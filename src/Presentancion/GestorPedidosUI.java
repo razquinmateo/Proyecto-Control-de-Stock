@@ -1,7 +1,11 @@
 package Presentancion;
 
 import java.awt.Component;
+import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
+import logica.Clases.Pedido;
 import logica.Fabrica;
+import logica.Interfaces.IControladorPedido;
 import logica.Interfaces.IControladorUsuario;
 
 /*
@@ -14,18 +18,39 @@ import logica.Interfaces.IControladorUsuario;
  * @author LucasCiceri
  */
 public class GestorPedidosUI extends javax.swing.JFrame {
-
-    /**
-     * Creates new form Login
-     */
+    
     private IControladorUsuario ICU;
+    private IControladorPedido ICP;
 
     public GestorPedidosUI() {
+        
         initComponents();
         this.ICU = Fabrica.getInstance().getIControladorUsuario();
+        this.ICP = Fabrica.getInstance().getIControladorPedido();
+        
         this.setTitle("Gestion de Pedidos");
         this.setLocationRelativeTo(null); // Centra la ventana
+        
+        this.cargarDatosDePedidos();
+        
     }
+    
+    private void cargarDatosDePedidos() {
+        ArrayList<Pedido> pedidosDeBaseDeDatos = this.ICP.listPedidos(); 
+        DefaultTableModel modelo = (DefaultTableModel) this.tblPedidos.getModel(); 
+
+        System.err.println("Pedidos Encontrados!!");
+
+        for (Pedido pedido : pedidosDeBaseDeDatos) {
+            Object[] nuevaRow = {
+                pedido.getFechaPedido(),
+                pedido.getEstado(),
+                pedido.getIdVendedor()
+            };
+            modelo.addRow(nuevaRow); // Agrega la fila al modelo
+        }
+    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -38,7 +63,7 @@ public class GestorPedidosUI extends javax.swing.JFrame {
 
         btnDatosProveedores = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblListarPedidos = new javax.swing.JTable();
+        tblPedidos = new javax.swing.JTable();
         btnDatosClientes = new javax.swing.JButton();
         btnDatosVendedores = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
@@ -56,7 +81,7 @@ public class GestorPedidosUI extends javax.swing.JFrame {
             }
         });
 
-        tblListarPedidos.setModel(new javax.swing.table.DefaultTableModel(
+        tblPedidos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -72,7 +97,7 @@ public class GestorPedidosUI extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(tblListarPedidos);
+        jScrollPane1.setViewportView(tblPedidos);
 
         btnDatosClientes.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnDatosClientes.setText("Clientes");
@@ -225,7 +250,7 @@ public class GestorPedidosUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JMenuBar menuBar;
-    private javax.swing.JTable tblListarPedidos;
+    private javax.swing.JTable tblPedidos;
     // End of variables declaration//GEN-END:variables
 
 }

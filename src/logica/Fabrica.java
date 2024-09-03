@@ -7,26 +7,35 @@ package logica;
 
 import logica.Controladores.ControladorUsuario;
 import logica.Interfaces.IControladorUsuario;
+import logica.Controladores.ControladorPedido;
+import logica.Interfaces.IControladorPedido;
 
 /**
  *
  * @author Santiago.S
  */
 public class Fabrica {
+
     private static Fabrica instancia;
+
     public static Fabrica getInstance() {
         if (instancia == null) {
             instancia = new Fabrica();
         }
         return instancia;
     }
-    
-     public IControladorUsuario getIControladorUsuario() {
+
+    public IControladorUsuario getIControladorUsuario() {
         IControladorUsuario ControladorU = ControladorUsuario.getInstance();
         return ControladorU; //To change body of generated methods, choose Tools | Templates.
     }
 
+    public IControladorPedido getIControladorPedido() {
+        IControladorPedido ControladorP = ControladorPedido.getInstance();
+        return ControladorP; 
+    }
+
     private Fabrica() {
     }
-    
+
 }
