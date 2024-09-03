@@ -8,12 +8,20 @@ package logica;
 import logica.Controladores.ControladorUsuario;
 import logica.Interfaces.IControladorUsuario;
 
+import logica.Controladores.ControladorVendedor;
+import logica.Interfaces.IControladorVendedor;
+
 /**
  *
  * @author Santiago.S
  */
 public class Fabrica {
+    
     private static Fabrica instancia;
+    
+    private Fabrica() {
+    }
+    
     public static Fabrica getInstance() {
         if (instancia == null) {
             instancia = new Fabrica();
@@ -25,8 +33,9 @@ public class Fabrica {
         IControladorUsuario ControladorU = ControladorUsuario.getInstance();
         return ControladorU; //To change body of generated methods, choose Tools | Templates.
     }
-
-    private Fabrica() {
+     
+     public IControladorVendedor getIControladorVendedor() {
+        return ControladorVendedor.getInstance();
     }
     
 }

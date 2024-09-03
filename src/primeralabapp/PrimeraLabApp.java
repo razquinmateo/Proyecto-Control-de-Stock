@@ -1,21 +1,27 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package primeralabapp;
 
-/**
- *
- * @author LucasCiceri
- */
+import logica.Clases.Vendedor;
+import logica.Controladores.ControladorVendedor;
+
+import java.util.ArrayList;
+import java.util.Date;
+
 public class PrimeraLabApp {
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
-        // TODO code application logic here
+        // Obtener la instancia del controlador de vendedores
+        ControladorVendedor controlador = ControladorVendedor.getInstance();
+        
+        // Crear y configurar un nuevo vendedor
+        Vendedor nuevoVendedor1 = new Vendedor();
+        nuevoVendedor1.setNombre("Ceciley Ugoni");
+        nuevoVendedor1.setCedula(51202150);
+        nuevoVendedor1.setCorreo("cugoni0@yelp.com");
+        nuevoVendedor1.setDireccion("038 Farwell Way");
+        nuevoVendedor1.setFechaContratacion(new Date());
+
+        // Alta del nuevo vendedor y mostrar el resultado
+        boolean altaExitosa1 = controlador.altaVendedor(nuevoVendedor1);
+        System.out.println("Alta de vendedor 1 exitosa: " + altaExitosa1);
     }
-    
 }
