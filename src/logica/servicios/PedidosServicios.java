@@ -18,9 +18,9 @@ import logica.Clases.Pedido;
  * @author Mateo
  */
 public class PedidosServicios {
-    
+
     private Connection conexion = new ConexionDB().getConexion();
-    
+
     public Pedido getPedidoById(int idPedido) throws SQLException {
         String sql = "SELECT * FROM pedidos WHERE idPedido = ?";
         PreparedStatement preparedStatement = conexion.prepareStatement(sql);
@@ -39,12 +39,12 @@ public class PedidosServicios {
 
         return null;
     }
-    
+
     public ArrayList<Pedido> getPedidos() {
         ArrayList<Pedido> pedidos = new ArrayList<>();
-        
+
         try {
-            
+
             String sql = "SELECT * FROM pedidos";
             Statement statement = conexion.createStatement();
             ResultSet resultSet = statement.executeQuery(sql);
@@ -60,13 +60,25 @@ public class PedidosServicios {
                 Pedido pedido = new Pedido(idPedido, identificador, fechaPedido, estado, total, idVendedor);
                 pedidos.add(pedido);
             }
-            
+
         } catch (Exception e) {
-            
+
             e.printStackTrace();
         }
-        
+
         return pedidos;
     }
-    
+
+    public String getNombreVendedorById(int idVendedor) throws SQLException {
+        String sql = "SELECT nombre FROM vendedor WHERE id = ?";
+        PreparedStatement preparedStatement = conexion.prepareStatement(sql);
+        preparedStatement.setInt(1, idVendedor);
+
+        ResultSet resultSet = preparedStatement.executeQuery();
+        if (resultSet.next()) {
+            return resultSet.getString("nombre");
+        }
+        return null;
+    }
+
 }

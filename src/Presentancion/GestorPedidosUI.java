@@ -18,39 +18,39 @@ import logica.Interfaces.IControladorUsuario;
  * @author LucasCiceri
  */
 public class GestorPedidosUI extends javax.swing.JFrame {
-    
+
     private IControladorUsuario ICU;
     private IControladorPedido ICP;
 
     public GestorPedidosUI() {
-        
+
         initComponents();
         this.ICU = Fabrica.getInstance().getIControladorUsuario();
         this.ICP = Fabrica.getInstance().getIControladorPedido();
-        
+
         this.setTitle("Gestion de Pedidos");
         this.setLocationRelativeTo(null); // Centra la ventana
-        
+
         this.cargarDatosDePedidos();
-        
+
     }
     
     private void cargarDatosDePedidos() {
-        ArrayList<Pedido> pedidosDeBaseDeDatos = this.ICP.listPedidos(); 
-        DefaultTableModel modelo = (DefaultTableModel) this.tblPedidos.getModel(); 
+        ArrayList<Pedido> pedidosDeBaseDeDatos = this.ICP.listPedidos();
+        DefaultTableModel modelo = (DefaultTableModel) this.tblPedidos.getModel();
 
         System.err.println("Pedidos Encontrados!!");
 
         for (Pedido pedido : pedidosDeBaseDeDatos) {
+            String nombreVendedor = ICP.obtenerNombreVendedorPorId(pedido.getIdVendedor()); // Obtener el nombre del vendedor
             Object[] nuevaRow = {
                 pedido.getFechaPedido(),
                 pedido.getEstado(),
-                pedido.getIdVendedor()
+                nombreVendedor // Mostrar el nombre en lugar del ID
             };
             modelo.addRow(nuevaRow); // Agrega la fila al modelo
         }
     }
-
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -90,7 +90,7 @@ public class GestorPedidosUI extends javax.swing.JFrame {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.Object.class, java.lang.String.class
+                java.lang.Object.class, java.lang.String.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {

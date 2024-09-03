@@ -14,5 +14,5 @@ import logica.Clases.Pedido;
 public interface IControladorPedido {
     
     public abstract ArrayList<Pedido> listPedidos();
-    
+    public abstract String obtenerNombreVendedorPorId(int idVendedor); // Nuevo método
 }

@@ -16,10 +16,11 @@ import logica.servicios.PedidosServicios;
  * @author Mateo
  */
 public class ControladorPedido implements IControladorPedido {
+
     private Map<String, Pedido> Pedidos;
     private PedidosServicios servicioPedidos;
     private static ControladorPedido instancia;
-    
+
     public ControladorPedido() {
         this.servicioPedidos = new PedidosServicios();
     }
@@ -30,9 +31,21 @@ public class ControladorPedido implements IControladorPedido {
         }
         return instancia;
     }
-    
+
     public ArrayList<Pedido> listPedidos() {
         ArrayList<Pedido> pedidos = servicioPedidos.getPedidos();
         return pedidos;
+    }
+
+    public String obtenerNombreVendedorPorId(int idVendedor) {
+        String nombreVendedor = "";
+        
+        try {
+            nombreVendedor = servicioPedidos.getNombreVendedorById(idVendedor); // Llama al servicio para obtener el nombre
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return nombreVendedor;
     }
 }
