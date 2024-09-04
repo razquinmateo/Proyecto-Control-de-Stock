@@ -14,7 +14,7 @@ public class Vendedor {
     private String contrasenia;
     private String nombre;
     private int cedula;
-    //private int telefono;
+    private int telefono;
     private String correo;
     private String direccion;
     private Date fechaContratacion;
@@ -23,13 +23,13 @@ public class Vendedor {
         
     }
     
-    public Vendedor(int id, String nomUsuario, String contrasenia, String nombre, int cedula, String correo, String direccion, Date fechaContratacion) {
-         this.id = id;
+    public Vendedor(int id, String nomUsuario, String contrasenia, String nombre, int cedula, int telefono, String correo, String direccion, Date fechaContratacion) {
+        this.id = id;
         this.nomUsuario = nomUsuario;
         this.contrasenia = contrasenia;
         this.nombre = nombre;
         this.cedula = cedula;
-        //this.telefono = telefono;
+        this.telefono = telefono;
         this.correo = correo;
         this.direccion = direccion;
         this.fechaContratacion = fechaContratacion;
@@ -75,13 +75,13 @@ public class Vendedor {
         this.cedula = cedula;
     }
 
-    /*public int getTelefono() {
+    public int getTelefono() {
         return telefono;
     }
 
     public void setTelefono(int telefono) {
         this.telefono = telefono;
-    }*/
+    }
 
     public String getCorreo() {
         return correo;

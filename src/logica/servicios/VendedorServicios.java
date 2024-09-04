@@ -24,13 +24,14 @@ public class VendedorServicios {
     public boolean altaVendedor(Vendedor vendedor) {
         try {
             //consulta SQL para insertar el nuevo vendedor a la bd
-            String sql = "INSERT INTO vendedor (nombre, cedula, correo_electronico, direccion, fecha_contratacion) VALUES (?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO vendedor (nombre, cedula, correo_electronico, telefono, direccion, fecha_contratacion) VALUES (?, ?, ?, ?, ?, ?)";
             PreparedStatement ps = conexion.prepareStatement(sql);
             ps.setString(1, vendedor.getNombre());
             ps.setInt(2, vendedor.getCedula());
             ps.setString(3, vendedor.getCorreo());
-            ps.setString(4, vendedor.getDireccion());
-            ps.setTimestamp(5, new java.sql.Timestamp(vendedor.getFechaContratacion().getTime()));
+            ps.setInt(4, vendedor.getTelefono());
+            ps.setString(5, vendedor.getDireccion());
+            ps.setTimestamp(6, new java.sql.Timestamp(vendedor.getFechaContratacion().getTime()));
 
             //ejecuta la consulta y retorna true si se inserta correctament
             return ps.executeUpdate() > 0;
@@ -43,14 +44,15 @@ public class VendedorServicios {
     public boolean modificarVendedor(int id, Vendedor vendedor) {
         try {
             //consulta SQL para actualizar los datos del vendedor
-            String sql = "UPDATE vendedor SET nombre = ?, cedula = ?, correo_electronico = ?, direccion = ?, fecha_contratacion = ? WHERE id = ?";
+            String sql = "UPDATE vendedor SET nombre = ?, cedula = ?, correo_electronico = ?, telefono = ?, direccion = ?, fecha_contratacion = ? WHERE id = ?";
             PreparedStatement ps = conexion.prepareStatement(sql);
             ps.setString(1, vendedor.getNombre());
             ps.setInt(2, vendedor.getCedula());
             ps.setString(3, vendedor.getCorreo());
-            ps.setString(4, vendedor.getDireccion());
-            ps.setTimestamp(5, new java.sql.Timestamp(vendedor.getFechaContratacion().getTime()));
-            ps.setInt(6, id);
+            ps.setInt(4, vendedor.getTelefono());
+            ps.setString(5, vendedor.getDireccion());
+            ps.setTimestamp(6, new java.sql.Timestamp(vendedor.getFechaContratacion().getTime()));
+            ps.setInt(7, id);
 
             //ejecuta la consulta y retorna true si se actualiza correctamente
             return ps.executeUpdate() > 0;
@@ -79,7 +81,7 @@ public class VendedorServicios {
         ArrayList<Vendedor> vendedores = new ArrayList<>();
         try {
             //consulta SQL para obtener todos los vendedores
-            String sql = "SELECT id, nombre, cedula, correo_electronico, direccion, fecha_contratacion FROM vendedor";
+            String sql = "SELECT id, nombre, cedula, correo_electronico, telefono, direccion, fecha_contratacion FROM vendedor";
             PreparedStatement ps = conexion.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
 
@@ -90,6 +92,7 @@ public class VendedorServicios {
                 vendedor.setNombre(rs.getString("nombre"));
                 vendedor.setCedula(rs.getInt("cedula"));
                 vendedor.setCorreo(rs.getString("correo_electronico"));
+                vendedor.setTelefono(rs.getInt("telefono"));
                 vendedor.setDireccion(rs.getString("direccion"));
                 Timestamp fechaContratacion = rs.getTimestamp("fecha_contratacion");
                 vendedor.setFechaContratacion(new java.util.Date(fechaContratacion.getTime()));
