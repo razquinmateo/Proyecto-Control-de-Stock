@@ -47,4 +47,9 @@ public class ControladorVendedor implements IControladorVendedor  {
     public ArrayList<Vendedor> listarVendedores() {
         return vendedorServicios.listarVendedores();
     }
+    
+    @Override
+    public Vendedor buscarVendedor(int id) {
+        return vendedorServicios.buscarVendedor(id);
+    }
 }

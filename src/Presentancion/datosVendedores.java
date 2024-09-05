@@ -11,6 +11,7 @@ import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -64,6 +65,7 @@ public class datosVendedores extends javax.swing.JFrame {
                 vendedor.getCedula(),
                 vendedor.getCorreo(),
                 vendedor.getTelefono(),
+                vendedor.getDireccion(),
                 vendedor.getFechaContratacion()
             });
         }
@@ -92,11 +94,11 @@ public class datosVendedores extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Nombre", "Cedula", "Correo Electronico", "Telefono", "Fecha de Contratacion"
+                "ID", "Nombre", "Cedula", "Correo Electronico", "Telefono", "Dirección", "Fecha de Contratacion"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -185,11 +187,68 @@ public class datosVendedores extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAltaVendedor1ActionPerformed
 
     private void btnModVendedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModVendedorActionPerformed
-        // TODO add your handling code here:
+        int selectedRow = tblListarVendedores.getSelectedRow();
+    
+        if (selectedRow >= 0) {
+            int id = (Integer) tblListarVendedores.getValueAt(selectedRow, 0);
+            String nombre = (String) tblListarVendedores.getValueAt(selectedRow, 1);
+            String correo = (String) tblListarVendedores.getValueAt(selectedRow, 3);
+            String telefono = (String) tblListarVendedores.getValueAt(selectedRow, 4);
+            String direccion = (String) tblListarVendedores.getValueAt(selectedRow, 5);
+
+            modificarVendedor ventanaModificacion = new modificarVendedor();
+            ventanaModificacion.setId(id);
+            ventanaModificacion.setNombre(nombre);
+            ventanaModificacion.setCorreo(correo);
+            ventanaModificacion.setTelefono(telefono);
+            ventanaModificacion.setDireccion(direccion);
+            ventanaModificacion.setVisible(true);
+
+            ventanaModificacion.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosed(java.awt.event.WindowEvent e) {
+                    cargarDatos();// actualiza la tabla después de cerrar la ventana de modificación
+                }
+            });
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Debe seleccionar un vendedor para modificar.");
+        }
     }//GEN-LAST:event_btnModVendedorActionPerformed
 
     private void btnElimVendedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnElimVendedorActionPerformed
-        // TODO add your handling code here:
+        int selectedRow = tblListarVendedores.getSelectedRow();
+    
+        if (selectedRow >= 0) {
+            int id = (Integer) tblListarVendedores.getValueAt(selectedRow, 0);
+
+            int confirm = JOptionPane.showConfirmDialog(this, 
+                    "¿Está seguro de que desea eliminar este vendedor?", 
+                    "Confirmar Eliminación", 
+                    JOptionPane.YES_NO_OPTION);
+
+            if (confirm == JOptionPane.YES_OPTION) {
+                VendedorServicios servicios = new VendedorServicios();
+                boolean exito = servicios.eliminarVendedor(id);
+
+                if (exito) {
+                    JOptionPane.showMessageDialog(this, 
+                            "Vendedor eliminado exitosamente.", 
+                            "Éxito", 
+                            JOptionPane.INFORMATION_MESSAGE);
+                    cargarDatos();
+                } else {
+                    JOptionPane.showMessageDialog(this, 
+                            "Error al eliminar el vendedor.", 
+                            "Error", 
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, 
+                    "Debe seleccionar un vendedor para eliminar.", 
+                    "Advertencia", 
+                    JOptionPane.WARNING_MESSAGE);
+        }
     }//GEN-LAST:event_btnElimVendedorActionPerformed
 
     /**
