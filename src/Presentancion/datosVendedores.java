@@ -6,6 +6,7 @@ package Presentancion;
 
 import logica.servicios.VendedorServicios;
 import logica.Clases.Vendedor;
+
 import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList;
 import java.awt.event.WindowAdapter;
@@ -67,7 +68,6 @@ public class datosVendedores extends javax.swing.JFrame {
             });
         }
     }
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -82,8 +82,8 @@ public class datosVendedores extends javax.swing.JFrame {
         tblListarVendedores = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         btnAltaVendedor1 = new javax.swing.JButton();
-        btnAltaVendedor2 = new javax.swing.JButton();
-        btnAltaVendedor4 = new javax.swing.JButton();
+        btnModVendedor = new javax.swing.JButton();
+        btnElimVendedor = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -115,9 +115,19 @@ public class datosVendedores extends javax.swing.JFrame {
             }
         });
 
-        btnAltaVendedor2.setText("Modificar Vendedor");
+        btnModVendedor.setText("Modificar Vendedor");
+        btnModVendedor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModVendedorActionPerformed(evt);
+            }
+        });
 
-        btnAltaVendedor4.setText("Eliminar Vendedor");
+        btnElimVendedor.setText("Eliminar Vendedor");
+        btnElimVendedor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnElimVendedorActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -125,21 +135,20 @@ public class datosVendedores extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(259, 259, 259)))
+                .addComponent(jScrollPane1)
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addGap(97, 97, 97)
                 .addComponent(btnAltaVendedor1, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(108, 108, 108)
-                .addComponent(btnAltaVendedor2)
+                .addComponent(btnModVendedor)
                 .addGap(103, 103, 103)
-                .addComponent(btnAltaVendedor4, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnElimVendedor, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 79, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(280, 280, 280))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -151,8 +160,8 @@ public class datosVendedores extends javax.swing.JFrame {
                 .addGap(48, 48, 48)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAltaVendedor1, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAltaVendedor2, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAltaVendedor4, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnModVendedor, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnElimVendedor, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(30, 30, 30))
         );
 
@@ -160,8 +169,28 @@ public class datosVendedores extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAltaVendedor1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAltaVendedor1ActionPerformed
-        // TODO add your handling code here:
+        //crea una nueva instancia de la ventana aniadirVendedor
+        aniadirVendedor ventanaAniadirVendedor = new aniadirVendedor();
+    
+        //hace que la ventana sea visible
+        ventanaAniadirVendedor.setVisible(true);
+        
+        //agregamos un listener para la ventana al cerrar
+        ventanaAniadirVendedor.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent e) {
+                cargarDatos();//actualizamos la tabla cuando se cierra la ventana
+            }
+        });
     }//GEN-LAST:event_btnAltaVendedor1ActionPerformed
+
+    private void btnModVendedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModVendedorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnModVendedorActionPerformed
+
+    private void btnElimVendedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnElimVendedorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnElimVendedorActionPerformed
 
     /**
      * @param args the command line arguments
@@ -200,8 +229,8 @@ public class datosVendedores extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAltaVendedor1;
-    private javax.swing.JButton btnAltaVendedor2;
-    private javax.swing.JButton btnAltaVendedor4;
+    private javax.swing.JButton btnElimVendedor;
+    private javax.swing.JButton btnModVendedor;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblListarVendedores;
