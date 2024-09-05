@@ -1,6 +1,5 @@
 package Presentancion;
 
-import java.awt.Component;
 import logica.Fabrica;
 import logica.Interfaces.IControladorUsuario;
 

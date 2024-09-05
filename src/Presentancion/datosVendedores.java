@@ -186,12 +186,18 @@ public class datosVendedores extends javax.swing.JFrame {
         int selectedRow = tblListarVendedores.getSelectedRow();
     
         if (selectedRow >= 0) {
-            int id = (Integer) tblListarVendedores.getValueAt(selectedRow, 0);
-            String nombre = (String) tblListarVendedores.getValueAt(selectedRow, 1);
-            String correo = (String) tblListarVendedores.getValueAt(selectedRow, 3);
-            String telefono = (String) tblListarVendedores.getValueAt(selectedRow, 4);
-            String direccion = (String) tblListarVendedores.getValueAt(selectedRow, 5);
+        int id = (Integer) tblListarVendedores.getValueAt(selectedRow, 0);
+        String nombre = (String) tblListarVendedores.getValueAt(selectedRow, 1);
+        String correo = (String) tblListarVendedores.getValueAt(selectedRow, 3);
+        String telefono = (String) tblListarVendedores.getValueAt(selectedRow, 4);
+        String direccion = (String) tblListarVendedores.getValueAt(selectedRow, 5);
 
+        int confirm = JOptionPane.showConfirmDialog(this, 
+                "¿Está seguro de que desea modificar este vendedor?", 
+                "Confirmar Modificación", 
+                JOptionPane.YES_NO_OPTION);
+        
+        if (confirm == JOptionPane.YES_OPTION) {
             modificarVendedor ventanaModificacion = new modificarVendedor();
             ventanaModificacion.setId(id);
             ventanaModificacion.setNombre(nombre);
@@ -203,9 +209,10 @@ public class datosVendedores extends javax.swing.JFrame {
             ventanaModificacion.addWindowListener(new java.awt.event.WindowAdapter() {
                 @Override
                 public void windowClosed(java.awt.event.WindowEvent e) {
-                    cargarDatos();// actualiza la tabla después de cerrar la ventana de modificación
+                    cargarDatos();//actualiza la tabla después de cerrar la ventana de modificación
                 }
             });
+        }
         } else {
             javax.swing.JOptionPane.showMessageDialog(this, "Debe seleccionar un vendedor para modificar.");
         }
