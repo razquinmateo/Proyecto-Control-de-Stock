@@ -24,12 +24,12 @@ public class Vendedor {
         
     }
     
-    public Vendedor(int id, String nombre, int cedula, String telefono, String correo, String direccion, Date fechaContratacion) {
+    public Vendedor(int id, String nombre, int cedula, String correo, String telefono, String direccion, Date fechaContratacion) {
         this.id = id;
         this.nombre = nombre;
         this.cedula = cedula;
-        this.telefono = telefono;
         this.correo = correo;
+        this.telefono = telefono;
         this.direccion = direccion;
         this.fechaContratacion = fechaContratacion;
     }

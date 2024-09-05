@@ -78,7 +78,7 @@
                 <Column editable="true" title="Nombre" type="java.lang.String"/>
                 <Column editable="true" title="Cedula" type="java.lang.Integer"/>
                 <Column editable="true" title="Correo Electronico" type="java.lang.String"/>
-                <Column editable="true" title="Telefono" type="java.lang.Integer"/>
+                <Column editable="true" title="Telefono" type="java.lang.String"/>
                 <Column editable="true" title="Direcci&#xf3;n" type="java.lang.String"/>
                 <Column editable="true" title="Fecha de Contratacion" type="java.lang.String"/>
               </Table>

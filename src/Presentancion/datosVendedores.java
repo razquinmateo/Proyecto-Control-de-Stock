@@ -41,10 +41,6 @@ public class datosVendedores extends javax.swing.JFrame {
     private void manejoCiereVentana() {
        //cierra la ventana actual (datosVendedores)
        this.dispose();
-
-       //crea una nueva instancia de la ventana principal (GestorPedidosUI) y la hace visible
-        GestorPedidosUI ventanaPrincipal = new GestorPedidosUI();
-        ventanaPrincipal.setVisible(true);
     }
     
     public void cargarDatos() {
@@ -98,7 +94,7 @@ public class datosVendedores extends javax.swing.JFrame {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {

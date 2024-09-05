@@ -15,7 +15,6 @@ import logica.Interfaces.IControladorUsuario;
  */
 public class GestorPedidosUI extends javax.swing.JFrame {
 
-    private datosVendedores datVendedores = new datosVendedores();
     private IControladorUsuario ICU;
     
 
@@ -167,8 +166,11 @@ public class GestorPedidosUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btnDatosClientesActionPerformed
 
     private void btnDatosVendedoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDatosVendedoresActionPerformed
-         datVendedores.setVisible(true);
-         this.dispose();
+         //crea una nueva instancia de la ventana aniadirVendedor
+        datosVendedores ventanaDatosVendedor = new datosVendedores();
+    
+        //hace que la ventana sea visible
+        ventanaDatosVendedor.setVisible(true);
     }//GEN-LAST:event_btnDatosVendedoresActionPerformed
 
     private void btnDatosProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDatosProductosActionPerformed
