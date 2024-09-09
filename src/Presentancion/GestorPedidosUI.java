@@ -1,6 +1,7 @@
 package Presentancion;
 
 import java.awt.Component;
+import javax.swing.JFrame;
 import logica.Fabrica;
 import logica.Interfaces.IControladorUsuario;
 
@@ -164,7 +165,26 @@ public class GestorPedidosUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btnDatosProveedoresActionPerformed
 
     private void btnDatosClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDatosClientesActionPerformed
-        // TODO add your handling code here:
+            // Crear un nuevo JFrame
+    JFrame frame = new JFrame("Gestión de Clientes");
+    
+    // Configurar el cierre de la ventana al cerrar la ventana de clientes
+    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    
+    // Crear una instancia de tu JPanel ClientesPrincipal
+    ClientesPrincipal panelClientes = new ClientesPrincipal();
+    
+    // Agregar el JPanel al JFrame
+    frame.add(panelClientes);
+    
+    // Configurar el tamaño del JFrame
+    frame.setSize(590, 600); // Ajusta el tamaño según sea necesario
+    
+    // Centrar la ventana en la pantalla
+    frame.setLocationRelativeTo(null);
+    
+    // Hacer visible la ventana
+    frame.setVisible(true);
     }//GEN-LAST:event_btnDatosClientesActionPerformed
 
     private void btnDatosVendedoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDatosVendedoresActionPerformed
