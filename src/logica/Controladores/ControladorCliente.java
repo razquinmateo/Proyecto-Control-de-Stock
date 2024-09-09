@@ -74,5 +74,14 @@ public class ControladorCliente implements IControladorCliente {
         }
         return modeloTabla;
     }
+    
+    // Método para obtener un cliente por su RUT
+    public Cliente obtenerClientePorRut(int rut) {
+        return ClienteServicios.getClientePorRut(rut);
+    }
+    
+    public boolean actualizarCliente(Cliente cliente) {
+        return ClienteServicios.actualizarCliente(cliente);
+    }
 
 }

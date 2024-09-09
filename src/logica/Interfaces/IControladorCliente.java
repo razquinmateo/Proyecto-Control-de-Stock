@@ -21,5 +21,7 @@ public interface IControladorCliente {
     public abstract boolean existeRut(int rut);
     public abstract boolean eliminarCliente(int rut);
     public abstract DefaultTableModel cargarDatosEnTabla();
+    public abstract Cliente obtenerClientePorRut(int rut);
+    public abstract boolean actualizarCliente(Cliente cliente);
     
 }

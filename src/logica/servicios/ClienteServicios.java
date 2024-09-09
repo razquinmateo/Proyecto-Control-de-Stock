@@ -96,7 +96,47 @@ public class ClienteServicios {
     }
 }
 
+// Método para obtener un cliente por su RUT
+    public Cliente getClientePorRut(int rut) {
+        Cliente cliente = null;
+        String sql = "SELECT * FROM cliente WHERE num_rut = ?";
+        try {
+            PreparedStatement stmt = conexion.prepareStatement(sql);
+            stmt.setInt(1, rut);
+            ResultSet rs = stmt.executeQuery();
 
+            if (rs.next()) {
+                String nombre = rs.getString("nom_empresa");
+                String email = rs.getString("correo_electronico");
+                String telefono = rs.getString("telefono");
+                Date fechaRegistro = rs.getDate("fecha_registro");
+
+                // Crear el objeto Cliente con los datos obtenidos
+                cliente = new Cliente(nombre, email, rut, telefono, fechaRegistro);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return cliente;
+    }
+    
+    // Método para actualizar los datos de un cliente
+    public boolean actualizarCliente(Cliente cliente) {
+        String sql = "UPDATE cliente SET nom_empresa = ?, correo_electronico = ?, telefono = ? WHERE num_rut = ?";
+        try {
+            PreparedStatement stmt = conexion.prepareStatement(sql);
+            stmt.setString(1, cliente.getNom_empresa());
+            stmt.setString(2, cliente.getCorreo_electronico());
+            stmt.setString(3, cliente.getTelefono());
+            stmt.setInt(4, cliente.getNum_rut());
+
+            int filasActualizadas = stmt.executeUpdate();
+            return filasActualizadas > 0;  // Devuelve true si se actualizaron filas
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
        
       
     

@@ -7,6 +7,7 @@ package Presentancion;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 import logica.Clases.Cliente;
@@ -43,6 +44,7 @@ public class ClientesPrincipal extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaClientes = new javax.swing.JTable();
         btnRecargar = new javax.swing.JButton();
+        btnVolver = new javax.swing.JButton();
 
         btnModificarCliente.setBackground(new java.awt.Color(0, 51, 204));
         btnModificarCliente.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -122,14 +124,29 @@ public class ClientesPrincipal extends javax.swing.JPanel {
             }
         });
 
+        btnVolver.setBackground(new java.awt.Color(255, 102, 102));
+        btnVolver.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnVolver.setText("Volver");
+        btnVolver.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVolverActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(33, 33, 33)
-                .addComponent(btnAltaCliente2, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(1, 1, 1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(33, 33, 33)
+                        .addComponent(btnAltaCliente2, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(1, 1, 1))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(btnVolver, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(34, 34, 34)
@@ -153,7 +170,8 @@ public class ClientesPrincipal extends javax.swing.JPanel {
                 .addGap(9, 9, 9)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(btnRecargar, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnRecargar, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnVolver, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(34, 34, 34)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
@@ -175,10 +193,14 @@ public class ClientesPrincipal extends javax.swing.JPanel {
 
         // Obtener el RUT de la columna correspondiente (ej. columna 0)
         int rut = (int) tablaClientes.getValueAt(filaSeleccionada, 0);
-
-        // Abrir el formulario de modificación y pasar el RUT
+        // Asignar el RUT a la variable estática
+        ClientesModificar.rutCliente = rut;
+        
+            // Centrar la ventana en la pantalla
+            // Abrir el formulario de modificación y pasar el RUT
         try {
             ClientesModificar frameClientesModificar = new ClientesModificar();
+            frameClientesModificar.setLocationRelativeTo(null);
             frameClientesModificar.setVisible(true);
         } catch (Exception e) {
             e.printStackTrace();
@@ -275,12 +297,19 @@ public class ClientesPrincipal extends javax.swing.JPanel {
         actualizarTablaClientes();
     }//GEN-LAST:event_btnRecargarActionPerformed
 
+    private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
+        // TODO add your handling code here:
+        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+        frame.dispose();
+    }//GEN-LAST:event_btnVolverActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAltaCliente2;
     private javax.swing.JButton btnEliminarcliente;
     private javax.swing.JButton btnModificarCliente;
     private javax.swing.JButton btnRecargar;
+    private javax.swing.JButton btnVolver;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tablaClientes;

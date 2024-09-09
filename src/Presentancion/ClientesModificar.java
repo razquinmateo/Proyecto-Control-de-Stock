@@ -4,6 +4,7 @@
  */
 package Presentancion;
 
+import java.util.Date;
 import javax.swing.JOptionPane;
 import logica.Clases.Cliente;
 import logica.Controladores.ControladorCliente;
@@ -14,11 +15,32 @@ import logica.Controladores.ControladorCliente;
  */
 public class ClientesModificar extends javax.swing.JFrame {
 private ControladorCliente controladorCliente;
+public static int rutCliente;
     /**
      * Creates new form ClientesModificar
      */
     public ClientesModificar() {
         initComponents();
+        cargarDatosCliente();
+    }
+    
+    private void cargarDatosCliente() {
+        // Obtener el controlador de clientes
+        ControladorCliente controlador = ControladorCliente.getInstance();
+
+        // Usar el método obtenerClientePorRut para obtener los datos del cliente
+        Cliente cliente = controlador.obtenerClientePorRut(rutCliente);
+
+        if (cliente != null) {
+            // Cargar los datos en los campos de texto
+            txtRut.setText(String.valueOf(cliente.getNum_rut()));
+            txtNombre1.setText(cliente.getNom_empresa());
+            txtTelefono.setText(cliente.getTelefono());
+            txtCorreo.setText(cliente.getCorreo_electronico());
+        } else {
+            // Si no se encuentra el cliente, mostrar un mensaje de error
+            JOptionPane.showMessageDialog(this, "Cliente no encontrado", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     /**
@@ -56,7 +78,7 @@ private ControladorCliente controladorCliente;
 
         btnAgregar.setBackground(new java.awt.Color(0, 204, 0));
         btnAgregar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnAgregar.setText("Agregar");
+        btnAgregar.setText("Actualizar");
         btnAgregar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAgregarActionPerformed(evt);
@@ -71,6 +93,8 @@ private ControladorCliente controladorCliente;
                 btnCancelarActionPerformed(evt);
             }
         });
+
+        txtRut.setEnabled(false);
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel5.setText("TELEFONO");
@@ -153,11 +177,36 @@ private ControladorCliente controladorCliente;
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        try {
+        // Obtener los datos actualizados desde los campos de texto
+        String nombre = txtNombre1.getText();
+        String email = txtCorreo.getText();
+        int rut = Integer.parseInt(txtRut.getText());  // El RUT no debe cambiar
+        String telefono = txtTelefono.getText();
 
+        // Crear un objeto Cliente con los datos actualizados
+        Cliente clienteActualizado = new Cliente(nombre, email, rut, telefono, new Date());
+
+        // Llamar al método para actualizar el cliente
+        ControladorCliente controlador = ControladorCliente.getInstance();
+        boolean actualizado = controlador.actualizarCliente(clienteActualizado);
+
+        if (actualizado) {
+            // Mostrar mensaje de éxito
+            JOptionPane.showMessageDialog(this, "Cliente actualizado correctamente");
+            this.dispose();  // Cerrar la ventana si se actualiza correctamente
+        } else {
+            // Mostrar mensaje de error si no se pudo actualizar
+            JOptionPane.showMessageDialog(this, "Error al actualizar el cliente", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error al actualizar cliente: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         // TODO add your handling code here:
+        this.dispose();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     /**
