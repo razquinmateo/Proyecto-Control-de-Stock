@@ -205,7 +205,18 @@ public class aniadirVendedor extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
-        //obtenemos los datos de los campos de texto
+        //le preguntamos al usuario si está seguro de agregar el vendedor
+        int confirmar = javax.swing.JOptionPane.showConfirmDialog(this, 
+                "¿Está seguro de que desea agregar este vendedor?", 
+                "Confirmar Adición", 
+                javax.swing.JOptionPane.YES_NO_OPTION);
+
+        // Si el usuario no confirma, salimos del método
+        if (confirmar != javax.swing.JOptionPane.YES_OPTION) {
+            return;
+        }
+
+    //obtenemos los datos de los campos de texto
         String nombre = txtNombre.getText();
         String cedulaStr = txtCedula.getText();
         String correo = txtCorreo.getText();
@@ -220,9 +231,13 @@ public class aniadirVendedor extends javax.swing.JFrame {
             return;
         }
         
-        //convertimos los datos a los tipos adecuados
-        int cedula;
+        //verificamos que el nombre no contenga nada raro, solo letras y espacios
+        if(!nombre.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
+            javax.swing.JOptionPane.showMessageDialog(this, "El nombre solo puede contener letras y espacios.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         
+        int cedula;
         try {
             cedula = Integer.parseInt(cedulaStr);
         }catch (NumberFormatException e) {
@@ -230,6 +245,31 @@ public class aniadirVendedor extends javax.swing.JFrame {
             javax.swing.JOptionPane.showMessageDialog(this, "Cédula deben ser números válidos.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
             return;
         }
+        
+        //verificamos que la cédula sea un numero positivo
+        if (cedula <= 0) {
+            javax.swing.JOptionPane.showMessageDialog(this, "La cédula debe ser un número positivo.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        //verificamos que la cédula tenga 8 dígitos
+        if (cedulaStr.length() != 8) {
+            javax.swing.JOptionPane.showMessageDialog(this, "La cédula debe tener 10 dígitos.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        //verificamos que el correo tenga un formato válido
+        if (!correo.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
+            javax.swing.JOptionPane.showMessageDialog(this, "El correo no tiene un formato válido.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        //verificamos que el teléfono tenga entre 9 y 15 dígitos
+        if (!telefono.matches("\\d{9,15}")) {
+            javax.swing.JOptionPane.showMessageDialog(this, "El teléfono debe tener entre 9 y 15 dígitos.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
         
         //creamos una instancia de Vendedor y establecemos sus atributos
         Vendedor vendedor = new Vendedor();

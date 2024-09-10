@@ -44,13 +44,14 @@ public class VendedorServicios {
     public boolean modificarVendedor(int id, Vendedor vendedor) {
         try {
             //consulta SQL para actualizar los datos del vendedor
-            String sql = "UPDATE vendedor SET nombre = ?, correo_electronico = ?, telefono = ?, direccion = ? WHERE id = ?";
+            String sql = "UPDATE vendedor SET nombre = ?, cedula = ?, correo_electronico = ?, telefono = ?, direccion = ? WHERE id = ?";
             PreparedStatement ps = conexion.prepareStatement(sql);
             ps.setString(1, vendedor.getNombre());
-            ps.setString(2, vendedor.getCorreo());
-            ps.setString(3, vendedor.getTelefono());
-            ps.setString(4, vendedor.getDireccion());
-            ps.setInt(5, id);
+            ps.setInt(2, vendedor.getCedula());
+            ps.setString(3, vendedor.getCorreo());
+            ps.setString(4, vendedor.getTelefono());
+            ps.setString(5, vendedor.getDireccion());
+            ps.setInt(6, id);
 
             //ejecuta la consulta y retorna true si se actualiza correctamente
             return ps.executeUpdate() > 0;

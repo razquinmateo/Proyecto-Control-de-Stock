@@ -14,11 +14,11 @@ import javax.swing.JOptionPane;
 
 
 public class ConexionDB {
-    private final String host= "sql10.freemysqlhosting.net";
+    private final String host= "localhost";
     private final String port= "3306";
-    private final String db= "sql10728555";
-    private final String user= "sql10728555";
-    private final String pass= "ShhZA5km4z";
+    private final String db= "progAplic";
+    private final String user= "root";
+    private final String pass= "";
    
     
     //Para hacer ConexionDB singleton descomentar
