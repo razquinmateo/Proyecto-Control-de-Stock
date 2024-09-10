@@ -3,12 +3,16 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< HEAD
             <file>file:/C:/Users/Jairo/Desktop/Prog%20aplicaciones%20java/GitHub_Compartida/Proyecto-Control-de-Stock/src/Presentancion/ClientesPrincipal.java</file>
             <file>file:/C:/Users/Jairo/Desktop/Prog%20aplicaciones%20java/GitHub_Compartida/Proyecto-Control-de-Stock/src/logica/Controladores/ControladorCliente.java</file>
             <file>file:/C:/Users/Jairo/Desktop/Prog%20aplicaciones%20java/GitHub_Compartida/Proyecto-Control-de-Stock/src/Presentancion/ClientesModificar.java</file>
             <file>file:/C:/Users/Jairo/Desktop/Prog%20aplicaciones%20java/GitHub_Compartida/Proyecto-Control-de-Stock/src/logica/servicios/ClienteServicios.java</file>
             <file>file:/C:/Users/Jairo/Desktop/Prog%20aplicaciones%20java/GitHub_Compartida/Proyecto-Control-de-Stock/src/logica/Interfaces/IControladorCliente.java</file>
             <file>file:/C:/Users/Jairo/Desktop/Prog%20aplicaciones%20java/GitHub_Compartida/Proyecto-Control-de-Stock/src/Presentancion/ClientesAlta.java</file>
+=======
+            <file>file:/C:/Users/Cebal/Desktop/Proyecto-Control-de-Stock/src/Presentancion/datosVendedores.java</file>
+>>>>>>> 4df2bcff01e82ab90f450bc70ab41241483852c7
         </group>
     </open-files>
 </project-private>
