@@ -47,6 +47,10 @@ public class modificarVendedor extends javax.swing.JFrame {
     public void setNombre(String nombre) {
         txtNombre.setText(nombre);
     }
+    
+    public void setCedula(int cedula) {
+        txtCedula.setText(String.valueOf(cedula));
+    }
 
     public void setCorreo(String correo) {
         txtCorreo.setText(correo);
@@ -79,9 +83,11 @@ public class modificarVendedor extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         btnGuardarCambios = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        txtCedula = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(444, 400));
+        setPreferredSize(new java.awt.Dimension(444, 430));
 
         txtNombre.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -129,30 +135,45 @@ public class modificarVendedor extends javax.swing.JFrame {
             }
         });
 
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel3.setText("Ingrese la cedula:");
+
+        txtCedula.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCedulaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(48, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel2))
-                .addGap(37, 37, 37)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(29, 29, 29))
-            .addGroup(layout.createSequentialGroup()
                 .addGap(120, 120, 120)
                 .addComponent(jLabel1)
                 .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(48, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(txtCedula, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel2))
+                        .addGap(37, 37, 37)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(29, 29, 29))
             .addGroup(layout.createSequentialGroup()
-                .addGap(142, 142, 142)
+                .addGap(150, 150, 150)
                 .addComponent(btnGuardarCambios, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -167,6 +188,10 @@ public class modificarVendedor extends javax.swing.JFrame {
                     .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtCedula, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
                 .addGap(18, 18, 18)
@@ -177,9 +202,9 @@ public class modificarVendedor extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(txtDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(31, 31, 31)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 62, Short.MAX_VALUE)
                 .addComponent(btnGuardarCambios, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(37, Short.MAX_VALUE))
+                .addGap(17, 17, 17))
         );
 
         pack();
@@ -207,11 +232,50 @@ public class modificarVendedor extends javax.swing.JFrame {
         Vendedor vendedorExistente = servicios.buscarVendedor(id);
 
         String nombre = txtNombre.getText();
+        int cedula = Integer.parseInt(txtCedula.getText());  
         String correo = txtCorreo.getText();
         String telefono = txtTelefono.getText();
         String direccion = txtDireccion.getText();
-        int cedula = vendedorExistente.getCedula();
         Date fechaContratacion = vendedorExistente.getFechaContratacion();
+        
+        String cedulaStr = txtCedula.getText();
+        
+        //verificamos que los campos no estén vacíos
+        if (nombre.isEmpty() || cedulaStr.isEmpty() || correo.isEmpty() || telefono.isEmpty() || direccion.isEmpty()) {
+            //mostramos un mensaje de error si algún campo está vacío
+            javax.swing.JOptionPane.showMessageDialog(this, "Todos los campos deben ser completados.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        //verificamos que el nombre solo contenga letras y espacios
+        if (!nombre.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
+            javax.swing.JOptionPane.showMessageDialog(this, "El nombre solo puede contener letras y espacios.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        //verificamos que la cédula sea un numero positivo
+        if (cedula <= 0) {
+            javax.swing.JOptionPane.showMessageDialog(this, "La cédula debe ser un número positivo.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        //verificamos que la cédula tenga 8 dígitos
+        if (cedulaStr.length() != 8) {
+            javax.swing.JOptionPane.showMessageDialog(this, "La cédula debe tener 10 dígitos.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        //verificamos que el correo tenga un formato válido
+        if (!correo.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
+            javax.swing.JOptionPane.showMessageDialog(this, "El correo no tiene un formato válido.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        //verificamos que el teléfono tenga entre 9 y 15 dígitos
+        if (!telefono.matches("\\d{9,15}")) {
+            javax.swing.JOptionPane.showMessageDialog(this, "El teléfono debe tener entre 9 y 15 dígitos.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         
         Vendedor vendedorActualizado = new Vendedor(id, nombre, cedula, correo, telefono, direccion, fechaContratacion);
     
@@ -225,6 +289,10 @@ public class modificarVendedor extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Error al modificar el vendedor.", "Error", JOptionPane.ERROR_MESSAGE);
         } 
     }//GEN-LAST:event_btnGuardarCambiosActionPerformed
+
+    private void txtCedulaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCedulaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCedulaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -265,9 +333,11 @@ public class modificarVendedor extends javax.swing.JFrame {
     private javax.swing.JButton btnGuardarCambios;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JTextField txtCedula;
     private javax.swing.JTextField txtCorreo;
     private javax.swing.JTextField txtDireccion;
     private javax.swing.JTextField txtNombre;

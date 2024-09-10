@@ -183,24 +183,26 @@ public class datosVendedores extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAltaVendedor1ActionPerformed
 
     private void btnModVendedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModVendedorActionPerformed
-        int selectedRow = tblListarVendedores.getSelectedRow();
-    
-        if (selectedRow >= 0) {
-        int id = (Integer) tblListarVendedores.getValueAt(selectedRow, 0);
-        String nombre = (String) tblListarVendedores.getValueAt(selectedRow, 1);
-        String correo = (String) tblListarVendedores.getValueAt(selectedRow, 3);
-        String telefono = (String) tblListarVendedores.getValueAt(selectedRow, 4);
-        String direccion = (String) tblListarVendedores.getValueAt(selectedRow, 5);
+        int filaSeleccionada = tblListarVendedores.getSelectedRow();
 
-        int confirm = JOptionPane.showConfirmDialog(this, 
+    if (filaSeleccionada >= 0) {
+        int id = (Integer) tblListarVendedores.getValueAt(filaSeleccionada, 0);
+        String nombre = (String) tblListarVendedores.getValueAt(filaSeleccionada, 1);
+        int cedula = (Integer) tblListarVendedores.getValueAt(filaSeleccionada, 2);
+        String correo = (String) tblListarVendedores.getValueAt(filaSeleccionada, 3);
+        String telefono = (String) tblListarVendedores.getValueAt(filaSeleccionada, 4);
+        String direccion = (String) tblListarVendedores.getValueAt(filaSeleccionada, 5);
+
+        int confirmacion = JOptionPane.showConfirmDialog(this, 
                 "¿Está seguro de que desea modificar este vendedor?", 
                 "Confirmar Modificación", 
                 JOptionPane.YES_NO_OPTION);
         
-        if (confirm == JOptionPane.YES_OPTION) {
+        if (confirmacion == JOptionPane.YES_OPTION) {
             modificarVendedor ventanaModificacion = new modificarVendedor();
             ventanaModificacion.setId(id);
             ventanaModificacion.setNombre(nombre);
+            ventanaModificacion.setCedula(cedula);
             ventanaModificacion.setCorreo(correo);
             ventanaModificacion.setTelefono(telefono);
             ventanaModificacion.setDireccion(direccion);
@@ -209,7 +211,7 @@ public class datosVendedores extends javax.swing.JFrame {
             ventanaModificacion.addWindowListener(new java.awt.event.WindowAdapter() {
                 @Override
                 public void windowClosed(java.awt.event.WindowEvent e) {
-                    cargarDatos();//actualiza la tabla después de cerrar la ventana de modificación
+                    cargarDatos(); //actualiza la tabla después de cerrar la ventana de modificación
                 }
             });
         }

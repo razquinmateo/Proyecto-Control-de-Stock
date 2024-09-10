@@ -20,6 +20,7 @@ public class ConexionDB {
     private final String user= "root";
     private final String pass= "";
 
+
    
     
     //Para hacer ConexionDB singleton descomentar
