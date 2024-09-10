@@ -1,8 +1,7 @@
 package Presentancion;
 
-import java.awt.Component;
-import javax.swing.JFrame;
 import logica.Fabrica;
+import javax.swing.JFrame;
 import logica.Interfaces.IControladorUsuario;
 
 /*
@@ -16,9 +15,6 @@ import logica.Interfaces.IControladorUsuario;
  */
 public class GestorPedidosUI extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Login
-     */
     private IControladorUsuario ICU;
     
 
@@ -162,30 +158,30 @@ public class GestorPedidosUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnDatosProveedoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDatosProveedoresActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_btnDatosProveedoresActionPerformed
 
     private void btnDatosClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDatosClientesActionPerformed
-            // Crear un nuevo JFrame
-    JFrame frame = new JFrame("Gestión de Clientes");
-    
-    // Configurar el cierre de la ventana al cerrar la ventana de clientes
-    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-    
-    // Crear una instancia de tu JPanel ClientesPrincipal
-    ClientesPrincipal panelClientes = new ClientesPrincipal();
-    
-    // Agregar el JPanel al JFrame
-    frame.add(panelClientes);
-    
-    // Configurar el tamaño del JFrame
-    frame.setSize(590, 600); // Ajusta el tamaño según sea necesario
-    
-    // Centrar la ventana en la pantalla
-    frame.setLocationRelativeTo(null);
-    
-    // Hacer visible la ventana
-    frame.setVisible(true);
+        //creamos una nueva instancia de JFrame
+        JFrame ventanaDatosClientes = new JFrame("Datos de Clientes");
+
+        //configuramos el cierre de la ventana
+        ventanaDatosClientes.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        //creamos una instancia de ClientesPrincipal
+        ClientesPrincipal panelClientes = new ClientesPrincipal();
+
+        //agregamos el JPanel al JFrame
+        ventanaDatosClientes.add(panelClientes);
+
+        //configuraoms el tamaño del JFrame
+        ventanaDatosClientes.setSize(800, 600);
+
+        //centramos la ventana en la pantalla
+        ventanaDatosClientes.setLocationRelativeTo(null);
+
+        //hacemos visible la ventana
+        ventanaDatosClientes.setVisible(true);
     }//GEN-LAST:event_btnDatosClientesActionPerformed
 
     private void btnDatosVendedoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDatosVendedoresActionPerformed

@@ -14,13 +14,11 @@ import javax.swing.JOptionPane;
 
 
 public class ConexionDB {
-    private final String host= "localhost";
-    private final String port= "3306";
-    private final String db= "controlStock";
-    private final String user= "root";
+    private final String host= "";
+    private final String port= "";
+    private final String db= "";
+    private final String user= "";
     private final String pass= "";
-
-
    
     
     //Para hacer ConexionDB singleton descomentar
