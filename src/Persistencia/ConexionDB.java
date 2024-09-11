@@ -18,7 +18,7 @@ public class ConexionDB {
     private final String port= "24060";
     private final String db= "progAplic";
     private final String user= "avnadmin";
-    private final String pass= "AVNS_wpZDdlQKDD2J4VPnf-b";
+    private final String pass= "";
    
     
     //Para hacer ConexionDB singleton descomentar
