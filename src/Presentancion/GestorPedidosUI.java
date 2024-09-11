@@ -162,30 +162,15 @@ public class GestorPedidosUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btnDatosProveedoresActionPerformed
 
     private void btnDatosClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDatosClientesActionPerformed
-        //creamos una nueva instancia de JFrame
-        JFrame ventanaDatosClientes = new JFrame("Datos de Clientes");
-
-        //configuramos el cierre de la ventana
-        ventanaDatosClientes.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-        //creamos una instancia de ClientesPrincipal
-        ClientesPrincipal panelClientes = new ClientesPrincipal();
-
-        //agregamos el JPanel al JFrame
-        ventanaDatosClientes.add(panelClientes);
-
-        //configuraoms el tamaño del JFrame
-        ventanaDatosClientes.setSize(800, 600);
-
-        //centramos la ventana en la pantalla
-        ventanaDatosClientes.setLocationRelativeTo(null);
-
-        //hacemos visible la ventana
-        ventanaDatosClientes.setVisible(true);
+        //crea una nueva instancia de la ventana ClientesPrincipal
+        ClientesPrincipal ventanaClientesPrincipal = new ClientesPrincipal();
+    
+        //hace que la ventana sea visible
+        ventanaClientesPrincipal.setVisible(true);
     }//GEN-LAST:event_btnDatosClientesActionPerformed
 
     private void btnDatosVendedoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDatosVendedoresActionPerformed
-         //crea una nueva instancia de la ventana aniadirVendedor
+        //crea una nueva instancia de la ventana aniadirVendedor
         datosVendedores ventanaDatosVendedor = new datosVendedores();
     
         //hace que la ventana sea visible

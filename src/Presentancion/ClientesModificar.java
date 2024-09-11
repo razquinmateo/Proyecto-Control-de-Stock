@@ -4,6 +4,8 @@
  */
 package Presentancion;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Date;
 import javax.swing.JOptionPane;
 import logica.Clases.Cliente;
@@ -22,7 +24,23 @@ public static int rutCliente;
     public ClientesModificar() {
         initComponents();
         cargarDatosCliente();
-    }
+        this.setLocationRelativeTo(null); // Centra la ventana
+
+            setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+                addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosing(WindowEvent e) {
+                        //codigo que se ejecuta al cerrar la ventana
+                        manejoCiereVentana();
+                    }
+                });
+            }
+
+            private void manejoCiereVentana() {
+               //cierra la ventana actual (aniadirVendedor)
+               this.dispose();
+            }
+    
     
     private void cargarDatosCliente() {
         // Obtener el controlador de clientes

@@ -14,11 +14,11 @@ import javax.swing.JOptionPane;
 
 
 public class ConexionDB {
-    private final String host= "";
-    private final String port= "";
-    private final String db= "";
-    private final String user= "";
-    private final String pass= "";
+    private final String host= "prog-aplicaiones-prog-aplicaciones.e.aivencloud.com";
+    private final String port= "24060";
+    private final String db= "progAplic";
+    private final String user= "avnadmin";
+    private final String pass= "AVNS_wpZDdlQKDD2J4VPnf-b";
    
     
     //Para hacer ConexionDB singleton descomentar
