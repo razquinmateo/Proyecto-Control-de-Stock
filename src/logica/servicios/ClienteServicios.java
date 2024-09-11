@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,11 +53,7 @@ public class ClienteServicios {
             stmt.setString(2, cliente.getCorreo_electronico());
             stmt.setInt(3, cliente.getNum_rut());
             stmt.setString(4, cliente.getTelefono());
-            // Convertir java.util.Date a java.sql.Date
-            java.util.Date utilDate = cliente.getFecha_registro();
-            java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
-            stmt.setDate(5, sqlDate);
-
+            stmt.setTimestamp(5, new java.sql.Timestamp(cliente.getFecha_registro().getTime()));
 
             int filasAfectadas = stmt.executeUpdate();
             return filasAfectadas > 0;
