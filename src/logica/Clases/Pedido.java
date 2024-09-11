@@ -4,16 +4,18 @@
  */
 package logica.Clases;
 
+import java.util.Date;
+
 public class Pedido {
     private int idPedido;
     private String identificador;
-    private String fechaPedido;
+    private Date fechaPedido;
     private String estado;
     private float total;
     private int idVendedor;
 
     // Constructor
-    public Pedido(int idPedido, String identificador, String fechaPedido, String estado, float total, int idVendedor) {
+    public Pedido(int idPedido, String identificador, Date fechaPedido, String estado, float total, int idVendedor) {
         this.idPedido = idPedido;
         this.identificador = identificador;
         this.fechaPedido = fechaPedido;
@@ -39,11 +41,11 @@ public class Pedido {
         this.identificador = identificador;
     }
 
-    public String getFechaPedido() {
+    public Date getFechaPedido() {
         return fechaPedido;
     }
 
-    public void setFechaPedido(String fechaPedido) {
+    public void setFechaPedido(Date fechaPedido) {
         this.fechaPedido = fechaPedido;
     }
 

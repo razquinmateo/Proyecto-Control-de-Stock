@@ -5,6 +5,7 @@
 package logica.Interfaces;
 
 import java.util.ArrayList;
+import java.util.Date;
 import logica.Clases.Pedido;
 
 /**
@@ -14,5 +15,7 @@ import logica.Clases.Pedido;
 public interface IControladorPedido {
     
     public abstract ArrayList<Pedido> listPedidos();
-    public abstract String obtenerNombreVendedorPorId(int idVendedor); // Nuevo método
+    public abstract String obtenerNombreVendedorPorId(int idVendedor); 
+    public abstract void eliminarPedido(int idPedido);
+    public abstract void actualizarPedido(int idPedido, String estado, float total, Date fechaPedido);
 }
