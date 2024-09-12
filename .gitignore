@@ -2,3 +2,6 @@
 /build/
 /dist/
 *.class
+build/built-jar.properties
+nbproject/project.properties
+
