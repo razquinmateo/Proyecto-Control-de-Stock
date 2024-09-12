@@ -16,7 +16,7 @@ import javax.swing.JOptionPane;
 public class ConexionDB {
     private final String host= "localhost";
     private final String port= "3306";
-    private final String db= "controlStock";
+    private final String db= "progaplic";
     private final String user= "root";
     private final String pass= "";
    
