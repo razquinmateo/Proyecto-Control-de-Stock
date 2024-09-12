@@ -20,6 +20,7 @@ public class GestorPedidosUI extends javax.swing.JFrame {
     private IControladorUsuario ICU;
     private IControladorPedido ICP;
     private ActualizarPedido actualizarPedido = new ActualizarPedido();
+    private AddPedido agregarPedido = new AddPedido();
 
     public GestorPedidosUI() {
 
@@ -46,13 +47,14 @@ public class GestorPedidosUI extends javax.swing.JFrame {
         tblPedidos.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
 
         for (Pedido pedido : pedidosDeBaseDeDatos) {
-
             String nombreVendedor = ICP.obtenerNombreVendedorPorId(pedido.getIdVendedor());
+            String nombreCliente = ICP.obtenerNombreClientePorId(pedido.getIdCliente());
             Object[] nuevaRow = {
-                pedido.getIdPedido(),
+                pedido.getIdentificador(),
                 pedido.getFechaPedido(),
                 pedido.getEstado(),
-                nombreVendedor // Mostrar el nombre en lugar del ID
+                nombreVendedor,
+                nombreCliente
             };
             modelo.addRow(nuevaRow);
 
@@ -83,6 +85,7 @@ public class GestorPedidosUI extends javax.swing.JFrame {
         btnRecargarPedidos = new javax.swing.JButton();
         btnEliminarPedido = new javax.swing.JButton();
         btnActualizarPedido = new javax.swing.JButton();
+        btnAddPedido = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -100,11 +103,11 @@ public class GestorPedidosUI extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Fecha", "Estado", "Vendedor"
+                "ID", "Fecha", "Estado", "Vendedor", "Cliente"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -140,8 +143,7 @@ public class GestorPedidosUI extends javax.swing.JFrame {
             }
         });
 
-        btnRecargarPedidos.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnRecargarPedidos.setText("Recargar");
+        btnRecargarPedidos.setIcon(new javax.swing.ImageIcon("C:\\Users\\Mateo\\Downloads\\recargar (2).png")); // NOI18N
         btnRecargarPedidos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRecargarPedidosActionPerformed(evt);
@@ -163,6 +165,14 @@ public class GestorPedidosUI extends javax.swing.JFrame {
                 btnActualizarPedidoActionPerformed(evt);
             }
         });
+
+        btnAddPedido.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnAddPedido.setText("Añadir");
+        btnAddPedido.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddPedidoActionPerformed(evt);
+            }
+        });
         setJMenuBar(menuBar);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -170,35 +180,39 @@ public class GestorPedidosUI extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(398, 398, 398)
-                        .addComponent(jLabel2)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(45, 45, 45)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(btnDatosVendedores, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnDatosClientes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnDatosProveedores, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnDatosProductos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 562, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(45, 45, 45)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnDatosVendedores, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnDatosClientes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnDatosProveedores, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnDatosProductos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 562, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(btnRecargarPedidos, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(55, 55, 55)
+                .addComponent(btnAddPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(70, 70, 70)
                 .addComponent(btnActualizarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(55, 55, 55)
+                .addGap(71, 71, 71)
                 .addComponent(btnEliminarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(76, 76, 76))
+                .addGap(78, 78, 78))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(398, 398, 398)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnRecargarPedidos, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(19, 19, 19))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnRecargarPedidos, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -210,13 +224,12 @@ public class GestorPedidosUI extends javax.swing.JFrame {
                         .addComponent(btnDatosProveedores, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(btnDatosProductos, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnRecargarPedidos, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnActualizarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnActualizarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAddPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnEliminarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(7, 7, 7))
+                .addGap(13, 13, 13))
         );
 
         pack();
@@ -239,7 +252,7 @@ public class GestorPedidosUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btnDatosProductosActionPerformed
 
     private void btnRecargarPedidosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRecargarPedidosActionPerformed
-        // TODO add your handling code here:
+        recargarDatosDelPedido();
     }//GEN-LAST:event_btnRecargarPedidosActionPerformed
 
     private void btnEliminarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarPedidoActionPerformed
@@ -248,33 +261,33 @@ public class GestorPedidosUI extends javax.swing.JFrame {
 
     private void btnActualizarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarPedidoActionPerformed
         int row = tblPedidos.getSelectedRow();
-        
+
         if (row >= 0) {
             // Obtener el ID del pedido de la tabla
-            int idPedido = (int) tblPedidos.getValueAt(row, 0); 
-            
+            int idPedido = (int) tblPedidos.getValueAt(row, 0);
+
             // Obtener el pedido desde el controlador
             ControladorPedido controlador = ControladorPedido.getInstance();
             Pedido pedido = controlador.listPedidos().stream()
-                .filter(p -> p.getIdPedido() == idPedido)
-                .findFirst()
-                .orElse(null);
-            
+                    .filter(p -> p.getIdentificador() == idPedido)
+                    .findFirst()
+                    .orElse(null);
+
             if (pedido != null) {
                 //Se abre la ventana de detalles
                 ActualizarPedido actualizarPedido = new ActualizarPedido();
-                actualizarPedido.setPedido(pedido); 
-                actualizarPedido.setPedidoId(idPedido); 
+                actualizarPedido.setPedido(pedido);
+                actualizarPedido.setPedidoId(idPedido);
                 actualizarPedido.setVisible(true);
-                
+
                 // Actualiza la tabla al cerrar la ventana
                 actualizarPedido.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosed(java.awt.event.WindowEvent windowEvent) {
-                        recargarDatosDelPedido(); 
+                        recargarDatosDelPedido();
                     }
                 });
-                
+
             } else {
                 JOptionPane.showMessageDialog(null, "Pedido no encontrado");
             }
@@ -283,21 +296,32 @@ public class GestorPedidosUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnActualizarPedidoActionPerformed
 
+    private void btnAddPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddPedidoActionPerformed
+        this.agregarPedido.setVisible(true);
+
+        agregarPedido.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                recargarDatosDelPedido();
+            }
+        });
+    }//GEN-LAST:event_btnAddPedidoActionPerformed
+
     private void eliminarPedidoSeleccionado() {
         // Obtener la fila seleccionada
         int filaSeleccionada = tblPedidos.getSelectedRow();
-        
+
         if (filaSeleccionada != -1) {
-            
+
             // Obtener el ID del pedido de la primera columna
             int idPedido = (int) tblPedidos.getValueAt(filaSeleccionada, 0);
-            
+
             // Mostrar cuadro de diálogo de confirmación
-            int confirmacion = JOptionPane.showConfirmDialog(this, 
-                "¿Estás seguro de que deseas eliminar este pedido?", 
-                "Confirmar eliminación", 
-                JOptionPane.YES_NO_OPTION);
-            
+            int confirmacion = JOptionPane.showConfirmDialog(this,
+                    "¿Estás seguro de que deseas eliminar este pedido?",
+                    "Confirmar eliminación",
+                    JOptionPane.YES_NO_OPTION);
+
             if (confirmacion == JOptionPane.YES_OPTION) {
                 // Llamar al servicio para eliminar el pedido
                 this.ICP.eliminarPedido(idPedido);
@@ -350,6 +374,7 @@ public class GestorPedidosUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnActualizarPedido;
+    private javax.swing.JButton btnAddPedido;
     private javax.swing.JButton btnDatosClientes;
     private javax.swing.JButton btnDatosProductos;
     private javax.swing.JButton btnDatosProveedores;

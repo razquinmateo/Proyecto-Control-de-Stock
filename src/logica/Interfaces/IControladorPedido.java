@@ -16,6 +16,10 @@ public interface IControladorPedido {
     
     public abstract ArrayList<Pedido> listPedidos();
     public abstract String obtenerNombreVendedorPorId(int idVendedor); 
+    public abstract String obtenerNombreClientePorId(int idCliente);
     public abstract void eliminarPedido(int idPedido);
-    public abstract void actualizarPedido(int idPedido, String estado, float total, Date fechaPedido);
+    public abstract void actualizarPedido(int idPedido, String estado, float total);
+    public abstract boolean validarVendedor(int idVendedor);
+    public abstract boolean validarCliente(int idCliente); 
+    public abstract void agregarPedido(Pedido pedido);
 }

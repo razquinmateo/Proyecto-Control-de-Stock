@@ -52,6 +52,18 @@ public class ControladorPedido implements IControladorPedido {
 
         return nombreVendedor;
     }
+    
+    public String obtenerNombreClientePorId(int idCliente) {
+        String nombreCliente = "";
+
+        try {
+            nombreCliente = servicioPedidos.getNombreClienteById(idCliente);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return nombreCliente;
+    }
 
     public void eliminarPedido(int idPedido) {
         try {
@@ -61,12 +73,51 @@ public class ControladorPedido implements IControladorPedido {
         }
     }
 
-    public void actualizarPedido(int idPedido, String estado, float total, Date fechaPedido) {
+    public void actualizarPedido(int idPedido, String estado, float total) {
         try {
-            servicioPedidos.actualizarPedido(idPedido, estado, total, fechaPedido);
+            servicioPedidos.actualizarPedido(idPedido, estado, total);
         } catch (SQLException e) {
             System.err.println("Error al actualizar el pedido: " + e.getMessage());
         }
+    }
+    
+    // Valida si el vendedor existe
+    public boolean validarVendedor(int idVendedor) {
+        try {
+            return servicioPedidos.getNombreVendedorById(idVendedor) != null;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    // Valida si el cliente existe
+    public boolean validarCliente(int idCliente) {
+        try {
+            return servicioPedidos.getNombreClienteById(idCliente) != null;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    // Método para agregar un pedido
+    @Override
+    public void agregarPedido(Pedido pedido) {
+        // Validar si el vendedor existe
+        if (!validarVendedor(pedido.getIdVendedor())) {
+            System.err.println("El VendedorID no existe.");
+            return;
+        }
+
+        // Validar si el cliente existe
+        if (!validarCliente(pedido.getIdCliente())) {
+            System.err.println("El ClienteID no existe.");
+            return;
+        }
+
+        // Si ambos son válidos, se procede a agregar el pedido
+        servicioPedidos.agregarPedido(pedido);
     }
 
 }

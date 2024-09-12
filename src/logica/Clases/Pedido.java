@@ -7,37 +7,30 @@ package logica.Clases;
 import java.util.Date;
 
 public class Pedido {
-    private int idPedido;
-    private String identificador;
+    private int identificador;
     private Date fechaPedido;
     private String estado;
     private float total;
     private int idVendedor;
+    private int idCliente;
 
     // Constructor
-    public Pedido(int idPedido, String identificador, Date fechaPedido, String estado, float total, int idVendedor) {
-        this.idPedido = idPedido;
+    public Pedido(int identificador, Date fechaPedido, String estado, float total, int idVendedor, int idCliente) {
         this.identificador = identificador;
         this.fechaPedido = fechaPedido;
         this.estado = estado;
         this.total = total;
         this.idVendedor = idVendedor;
+        this.idCliente = idCliente;
     }
 
     // Getters y Setters
-    public int getIdPedido() {
-        return idPedido;
-    }
 
-    public void setIdPedido(int idPedido) {
-        this.idPedido = idPedido;
-    }
-
-    public String getIdentificador() {
+    public int getIdentificador() {
         return identificador;
     }
 
-    public void setIdentificador(String identificador) {
+    public void setIdentificador(int identificador) {
         this.identificador = identificador;
     }
 
@@ -71,6 +64,14 @@ public class Pedido {
 
     public void setIdVendedor(int idVendedor) {
         this.idVendedor = idVendedor;
+    }
+    
+    public int getIdCliente() {
+        return idCliente;
+    }
+
+    public void setIdCliente(int idCliente) {
+        this.idCliente = idCliente;
     }
 }
 
