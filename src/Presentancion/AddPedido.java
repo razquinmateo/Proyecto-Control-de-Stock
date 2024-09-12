@@ -167,7 +167,18 @@ public class AddPedido extends javax.swing.JFrame {
             return;
         }
 
-        String estado = txtEstado.getText();
+        // Valida si el estado es correcto
+        Pedido.Estado estado = null;
+        try {
+            estado = Pedido.Estado.valueOf(txtEstado.getText().toUpperCase());
+        } catch (IllegalArgumentException e) {
+            JOptionPane.showMessageDialog(this, "El estado ingresado no es válido. Use uno de los siguientes: "
+                    + java.util.Arrays.toString(Pedido.Estado.values()), "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+//        Pedido.Estado estado = Pedido.Estado.valueOf(txtEstado.getText().toUpperCase());
+        
         float total = Float.parseFloat(txtTotal.getText());
         int vendedor_id = Integer.parseInt(txtVendedorID.getText());
         int cliente_id = Integer.parseInt(txtClienteID.getText());

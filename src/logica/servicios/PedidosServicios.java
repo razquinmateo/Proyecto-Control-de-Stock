@@ -13,6 +13,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import logica.Clases.Pedido;
+import logica.Clases.Pedido.Estado;
 
 /**
  *
@@ -43,7 +44,8 @@ public class PedidosServicios {
 
                 int identificador = resultSet.getInt("Identificador");
                 Date fechaPedido = resultSet.getDate("FechaPedido");
-                String estado = resultSet.getString("Estado");
+                String estadoStr = resultSet.getString("Estado");
+                Estado estado = Estado.valueOf(estadoStr); 
                 float total = resultSet.getFloat("Total");
                 int idVendedor = resultSet.getInt("VendedorID");
                 int idCliente = resultSet.getInt("ClienteID");
@@ -128,7 +130,7 @@ public class PedidosServicios {
         try (PreparedStatement preparedStatement = conexion.prepareStatement(sql)) {
 
             preparedStatement.setDate(1, new java.sql.Date(pedido.getFechaPedido().getTime()));
-            preparedStatement.setString(2, pedido.getEstado());
+            preparedStatement.setString(2, pedido.getEstado().name());
             preparedStatement.setFloat(3, pedido.getTotal());
             preparedStatement.setInt(4, pedido.getIdVendedor());
             preparedStatement.setInt(5, pedido.getIdCliente());

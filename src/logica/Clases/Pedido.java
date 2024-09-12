@@ -7,15 +7,20 @@ package logica.Clases;
 import java.util.Date;
 
 public class Pedido {
+    
+    public enum Estado {
+        EN_PREPARACION, EN_VIAJE, ENTREGADO, CANCELADO
+    }
+    
     private int identificador;
     private Date fechaPedido;
-    private String estado;
+    private Estado estado;
     private float total;
     private int idVendedor;
     private int idCliente;
 
     // Constructor
-    public Pedido(int identificador, Date fechaPedido, String estado, float total, int idVendedor, int idCliente) {
+    public Pedido(int identificador, Date fechaPedido, Estado estado, float total, int idVendedor, int idCliente) {
         this.identificador = identificador;
         this.fechaPedido = fechaPedido;
         this.estado = estado;
@@ -42,11 +47,11 @@ public class Pedido {
         this.fechaPedido = fechaPedido;
     }
 
-    public String getEstado() {
+    public Estado getEstado() {
         return estado;
     }
 
-    public void setEstado(String estado) {
+    public void setEstado(Estado estado) {
         this.estado = estado;
     }
 

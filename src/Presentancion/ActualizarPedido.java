@@ -24,7 +24,7 @@ public class ActualizarPedido extends javax.swing.JFrame {
     // Carga los valores en los jtextfield's
     public void setPedido(Pedido pedido) {
         txtTotalPedido.setText(String.valueOf(pedido.getTotal()));
-        txtEstadoPedido.setText(pedido.getEstado());
+        txtEstadoPedido.setText(pedido.getEstado().name());
     }
 
     public void setPedidoId(int id) {
