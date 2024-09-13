@@ -143,7 +143,7 @@ public class GestorPedidosUI extends javax.swing.JFrame {
             }
         });
 
-        btnRecargarPedidos.setIcon(new javax.swing.ImageIcon("C:\\Users\\Mateo\\Downloads\\recargar (2).png")); // NOI18N
+        btnRecargarPedidos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Presentancion/Iconos/icons8-update-24.png"))); // NOI18N
         btnRecargarPedidos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRecargarPedidosActionPerformed(evt);
