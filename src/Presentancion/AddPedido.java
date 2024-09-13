@@ -4,6 +4,8 @@
  */
 package Presentancion;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -27,7 +29,21 @@ public class AddPedido extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         this.pedidosServicios = new PedidosServicios();
         this.ICP = Fabrica.getInstance().getIControladorPedido();
-    }
+    
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+            addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    //codigo que se ejecuta al cerrar la ventana
+                    manejoCiereVentana();
+                }
+            });
+        }
+
+        private void manejoCiereVentana() {
+           //cierra la ventana actual ()
+           this.dispose();
+        }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -153,7 +169,15 @@ public class AddPedido extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCancelarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarPedidoActionPerformed
-        this.dispose();
+        int confirmar = JOptionPane.showConfirmDialog(this, 
+        "¿Estás seguro de que deseas cancelar? Los cambios no guardados se perderán.", 
+        "Confirmar Cancelación", 
+        JOptionPane.YES_NO_OPTION);
+
+        if(confirmar == JOptionPane.YES_OPTION) {
+            //cerramos la ventana actual
+            this.dispose();
+        }
     }//GEN-LAST:event_btnCancelarPedidoActionPerformed
 
     private void btnAñadirPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAñadirPedidoActionPerformed

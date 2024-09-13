@@ -20,6 +20,7 @@ public class ConexionDB {
     private final String user= "avnadmin";
     private final String pass= "AVNS_wpZDdlQKDD2J4VPnf-b";
    
+    
     //Para hacer ConexionDB singleton descomentar
     //private static Connection conexion=null;
     private Connection conexion=null;
@@ -63,10 +64,9 @@ public class ConexionDB {
            
         if (conexion == null) {
             try {
-//                Driver driver = new com.mysql.jdbc.Driver();
-//                DriverManager.registerDriver(driver);
-//                conexion = DriverManager.getConnection("jdbc:mysql://"+host+":"+port+"/"+db, user, pass);
-                  conexion = DriverManager.getConnection("jdbc:mysql://"+host+":"+port+"/"+db+"?useSSL=false&serverTimezone=UTC", user, pass);
+                Driver driver = new com.mysql.jdbc.Driver();
+                DriverManager.registerDriver(driver);
+                conexion = DriverManager.getConnection("jdbc:mysql://"+host+":"+port+"/"+db, user, pass);
             } catch (SQLException ex) {
                 ex.printStackTrace();
                 Logger.getLogger(ConexionDB.class.getName()).log(Level.SEVERE, null, ex);

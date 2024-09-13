@@ -4,10 +4,10 @@
  */
 package Presentancion;
 
-import java.util.Date;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
 import logica.Clases.Pedido;
-import logica.Controladores.ControladorPedido;
 import logica.Fabrica;
 import logica.Interfaces.IControladorPedido;
 import logica.servicios.PedidosServicios;
@@ -24,7 +24,21 @@ public class ActualizarPedido extends javax.swing.JFrame {
         this.pedidosServicios = new PedidosServicios();
         this.ICP = Fabrica.getInstance().getIControladorPedido();
         this.setLocationRelativeTo(null);
-    }
+    
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+            addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    //codigo que se ejecuta al cerrar la ventana
+                    manejoCiereVentana();
+                }
+            });
+        }
+
+        private void manejoCiereVentana() {
+           //cierra la ventana actual ()
+           this.dispose();
+        }
 
     // Carga los valores en los jtextfield's
     public void setPedido(Pedido pedido) {
@@ -127,7 +141,15 @@ public class ActualizarPedido extends javax.swing.JFrame {
 
     // Boton eliminar pedido
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        this.dispose();
+        int confirmar = JOptionPane.showConfirmDialog(this, 
+        "¿Estás seguro de que deseas cancelar? Los cambios no guardados se perderán.", 
+        "Confirmar Cancelación", 
+        JOptionPane.YES_NO_OPTION);
+
+        if(confirmar == JOptionPane.YES_OPTION) {
+            //cerramos la ventana actual
+            this.dispose();
+        }
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     // Boton actualizar pedido
