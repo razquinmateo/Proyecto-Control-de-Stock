@@ -5,13 +5,9 @@
 package logica.servicios;
 
 import Persistencia.ConexionDB;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.List;
 import logica.Clases.Pedido;
 import logica.Clases.Pedido.Estado;
 
@@ -22,14 +18,13 @@ import logica.Clases.Pedido.Estado;
 public class PedidosServicios {
 
     private Connection conexion = new ConexionDB().getConexion();
-
-    //Obtiene todos los datos de los pedidos y los devuelve en un ArrayList
+    private DetallePedidoServicios detallePedidoServicios = new DetallePedidoServicios();
+    
+    //obtiene todos los datos de los pedidos y los devuelve en un ArrayList
     public ArrayList<Pedido> getPedidos() {
-
         ArrayList<Pedido> pedidos = new ArrayList<>();
 
         try {
-
             String sql = "SELECT p.Identificador, p.FechaPedido, p.Estado, p.Total, "
                     + "p.VendedorID, p.ClienteID, c.Nom_Empresa as nombre_cliente, "
                     + "v.Nombre as nombre_vendedor, v.Cedula as cedula_vendedor, v.Telefono as telefono_vendedor "
@@ -41,103 +36,137 @@ public class PedidosServicios {
             ResultSet resultSet = statement.executeQuery(sql);
 
             while (resultSet.next()) {
-
                 int identificador = resultSet.getInt("Identificador");
                 Date fechaPedido = resultSet.getDate("FechaPedido");
                 String estadoStr = resultSet.getString("Estado");
-                Estado estado = Estado.valueOf(estadoStr); 
+                Estado estado = Estado.valueOf(estadoStr);
                 float total = resultSet.getFloat("Total");
                 int idVendedor = resultSet.getInt("VendedorID");
                 int idCliente = resultSet.getInt("ClienteID");
-                String nombreVendedor = resultSet.getString("nombre_vendedor");
-                String nombreCliente = resultSet.getString("nombre_cliente");
 
                 Pedido pedido = new Pedido(identificador, fechaPedido, estado, total, idVendedor, idCliente);
                 pedidos.add(pedido);
-
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return pedidos;
     }
 
-    //Obtiene el nombre de la tabla vendedor con el id del pedido, para mostrar el nombre del vendedor en lugar del id
-    public String getNombreVendedorById(int idVendedor) throws SQLException {
-
+    //obtiene el nombre de la tabla vendedor con el id del pedido, para mostrar el nombre del vendedor en lugar del id
+    public String getNombreVendedorPorId(int idVendedor) throws SQLException {
         String sql = "SELECT nombre FROM vendedor WHERE id = ?";
-        PreparedStatement preparedStatement = conexion.prepareStatement(sql);
-        preparedStatement.setInt(1, idVendedor);
+        PreparedStatement ps = conexion.prepareStatement(sql);
+        ps.setInt(1, idVendedor);
 
-        ResultSet resultSet = preparedStatement.executeQuery();
+        ResultSet resultSet = ps.executeQuery();
 
         if (resultSet.next()) {
             return resultSet.getString("nombre");
         }
-
         return null;
     }
 
-    public String getNombreClienteById(int idCliente) throws SQLException {
+    public String getNombreClientePorId(int idCliente) throws SQLException {
         String sql = "SELECT Nom_Empresa FROM cliente WHERE ID = ?";
-        PreparedStatement preparedStatement = conexion.prepareStatement(sql);
-        preparedStatement.setInt(1, idCliente);
+        PreparedStatement ps = conexion.prepareStatement(sql);
+        ps.setInt(1, idCliente);
 
-        ResultSet resultSet = preparedStatement.executeQuery();
+        ResultSet resultSet = ps.executeQuery();
 
         if (resultSet.next()) {
             return resultSet.getString("Nom_Empresa");
         }
-
-        return null; // Si no se encuentra el cliente
+        return null;
     }
 
-    public void eliminarPedido(int idPedido) {
-        String sql = "DELETE FROM pedido WHERE Identificador = ?";
-
-        try (PreparedStatement preparedStatement = conexion.prepareStatement(sql)) {
-
-            preparedStatement.setInt(1, idPedido);
-            preparedStatement.executeUpdate();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+    public boolean eliminarPedido(int idPedido) {
+        boolean resultado = detallePedidoServicios.eliminarDetallesPedido(idPedido);
+        if (resultado) {
+            String sql = "DELETE FROM pedido WHERE Identificador = ?";
+            try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+                ps.setInt(1, idPedido);
+                int rowsAffected = ps.executeUpdate();
+                return rowsAffected > 0;
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return false;
+            }
         }
+        return false;
     }
 
-    public void actualizarPedido(int idPedido, Estado estado, float total) throws SQLException {
+    public boolean actualizarPedido(int idPedido, Estado estado, float total) {
         String sql = "UPDATE pedido SET estado = ?, total = ? WHERE Identificador = ?";
-
-        try (PreparedStatement preparedStatement = conexion.prepareStatement(sql)) {
-
-            preparedStatement.setString(1, estado.name());
-            preparedStatement.setFloat(2, total);
-            preparedStatement.setInt(3, idPedido);
-            preparedStatement.executeUpdate();
-
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setString(1, estado.name());
+            ps.setFloat(2, total);
+            ps.setInt(3, idPedido);
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new SQLException("Error al actualizar el pedido.");
+            return false;
         }
     }
 
-    public void agregarPedido(Pedido pedido) {
- 
-        String sql = "INSERT INTO pedido (FechaPedido, Estado, Total, VendedorID, ClienteID) VALUES (?, ?, ?, ?, ?)";
+    public boolean agregarPedido(Pedido pedido) {
+        String sqlPedido = "INSERT INTO pedido (FechaPedido, Estado, Total, VendedorID, ClienteID) VALUES (?, ?, ?, ?, ?)";
+        try (PreparedStatement stmtPedido = conexion.prepareStatement(sqlPedido, Statement.RETURN_GENERATED_KEYS)) {
+            stmtPedido.setTimestamp(1, new java.sql.Timestamp(pedido.getFechaPedido().getTime()));
+            stmtPedido.setString(2, pedido.getEstado().name());
+            stmtPedido.setFloat(3, pedido.getTotal());
+            stmtPedido.setInt(4, pedido.getIdVendedor());
+            stmtPedido.setInt(5, pedido.getIdCliente());
+            int rowsAffected = stmtPedido.executeUpdate();
 
-        try (PreparedStatement preparedStatement = conexion.prepareStatement(sql)) {
-
-            preparedStatement.setDate(1, new java.sql.Date(pedido.getFechaPedido().getTime()));
-            preparedStatement.setString(2, pedido.getEstado().name());
-            preparedStatement.setFloat(3, pedido.getTotal());
-            preparedStatement.setInt(4, pedido.getIdVendedor());
-            preparedStatement.setInt(5, pedido.getIdCliente());
-            preparedStatement.executeUpdate();
-
+            if (rowsAffected > 0) {
+                ResultSet generatedKeys = stmtPedido.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    int pedidoID = generatedKeys.getInt(1);
+                    pedido.setIdentificador(pedidoID);
+                    
+                    //inserta los detalles del pedido asociados
+                    return detallePedidoServicios.agregarDetallePedido(pedidoID, pedido.getDetallesPedidos());
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return false;
     }
+    
+    
+    public List<String> obtenerNombresVendedores() {
+        List<String> nombres = new ArrayList<>();
+        try{
+            String sql = "SELECT nombre FROM vendedor";
+            PreparedStatement ps = conexion.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+           while (rs.next()) {
+               nombres.add(rs.getString("nombre"));
+           }
+       } catch (SQLException e) {
+           e.printStackTrace();
+       }
+       return nombres;
+    }
+
+    public List<String> obtenerNombresClientes() {
+        List<String> nombres = new ArrayList<>();
+        try{
+            String sql = "SELECT nom_empresa FROM cliente";
+            PreparedStatement ps = conexion.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+           while (rs.next()) {
+            nombres.add(rs.getString("nom_empresa"));
+        }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return nombres;
+    }
+
 }

@@ -53,4 +53,19 @@ public class ControladorProducto implements IControladorProducto {
     public Producto buscarProducto(int id) {
         return productoServicios.buscarProducto(id);
     }
+    
+    @Override
+    public ArrayList<String> obtenerNombresProductos(){
+        return productoServicios.obtenerNombresProductos();
+    }
+    
+    @Override
+    public ArrayList<Float> obtenerPreciosProductos(){
+        return productoServicios.obtenerPreciosProductos();
+    }
+    
+    @Override
+    public Producto buscarProductoPorNombre(String nombreProducto){
+        return productoServicios.buscarProductoPorNombre(nombreProducto);
+    }
 }

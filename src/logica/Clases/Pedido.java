@@ -4,6 +4,7 @@
  */
 package logica.Clases;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Pedido {
@@ -18,18 +19,17 @@ public class Pedido {
     private float total;
     private int idVendedor;
     private int idCliente;
+    private ArrayList<DetallePedido> detallesPedidos;
 
-    // Constructor
     public Pedido(int identificador, Date fechaPedido, Estado estado, float total, int idVendedor, int idCliente) {
         this.identificador = identificador;
         this.fechaPedido = fechaPedido;
         this.estado = estado;
-        this.total = total;
+        this.total = 0.0f;  //lo calculamos a partir de los detallesPedido
         this.idVendedor = idVendedor;
         this.idCliente = idCliente;
+        this.detallesPedidos = new ArrayList<>();
     }
-
-    // Getters y Setters
 
     public int getIdentificador() {
         return identificador;
@@ -77,6 +77,27 @@ public class Pedido {
 
     public void setIdCliente(int idCliente) {
         this.idCliente = idCliente;
+    }
+    
+    public void agregarDetalle(DetallePedido detalle) {
+        detallesPedidos.add(detalle);
+        recalcularTotal();
+    }
+
+    public void eliminarDetalle(DetallePedido detalle) {
+        detallesPedidos.remove(detalle);
+        recalcularTotal();
+    }
+
+    private void recalcularTotal() {
+        total = 0;
+        for (DetallePedido detalle : detallesPedidos) {
+            total += detalle.subTotal();
+        }
+    }
+
+    public ArrayList<DetallePedido> getDetallesPedidos() {
+        return detallesPedidos;
     }
 }
 

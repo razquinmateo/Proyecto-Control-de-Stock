@@ -6,7 +6,7 @@ package logica.Controladores;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import logica.Clases.Pedido;
 import logica.Clases.Pedido.Estado;
@@ -35,18 +35,20 @@ public class ControladorPedido implements IControladorPedido {
         return instancia;
     }
 
+    @Override
     //Devuelve todos los pedidos
-    public ArrayList<Pedido> listPedidos() {
+    public ArrayList<Pedido> getPedidos() {
         ArrayList<Pedido> pedidos = servicioPedidos.getPedidos();
         return pedidos;
     }
 
+    @Override
     //Devuelve el nombre del vendedor
     public String obtenerNombreVendedorPorId(int idVendedor) {
         String nombreVendedor = "";
 
         try {
-            nombreVendedor = servicioPedidos.getNombreVendedorById(idVendedor);
+            nombreVendedor = servicioPedidos.getNombreVendedorPorId(idVendedor);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -54,11 +56,12 @@ public class ControladorPedido implements IControladorPedido {
         return nombreVendedor;
     }
     
+    @Override
     public String obtenerNombreClientePorId(int idCliente) {
         String nombreCliente = "";
 
         try {
-            nombreCliente = servicioPedidos.getNombreClienteById(idCliente);
+            nombreCliente = servicioPedidos.getNombreClientePorId(idCliente);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -66,36 +69,32 @@ public class ControladorPedido implements IControladorPedido {
         return nombreCliente;
     }
 
-    public void eliminarPedido(int idPedido) {
-        try {
-            servicioPedidos.eliminarPedido(idPedido);
-        } catch (Exception e) {
-            System.err.println("Ocurrió un error al eliminar el pedido: " + e.getMessage());
-        }
+    @Override
+    public boolean eliminarPedido(int idPedido) {
+        return servicioPedidos.eliminarPedido(idPedido);
     }
 
-    public void actualizarPedido(int idPedido, Estado estado, float total) {
-        try {
-            servicioPedidos.actualizarPedido(idPedido, estado, total);
-        } catch (SQLException e) {
-            System.err.println("Error al actualizar el pedido: " + e.getMessage());
-        }
+    @Override
+    public boolean actualizarPedido(int idPedido, Estado estado, float total) {
+        return servicioPedidos.actualizarPedido(idPedido, estado, total);
     }
     
+    @Override
     // Valida si el vendedor existe
     public boolean validarVendedor(int idVendedor) {
         try {
-            return servicioPedidos.getNombreVendedorById(idVendedor) != null;
+            return servicioPedidos.getNombreVendedorPorId(idVendedor) != null;
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
     }
 
+    @Override
     // Valida si el cliente existe
     public boolean validarCliente(int idCliente) {
         try {
-            return servicioPedidos.getNombreClienteById(idCliente) != null;
+            return servicioPedidos.getNombreClientePorId(idCliente) != null;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -104,21 +103,32 @@ public class ControladorPedido implements IControladorPedido {
     
     // Método para agregar un pedido
     @Override
-    public void agregarPedido(Pedido pedido) {
+    public boolean agregarPedido(Pedido pedido) {
         // Validar si el vendedor existe
         if (!validarVendedor(pedido.getIdVendedor())) {
             System.err.println("El VendedorID no existe.");
-            return;
+            return false;
         }
 
         // Validar si el cliente existe
         if (!validarCliente(pedido.getIdCliente())) {
             System.err.println("El ClienteID no existe.");
-            return;
+            return false;
         }
 
         // Si ambos son válidos, se procede a agregar el pedido
-        servicioPedidos.agregarPedido(pedido);
+        boolean exito = servicioPedidos.agregarPedido(pedido);
+        return exito;
+    }
+    
+    @Override
+    public List<String> obtenerNombresVendedores() {
+        return servicioPedidos.obtenerNombresVendedores();
+    }
+
+    @Override
+    public List<String> obtenerNombresClientes() {
+        return servicioPedidos.obtenerNombresVendedores();
     }
 
 }

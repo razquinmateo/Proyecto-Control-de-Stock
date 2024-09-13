@@ -121,4 +121,62 @@ public class ProductoServicios {
         return categoriaServicios.buscarCategoria(id);
     }
     
+    //auxiliar para obtener los nombres de los productos
+    public ArrayList<String> obtenerNombresProductos() {
+        ArrayList<String> nombres = new ArrayList<>();
+        try {
+            String sql = "SELECT nombre FROM producto";
+            PreparedStatement ps = conexion.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                nombres.add(rs.getString("nombre"));
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return nombres;
+    }
+    
+    //auxiliar para obtener los precios de los productos
+    public ArrayList<Float> obtenerPreciosProductos() {
+        ArrayList<Float> precios = new ArrayList<>();
+        try {
+            String sql = "SELECT precioVenta FROM producto";
+            PreparedStatement ps = conexion.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                precios.add(rs.getFloat("precioVenta"));
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return precios;
+    }
+    
+    //auxiliar para buscar producto por nombre
+    public Producto buscarProductoPorNombre(String nombreProducto) {
+        Producto producto = null;
+        try {
+            String sql = "SELECT * FROM producto WHERE nombre = ?";
+            PreparedStatement ps = conexion.prepareStatement(sql);
+            ps.setString(1, nombreProducto);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                producto = new Producto();
+                producto.setId(rs.getInt("id"));
+                producto.setNombre(rs.getString("nombre"));
+                producto.setDescripcion(rs.getString("descripcion"));
+                producto.setSKU(rs.getString("SKU"));
+                producto.setStock(rs.getInt("stock"));
+                producto.setPrecioVenta(rs.getFloat("precioVenta"));
+                producto.setCategoria(buscarCategoriaPorId(rs.getInt("CategoriaID")));
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return producto;
+}
 }

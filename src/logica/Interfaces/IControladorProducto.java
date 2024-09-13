@@ -17,4 +17,7 @@ public interface IControladorProducto {
     public abstract boolean eliminarProducto(int id);
     public abstract ArrayList<Producto> listarProductos();
     public abstract Producto buscarProducto(int id);
+    public abstract ArrayList<String> obtenerNombresProductos();
+    public abstract ArrayList<Float> obtenerPreciosProductos();
+    public abstract Producto buscarProductoPorNombre(String nombreProducto);
 }
