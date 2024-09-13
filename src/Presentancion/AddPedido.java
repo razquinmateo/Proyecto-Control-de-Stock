@@ -176,8 +176,6 @@ public class AddPedido extends javax.swing.JFrame {
                     + java.util.Arrays.toString(Pedido.Estado.values()), "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-
-//        Pedido.Estado estado = Pedido.Estado.valueOf(txtEstado.getText().toUpperCase());
         
         float total = Float.parseFloat(txtTotal.getText());
         int vendedor_id = Integer.parseInt(txtVendedorID.getText());

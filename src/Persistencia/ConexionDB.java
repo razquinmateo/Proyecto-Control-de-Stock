@@ -14,11 +14,11 @@ import javax.swing.JOptionPane;
 
 
 public class ConexionDB {
-    private final String host= "localhost";
-    private final String port= "3306";
-    private final String db= "control_stock";
-    private final String user= "root";
-    private final String pass= "";
+    private final String host= "prog-aplicaiones-prog-aplicaciones.e.aivencloud.com";
+    private final String port= "24060";
+    private final String db= "progAplic";
+    private final String user= "avnadmin";
+    private final String pass= "AVNS_wpZDdlQKDD2J4VPnf-b";
    
     //Para hacer ConexionDB singleton descomentar
     //private static Connection conexion=null;
@@ -63,9 +63,10 @@ public class ConexionDB {
            
         if (conexion == null) {
             try {
-                Driver driver = new com.mysql.jdbc.Driver();
-                DriverManager.registerDriver(driver);
-                conexion = DriverManager.getConnection("jdbc:mysql://"+host+":"+port+"/"+db, user, pass);
+//                Driver driver = new com.mysql.jdbc.Driver();
+//                DriverManager.registerDriver(driver);
+//                conexion = DriverManager.getConnection("jdbc:mysql://"+host+":"+port+"/"+db, user, pass);
+                  conexion = DriverManager.getConnection("jdbc:mysql://"+host+":"+port+"/"+db+"?useSSL=false&serverTimezone=UTC", user, pass);
             } catch (SQLException ex) {
                 ex.printStackTrace();
                 Logger.getLogger(ConexionDB.class.getName()).log(Level.SEVERE, null, ex);

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 import logica.Clases.Pedido;
+import logica.Clases.Pedido.Estado;
 import logica.Interfaces.IControladorPedido;
 import logica.servicios.PedidosServicios;
 
@@ -73,7 +74,7 @@ public class ControladorPedido implements IControladorPedido {
         }
     }
 
-    public void actualizarPedido(int idPedido, String estado, float total) {
+    public void actualizarPedido(int idPedido, Estado estado, float total) {
         try {
             servicioPedidos.actualizarPedido(idPedido, estado, total);
         } catch (SQLException e) {

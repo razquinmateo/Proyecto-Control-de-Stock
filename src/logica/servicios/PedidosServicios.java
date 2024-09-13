@@ -107,14 +107,14 @@ public class PedidosServicios {
         }
     }
 
-    public void actualizarPedido(int idPedido, String estado, float total) throws SQLException {
+    public void actualizarPedido(int idPedido, Estado estado, float total) throws SQLException {
         String sql = "UPDATE pedido SET estado = ?, total = ? WHERE Identificador = ?";
 
         try (PreparedStatement preparedStatement = conexion.prepareStatement(sql)) {
 
-            preparedStatement.setInt(1, idPedido);
-            preparedStatement.setString(2, estado);
-            preparedStatement.setFloat(3, total);
+            preparedStatement.setString(1, estado.name());
+            preparedStatement.setFloat(2, total);
+            preparedStatement.setInt(3, idPedido);
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {

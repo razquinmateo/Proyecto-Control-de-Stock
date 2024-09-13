@@ -8,16 +8,21 @@ import java.util.Date;
 import javax.swing.JOptionPane;
 import logica.Clases.Pedido;
 import logica.Controladores.ControladorPedido;
+import logica.Fabrica;
+import logica.Interfaces.IControladorPedido;
 import logica.servicios.PedidosServicios;
 
 public class ActualizarPedido extends javax.swing.JFrame {
 
     private PedidosServicios pedidosServicios;
+    private IControladorPedido ICP;
     private int pedidoId;
 
     public ActualizarPedido() {
         initComponents();
         this.setTitle("Gestion de Pedidos");
+        this.pedidosServicios = new PedidosServicios();
+        this.ICP = Fabrica.getInstance().getIControladorPedido();
         this.setLocationRelativeTo(null);
     }
 
@@ -126,12 +131,25 @@ public class ActualizarPedido extends javax.swing.JFrame {
     // Boton actualizar pedido
     private void btnActualizarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarPedidoActionPerformed
         try {
-            String estado = txtEstadoPedido.getText();
+//            String estado = txtEstadoPedido.getText();
+            String estadoIngresado = txtEstadoPedido.getText().toUpperCase();
             float total = Float.parseFloat(txtTotalPedido.getText());
 
-            // Llamamos al controlador para actualizar el pedido
-            ControladorPedido controlador = ControladorPedido.getInstance();
-            controlador.actualizarPedido(pedidoId, estado, total);
+            Pedido.Estado estado;
+            try {
+                // Validar si el estado ingresado corresponde a un valor del enum
+                estado = Pedido.Estado.valueOf(estadoIngresado);
+            } catch (IllegalArgumentException e) {
+                // Mostrar mensaje de error si el estado no es válido
+                JOptionPane.showMessageDialog(this,
+                        "El estado ingresado no es válido. Use uno de los siguientes: "
+                        + java.util.Arrays.toString(Pedido.Estado.values()),
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return; 
+            }
+
+            ICP.actualizarPedido(pedidoId, estado, total);
 
             // Mensaje de éxito
             JOptionPane.showMessageDialog(this, "Pedido actualizado correctamente");
