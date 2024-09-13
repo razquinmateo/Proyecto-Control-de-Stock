@@ -20,6 +20,7 @@ public class ConexionDB {
     private final String user= "avnadmin";
     private final String pass= "AVNS_wpZDdlQKDD2J4VPnf-b";
    
+    
     //Para hacer ConexionDB singleton descomentar
     //private static Connection conexion=null;
     private Connection conexion=null;

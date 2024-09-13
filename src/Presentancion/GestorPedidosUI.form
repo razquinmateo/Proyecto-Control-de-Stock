@@ -29,12 +29,32 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
+<<<<<<< HEAD
               <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Component id="btnDatosVendedores" max="32767" attributes="0"/>
                   <Component id="btnDatosClientes" alignment="0" max="32767" attributes="0"/>
                   <Component id="btnDatosProveedores" alignment="0" max="32767" attributes="0"/>
                   <Component id="btnDatosProductos" alignment="0" max="32767" attributes="0"/>
+=======
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <EmptySpace min="-2" pref="398" max="-2" attributes="0"/>
+                      <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="49" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="btnDatosVendedores" max="32767" attributes="0"/>
+                          <Component id="btnDatosClientes" alignment="0" max="32767" attributes="0"/>
+                          <Component id="btnDatosProveedores" alignment="0" max="32767" attributes="0"/>
+                          <Component id="btnDatosProductos" alignment="0" max="32767" attributes="0"/>
+                      </Group>
+                      <EmptySpace pref="57" max="32767" attributes="0"/>
+                      <Component id="jScrollPane1" min="-2" pref="562" max="-2" attributes="0"/>
+                  </Group>
+>>>>>>> 585213d043c78783933f0a74d8b06e8ac9c2bfa8
               </Group>
               <EmptySpace pref="45" max="32767" attributes="0"/>
               <Component id="jScrollPane1" min="-2" pref="562" max="-2" attributes="0"/>
@@ -62,6 +82,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
+<<<<<<< HEAD
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jLabel2" pref="50" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
@@ -69,6 +90,9 @@
                       <Component id="btnRecargarPedidos" min="-2" pref="35" max="-2" attributes="0"/>
                   </Group>
               </Group>
+=======
+              <Component id="jLabel2" pref="44" max="32767" attributes="0"/>
+>>>>>>> 585213d043c78783933f0a74d8b06e8ac9c2bfa8
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jScrollPane1" min="-2" pref="329" max="-2" attributes="0"/>

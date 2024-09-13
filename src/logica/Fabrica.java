@@ -9,6 +9,8 @@ import logica.Controladores.ControladorUsuario;
 import logica.Interfaces.IControladorUsuario;
 import logica.Controladores.ControladorPedido;
 import logica.Interfaces.IControladorPedido;
+import logica.Controladores.ControladorVendedor;
+import logica.Interfaces.IControladorVendedor;
 
 /**
  *
@@ -17,7 +19,10 @@ import logica.Interfaces.IControladorPedido;
 public class Fabrica {
 
     private static Fabrica instancia;
-
+    
+    private Fabrica() {
+    }
+    
     public static Fabrica getInstance() {
         if (instancia == null) {
             instancia = new Fabrica();
@@ -34,8 +39,9 @@ public class Fabrica {
         IControladorPedido ControladorP = ControladorPedido.getInstance();
         return ControladorP; 
     }
-
-    private Fabrica() {
+     
+    public IControladorVendedor getIControladorVendedor() {
+        return ControladorVendedor.getInstance();
     }
 
 }
