@@ -79,19 +79,19 @@ public class ClienteServicios {
 }
     
     public boolean eliminarCliente(int rut) {
-    String sql = "DELETE FROM cliente WHERE num_rut = ?";
-    
-    try {
-        PreparedStatement stmt = conexion.prepareStatement(sql);
-        stmt.setInt(1, rut);
-        
-        int filasAfectadas = stmt.executeUpdate();
-        return filasAfectadas > 0;
-    } catch (SQLException ex) {
-        ex.printStackTrace();
-        return false;
+        String sql = "DELETE FROM cliente WHERE num_rut = ?";
+
+        try {
+            PreparedStatement stmt = conexion.prepareStatement(sql);
+            stmt.setInt(1, rut);
+
+            int filasAfectadas = stmt.executeUpdate();
+            return filasAfectadas > 0;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        }
     }
-}
 
 // Método para obtener un cliente por su RUT
     public Cliente getClientePorRut(int rut) {

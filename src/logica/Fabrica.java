@@ -11,6 +11,12 @@ import logica.Interfaces.IControladorUsuario;
 import logica.Controladores.ControladorVendedor;
 import logica.Interfaces.IControladorVendedor;
 
+import logica.Controladores.ControladorProducto;
+import logica.Interfaces.IControladorProducto;
+
+import logica.Controladores.ControladorCategoria;
+import logica.Interfaces.IControladorCategoria;
+
 /**
  *
  * @author Santiago.S
@@ -29,13 +35,23 @@ public class Fabrica {
         return instancia;
     }
     
-     public IControladorUsuario getIControladorUsuario() {
+    public IControladorUsuario getIControladorUsuario() {
         IControladorUsuario ControladorU = ControladorUsuario.getInstance();
-        return ControladorU; //To change body of generated methods, choose Tools | Templates.
+        return ControladorU;
     }
      
-     public IControladorVendedor getIControladorVendedor() {
-        return ControladorVendedor.getInstance();
+    public IControladorVendedor getIControladorVendedor() {
+        IControladorVendedor ControladorV = ControladorVendedor.getInstance();
+        return ControladorV;
     }
     
+    public IControladorProducto getIControladorProducto() {
+        IControladorProducto ControladorP = ControladorProducto.getInstance();
+        return ControladorP;
+    }
+
+    public IControladorCategoria getIControladorCategoria() {
+        IControladorCategoria ControladorC = ControladorCategoria.getInstance();
+        return ControladorC;
+    }
 }

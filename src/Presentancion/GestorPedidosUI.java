@@ -1,7 +1,10 @@
 package Presentancion;
 
+import Presentancion.Productos.datosProductos;
+import Presentancion.Categoria.datosCategorias;
+import Presentancion.Vendedores.datosVendedores;
+import Presentancion.Clientes.ClientesPrincipal;
 import logica.Fabrica;
-import javax.swing.JFrame;
 import logica.Interfaces.IControladorUsuario;
 
 /*
@@ -14,13 +17,10 @@ import logica.Interfaces.IControladorUsuario;
  * @author LucasCiceri
  */
 public class GestorPedidosUI extends javax.swing.JFrame {
-
-    private IControladorUsuario ICU;
     
 
     public GestorPedidosUI() {
         initComponents();
-        this.ICU = Fabrica.getInstance().getIControladorUsuario();
         this.setTitle("Gestion de Pedidos");
         this.setLocationRelativeTo(null); // Centra la ventana
     }
@@ -42,6 +42,7 @@ public class GestorPedidosUI extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         btnDatosProductos = new javax.swing.JButton();
         btnRecargarPedidos = new javax.swing.JButton();
+        btnDatosCategoria = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -106,6 +107,14 @@ public class GestorPedidosUI extends javax.swing.JFrame {
                 btnRecargarPedidosActionPerformed(evt);
             }
         });
+
+        btnDatosCategoria.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnDatosCategoria.setText("Categorias");
+        btnDatosCategoria.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDatosCategoriaActionPerformed(evt);
+            }
+        });
         setJMenuBar(menuBar);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -124,7 +133,8 @@ public class GestorPedidosUI extends javax.swing.JFrame {
                             .addComponent(btnDatosVendedores, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnDatosClientes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnDatosProveedores, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnDatosProductos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(btnDatosProductos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnDatosCategoria, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 562, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
@@ -148,7 +158,9 @@ public class GestorPedidosUI extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(btnDatosProveedores, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(btnDatosProductos, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnDatosProductos, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnDatosCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnRecargarPedidos, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(13, 13, 13))
@@ -170,7 +182,7 @@ public class GestorPedidosUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btnDatosClientesActionPerformed
 
     private void btnDatosVendedoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDatosVendedoresActionPerformed
-        //crea una nueva instancia de la ventana aniadirVendedor
+        //crea una nueva instancia de la ventana datosVendedores
         datosVendedores ventanaDatosVendedor = new datosVendedores();
     
         //hace que la ventana sea visible
@@ -178,12 +190,24 @@ public class GestorPedidosUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btnDatosVendedoresActionPerformed
 
     private void btnDatosProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDatosProductosActionPerformed
-        // TODO add your handling code here:
+        //crea una nueva instancia de la ventana datosProductos
+        datosProductos ventanaDatosProductos = new datosProductos();
+    
+        //hace que la ventana sea visible
+        ventanaDatosProductos.setVisible(true);
     }//GEN-LAST:event_btnDatosProductosActionPerformed
 
     private void btnRecargarPedidosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRecargarPedidosActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnRecargarPedidosActionPerformed
+
+    private void btnDatosCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDatosCategoriaActionPerformed
+        //crea una nueva instancia de la ventana datosCategorias
+        datosCategorias ventanaDatosCategoria = new datosCategorias();
+    
+        //hace que la ventana sea visible
+        ventanaDatosCategoria.setVisible(true);
+    }//GEN-LAST:event_btnDatosCategoriaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -223,6 +247,7 @@ public class GestorPedidosUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnDatosCategoria;
     private javax.swing.JButton btnDatosClientes;
     private javax.swing.JButton btnDatosProductos;
     private javax.swing.JButton btnDatosProveedores;
