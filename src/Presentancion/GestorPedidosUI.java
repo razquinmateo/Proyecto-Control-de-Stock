@@ -1,10 +1,20 @@
 package Presentancion;
 
+import logica.Fabrica;
+
+
 import Presentancion.Productos.datosProductos;
 import Presentancion.Categoria.datosCategorias;
 import Presentancion.Vendedores.datosVendedores;
 import Presentancion.Clientes.ClientesPrincipal;
-import logica.Fabrica;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import logica.Clases.Pedido;
+import logica.Controladores.ControladorPedido;
+import logica.Interfaces.IControladorPedido;
 import logica.Interfaces.IControladorUsuario;
 
 /*
@@ -18,11 +28,55 @@ import logica.Interfaces.IControladorUsuario;
  */
 public class GestorPedidosUI extends javax.swing.JFrame {
     
+    private IControladorUsuario ICU;
+    private IControladorPedido ICP;
+    private ActualizarPedido actualizarPedido = new ActualizarPedido();
+    private AddPedido agregarPedido = new AddPedido();
 
     public GestorPedidosUI() {
         initComponents();
+        this.ICU = Fabrica.getInstance().getIControladorUsuario();
+        this.ICP = Fabrica.getInstance().getIControladorPedido();
         this.setTitle("Gestion de Pedidos");
         this.setLocationRelativeTo(null); // Centra la ventana
+        this.cargarDatosDePedidos();
+    }
+    
+    private void cargarDatosDePedidos() {
+
+        ArrayList<Pedido> pedidosDeBaseDeDatos = this.ICP.listPedidos();
+        DefaultTableModel modelo = (DefaultTableModel) this.tblPedidos.getModel();
+
+        // Crear un renderizador que centre el contenido
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+
+        // Centra la primera columna
+        tblPedidos.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+
+        for (Pedido pedido : pedidosDeBaseDeDatos) {
+            String nombreVendedor = ICP.obtenerNombreVendedorPorId(pedido.getIdVendedor());
+            String nombreCliente = ICP.obtenerNombreClientePorId(pedido.getIdCliente());
+            Object[] nuevaRow = {
+                pedido.getIdentificador(),
+                pedido.getFechaPedido(),
+                pedido.getEstado(),
+                nombreVendedor,
+                nombreCliente
+            };
+            modelo.addRow(nuevaRow);
+
+        }
+    }
+    
+    private void limpiarTablaUsuarios() {
+        DefaultTableModel modelo = (DefaultTableModel) this.tblPedidos.getModel();
+        modelo.setRowCount(0);
+    }
+
+    public void recargarDatosDelPedido() {
+        limpiarTablaUsuarios();
+        cargarDatosDePedidos();
     }
 
     /**
@@ -35,19 +89,23 @@ public class GestorPedidosUI extends javax.swing.JFrame {
     private void initComponents() {
 
         btnDatosProveedores = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tblListarPedidos = new javax.swing.JTable();
         btnDatosClientes = new javax.swing.JButton();
         btnDatosVendedores = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         btnDatosProductos = new javax.swing.JButton();
-        btnRecargarPedidos = new javax.swing.JButton();
         btnDatosCategoria = new javax.swing.JButton();
+        btnRecargarPedidos1 = new javax.swing.JButton();
+        btnAddPedido = new javax.swing.JButton();
+        btnActualizarPedido = new javax.swing.JButton();
+        btnEliminarPedido = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblPedidos = new javax.swing.JTable();
         menuBar = new javax.swing.JMenuBar();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         btnDatosProveedores.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnDatosProveedores.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Presentancion/Iconos/icons8-supply-32.png"))); // NOI18N
         btnDatosProveedores.setText("Proveedores");
         btnDatosProveedores.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -55,25 +113,8 @@ public class GestorPedidosUI extends javax.swing.JFrame {
             }
         });
 
-        tblListarPedidos.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Fecha", "Estado", "Vendedor"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.Object.class, java.lang.String.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
-        jScrollPane1.setViewportView(tblListarPedidos);
-
         btnDatosClientes.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnDatosClientes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Presentancion/Iconos/icons8-customers-32.png"))); // NOI18N
         btnDatosClientes.setText("Clientes");
         btnDatosClientes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -82,6 +123,7 @@ public class GestorPedidosUI extends javax.swing.JFrame {
         });
 
         btnDatosVendedores.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnDatosVendedores.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Presentancion/Iconos/icons8-resume-32.png"))); // NOI18N
         btnDatosVendedores.setText("Vendedores");
         btnDatosVendedores.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -93,6 +135,7 @@ public class GestorPedidosUI extends javax.swing.JFrame {
         jLabel2.setText("TABLA DE PEDIDOS");
 
         btnDatosProductos.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnDatosProductos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Presentancion/Iconos/icons8-inventory-32.png"))); // NOI18N
         btnDatosProductos.setText("Productos");
         btnDatosProductos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -100,57 +143,114 @@ public class GestorPedidosUI extends javax.swing.JFrame {
             }
         });
 
-        btnRecargarPedidos.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnRecargarPedidos.setText("Recargar");
-        btnRecargarPedidos.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRecargarPedidosActionPerformed(evt);
-            }
-        });
-
         btnDatosCategoria.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnDatosCategoria.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Presentancion/Iconos/icons8-label-32.png"))); // NOI18N
         btnDatosCategoria.setText("Categorias");
         btnDatosCategoria.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDatosCategoriaActionPerformed(evt);
             }
         });
+
+        btnRecargarPedidos1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Presentancion/Iconos/icons8-update-24.png"))); // NOI18N
+        btnRecargarPedidos1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRecargarPedidos1ActionPerformed(evt);
+            }
+        });
+
+        btnAddPedido.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnAddPedido.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Presentancion/Iconos/icons8-plus-32.png"))); // NOI18N
+        btnAddPedido.setText("Añadir Pedido");
+        btnAddPedido.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddPedidoActionPerformed(evt);
+            }
+        });
+
+        btnActualizarPedido.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnActualizarPedido.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Presentancion/Iconos/icons8-modify-32.png"))); // NOI18N
+        btnActualizarPedido.setText("Modificar Pedido");
+        btnActualizarPedido.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnActualizarPedidoActionPerformed(evt);
+            }
+        });
+
+        btnEliminarPedido.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnEliminarPedido.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Presentancion/Iconos/icons8-cancel-32.png"))); // NOI18N
+        btnEliminarPedido.setText("Eliminar Pedido");
+        btnEliminarPedido.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarPedidoActionPerformed(evt);
+            }
+        });
+
+        tblPedidos.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Fecha", "Estado", "Vendedor", "Cliente"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(tblPedidos);
+        if (tblPedidos.getColumnModel().getColumnCount() > 0) {
+            tblPedidos.getColumnModel().getColumn(0).setMinWidth(50);
+            tblPedidos.getColumnModel().getColumn(0).setMaxWidth(60);
+        }
+
         setJMenuBar(menuBar);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(398, 398, 398)
                         .addComponent(jLabel2)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnRecargarPedidos1))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(49, 49, 49)
+                        .addContainerGap(39, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(btnDatosVendedores, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnDatosClientes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnDatosProveedores, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnDatosProductos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnDatosCategoria, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 562, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(btnRecargarPedidos, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(246, 246, 246))
+                            .addComponent(btnDatosCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnAddPedido)
+                                .addGap(55, 55, 55)
+                                .addComponent(btnActualizarPedido)
+                                .addGap(53, 53, 53)
+                                .addComponent(btnEliminarPedido))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 562, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(19, 19, 19))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 44, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnRecargarPedidos1)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnDatosClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
@@ -160,10 +260,14 @@ public class GestorPedidosUI extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(btnDatosProductos, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(btnDatosCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnRecargarPedidos, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(13, 13, 13))
+                        .addComponent(btnDatosCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnActualizarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAddPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnEliminarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(12, 12, 12))
         );
 
         pack();
@@ -197,10 +301,6 @@ public class GestorPedidosUI extends javax.swing.JFrame {
         ventanaDatosProductos.setVisible(true);
     }//GEN-LAST:event_btnDatosProductosActionPerformed
 
-    private void btnRecargarPedidosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRecargarPedidosActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnRecargarPedidosActionPerformed
-
     private void btnDatosCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDatosCategoriaActionPerformed
         //crea una nueva instancia de la ventana datosCategorias
         datosCategorias ventanaDatosCategoria = new datosCategorias();
@@ -208,6 +308,68 @@ public class GestorPedidosUI extends javax.swing.JFrame {
         //hace que la ventana sea visible
         ventanaDatosCategoria.setVisible(true);
     }//GEN-LAST:event_btnDatosCategoriaActionPerformed
+
+    private void btnRecargarPedidos1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRecargarPedidos1ActionPerformed
+        recargarDatosDelPedido();
+    }//GEN-LAST:event_btnRecargarPedidos1ActionPerformed
+
+    private void btnAddPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddPedidoActionPerformed
+        this.agregarPedido.setVisible(true);
+    }//GEN-LAST:event_btnAddPedidoActionPerformed
+
+    private void btnActualizarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarPedidoActionPerformed
+        int row = tblPedidos.getSelectedRow();
+
+        if (row >= 0) {
+            // Obtener el ID del pedido de la tabla
+            int idPedido = (int) tblPedidos.getValueAt(row, 0);
+
+            // Obtener el pedido desde el controlador
+            ControladorPedido controlador = ControladorPedido.getInstance();
+            Pedido pedido = controlador.listPedidos().stream()
+            .filter(p -> p.getIdentificador() == idPedido)
+            .findFirst()
+            .orElse(null);
+
+            if (pedido != null) {
+                //Se abre la ventana de detalles
+                ActualizarPedido actualizarPedido = new ActualizarPedido();
+                actualizarPedido.setPedido(pedido);
+                actualizarPedido.setPedidoId(idPedido);
+                actualizarPedido.setVisible(true);
+
+            } else {
+                JOptionPane.showMessageDialog(null, "Pedido no encontrado");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Seleccione un pedido de la tabla");
+        }
+    }//GEN-LAST:event_btnActualizarPedidoActionPerformed
+
+    private void btnEliminarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarPedidoActionPerformed
+        // Obtener la fila seleccionada
+        int filaSeleccionada = tblPedidos.getSelectedRow();
+
+        if (filaSeleccionada != -1) {
+
+            // Obtener el ID del pedido de la primera columna
+            int idPedido = (int) tblPedidos.getValueAt(filaSeleccionada, 0);
+
+            // Mostrar cuadro de diálogo de confirmación
+            int confirmacion = JOptionPane.showConfirmDialog(this,
+                    "¿Estás seguro de que deseas eliminar este pedido?",
+                    "Confirmar eliminación",
+                    JOptionPane.YES_NO_OPTION);
+
+            if (confirmacion == JOptionPane.YES_OPTION) {
+                // Llamar al servicio para eliminar el pedido
+                this.ICP.eliminarPedido(idPedido);
+            }
+
+        } else {
+            JOptionPane.showMessageDialog(this, "Por favor, selecciona un pedido para eliminar.");
+        }
+    }//GEN-LAST:event_btnEliminarPedidoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -247,16 +409,19 @@ public class GestorPedidosUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnActualizarPedido;
+    private javax.swing.JButton btnAddPedido;
     private javax.swing.JButton btnDatosCategoria;
     private javax.swing.JButton btnDatosClientes;
     private javax.swing.JButton btnDatosProductos;
     private javax.swing.JButton btnDatosProveedores;
     private javax.swing.JButton btnDatosVendedores;
-    private javax.swing.JButton btnRecargarPedidos;
+    private javax.swing.JButton btnEliminarPedido;
+    private javax.swing.JButton btnRecargarPedidos1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JMenuBar menuBar;
-    private javax.swing.JTable tblListarPedidos;
+    private javax.swing.JTable tblPedidos;
     // End of variables declaration//GEN-END:variables
 
 }

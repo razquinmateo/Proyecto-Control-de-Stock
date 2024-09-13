@@ -17,6 +17,9 @@ import logica.Interfaces.IControladorProducto;
 import logica.Controladores.ControladorCategoria;
 import logica.Interfaces.IControladorCategoria;
 
+import logica.Controladores.ControladorPedido;
+import logica.Interfaces.IControladorPedido;
+
 /**
  *
  * @author Santiago.S
@@ -53,5 +56,10 @@ public class Fabrica {
     public IControladorCategoria getIControladorCategoria() {
         IControladorCategoria ControladorC = ControladorCategoria.getInstance();
         return ControladorC;
+    }
+    
+    public IControladorPedido getIControladorPedido() {
+        IControladorPedido ControladorP = ControladorPedido.getInstance();
+        return ControladorP; 
     }
 }
