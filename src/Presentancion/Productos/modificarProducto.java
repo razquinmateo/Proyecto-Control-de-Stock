@@ -76,6 +76,7 @@ public class modificarProducto extends javax.swing.JFrame {
     private void cargarCategorias() {
         CategoriaServicios categoriaServicios = new CategoriaServicios();
         CbCategoria.removeAllItems();
+        CbCategoria.addItem("--Selecciona una categoria--");
         List<Categoria> categorias = categoriaServicios.listarCategorias();
         for (Categoria categoria : categorias) {
             CbCategoria.addItem(categoria.getNombre());
@@ -169,6 +170,12 @@ public class modificarProducto extends javax.swing.JFrame {
         txtStock.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtStockActionPerformed(evt);
+            }
+        });
+
+        CbCategoria.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CbCategoriaActionPerformed(evt);
             }
         });
 
@@ -349,6 +356,10 @@ public class modificarProducto extends javax.swing.JFrame {
             this.dispose();
         }
     }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void CbCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CbCategoriaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_CbCategoriaActionPerformed
 
     /**
      * @param args the command line arguments

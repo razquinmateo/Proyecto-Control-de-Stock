@@ -12,13 +12,13 @@ public class DetallePedido {
     private int cantidad;
     private float precioVenta;
     private Producto producto;
-    private Pedido pedido;
+    private int pedidoID;
     
-    public DetallePedido(int cantidad, float precioVenta, Producto producto, Pedido pedido) {
+    public DetallePedido(int cantidad, float precioVenta, Producto producto, int pedidoID) {
         this.cantidad = cantidad;
         this.precioVenta = precioVenta;
         this.producto = producto;
-        this.pedido = pedido;
+        this.pedidoID = pedidoID;
     }
 
     public int getCantidad() {
@@ -45,12 +45,12 @@ public class DetallePedido {
         this.producto = producto;
     }
 
-    public Pedido getPedido() {
-        return pedido;
+    public int getPedido() {
+        return pedidoID;
     }
 
-    public void setPedido(Pedido pedido) {
-        this.pedido = pedido;
+    public void setPedido(int pedidoID) {
+        this.pedidoID = pedidoID;
     }
 
     public float subTotal() {

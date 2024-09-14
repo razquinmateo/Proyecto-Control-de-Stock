@@ -23,5 +23,6 @@ public interface IControladorCliente {
     public abstract DefaultTableModel cargarDatosEnTabla();
     public abstract Cliente obtenerClientePorRut(int rut);
     public abstract boolean actualizarCliente(Cliente cliente);
+    public abstract int obtenerIdClientePorNombre(String nombreCliente);
     
 }

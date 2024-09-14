@@ -20,6 +20,10 @@ public class Pedido {
     private int idVendedor;
     private int idCliente;
     private ArrayList<DetallePedido> detallesPedidos;
+    
+    public Pedido(){
+        
+    }
 
     public Pedido(int identificador, Date fechaPedido, Estado estado, float total, int idVendedor, int idCliente) {
         this.identificador = identificador;
@@ -80,7 +84,10 @@ public class Pedido {
     }
     
     public void agregarDetalle(DetallePedido detalle) {
-        detallesPedidos.add(detalle);
+        if (this.detallesPedidos == null) {
+            this.detallesPedidos = new ArrayList<>();
+        }
+        this.detallesPedidos.add(detalle);
         recalcularTotal();
     }
 

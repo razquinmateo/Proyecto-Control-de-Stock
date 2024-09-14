@@ -14,4 +14,5 @@ public interface IControladorVendedor {
     public abstract boolean eliminarVendedor(int id);
     public abstract ArrayList<Vendedor> listarVendedores();
     public abstract Vendedor buscarVendedor(int id);
+    public abstract int obtenerIdVendedorPorNombre(String nombreVendedor);
 }

@@ -34,7 +34,7 @@ public class DetallePedidoServicios {
     //agrega un detalle de pedido
     public boolean agregarDetallePedido(int idPedido, DetallePedido detalle) {
         String sql = "INSERT INTO pedido_producto (PedidoID, ProductoID, Cantidad, PrecioVenta) VALUES (?, ?, ?, ?)";
-        
+
         try (PreparedStatement preparedStatement = conexion.prepareStatement(sql)) {
             preparedStatement.setInt(1, idPedido);
             preparedStatement.setInt(2, detalle.getProducto().getId());

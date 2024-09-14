@@ -10,10 +10,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.sql.Date;
-import java.sql.Timestamp;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import logica.Clases.Cliente;
 
 /**
@@ -134,7 +130,22 @@ public class ClienteServicios {
             return false;
         }
     }
-       
-      
+    
+    public int obtenerIdClientePorNombre(String nombreCliente) {
+        String sql = "SELECT ID FROM cliente WHERE Nom_Empresa = ?";
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setString(1, nombreCliente);
+            try (ResultSet resultSet = ps.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getInt("ID");
+                } else {
+                    throw new SQLException("No se encontró un cliente con el nombre: " + nombreCliente);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
     
 }

@@ -6,14 +6,21 @@ package Presentancion.Pedidos;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import logica.Clases.DetallePedido;
+import logica.Clases.Pedido;
+import logica.Clases.Producto;
 import logica.Fabrica;
 import logica.Interfaces.IControladorPedido;
+import logica.servicios.ClienteServicios;
 import logica.servicios.PedidosServicios;
+import logica.servicios.VendedorServicios;
+import logica.servicios.ProductoServicios;
 
 /**
  *
@@ -22,11 +29,18 @@ import logica.servicios.PedidosServicios;
 public class AddPedido extends javax.swing.JFrame {
 
     private PedidosServicios pedidosServicios;
+    private VendedorServicios vendedorServicios;
+    private ClienteServicios clienteServicios;
+    private ProductoServicios productoServicios;
     private IControladorPedido ICP;
+    
 
     public AddPedido() {
         initComponents();
         this.setLocationRelativeTo(null);
+        this.vendedorServicios = new VendedorServicios();
+        this.clienteServicios = new ClienteServicios();
+        this.productoServicios = new ProductoServicios();
         this.pedidosServicios = new PedidosServicios();
         this.ICP = Fabrica.getInstance().getIControladorPedido();
     
@@ -38,6 +52,7 @@ public class AddPedido extends javax.swing.JFrame {
                     manejoCiereVentana();
                 }
             });
+            txtPrecioTotal.setEnabled(false);
             cargarNombres();
             
             //deshabilitamos los botones quitar, modificar y limpiar
@@ -55,6 +70,15 @@ public class AddPedido extends javax.swing.JFrame {
             ((DefaultTableModel) JtableCarrito.getModel()).addTableModelListener(e -> {
                 btnLimpiarTabla.setEnabled(JtableCarrito.getRowCount() > 0);
             });
+            
+            //añadimos un TableModelListener a la tabla para actualizar el total
+            ((DefaultTableModel) JtableCarrito.getModel()).addTableModelListener(new TableModelListener() {
+                @Override
+                public void tableChanged(TableModelEvent e) {
+                    // Solo actualiza si la tabla cambia
+                    actualizarPrecioTotal();
+                }
+            });
         }
     
         private void manejoCiereVentana() {
@@ -63,6 +87,8 @@ public class AddPedido extends javax.swing.JFrame {
         }
         
         private void cargarNombres() {
+        CbNombreVendedor.addItem("--Selecciona un vendedor--");
+        CbNombreCliente.addItem("--Selecciona un cliente--");
         List<String> nombresVendedores = pedidosServicios.obtenerNombresVendedores();
         List<String> nombresClientes = pedidosServicios.obtenerNombresClientes();
 
@@ -73,6 +99,38 @@ public class AddPedido extends javax.swing.JFrame {
         for (String nombre : nombresClientes) {
             CbNombreCliente.addItem(nombre);
         }
+    }
+        
+   public void agregarProductoATabla(String producto, float precioUnidad, int cantidad, float subtotal) {
+        //obtenemos el modelo de la tabla
+        DefaultTableModel model = (DefaultTableModel) JtableCarrito.getModel();
+
+        //agregamos una nueva fila con los datos del producto
+        model.addRow(new Object[]{producto, precioUnidad, cantidad, subtotal});
+    }
+
+   //auxiliar para actualizar el precio total
+    private void actualizarPrecioTotal() {
+        DefaultTableModel model = (DefaultTableModel) JtableCarrito.getModel();
+        float total = 0;
+
+        for (int i = 0; i < model.getRowCount(); i++) {
+            Float subtotal = (Float) model.getValueAt(i, 3); // Columna "Subtotal"
+            if (subtotal != null) {
+                total += subtotal;
+            }
+        }
+
+        txtPrecioTotal.setText(String.format("%.2f", total));
+    }
+    
+    public void actualizarFila(int row, String producto, float precioUnidad, int cantidad, float subtotal) {
+        DefaultTableModel model = (DefaultTableModel) JtableCarrito.getModel();
+
+        model.setValueAt(producto, row, 0);
+        model.setValueAt(precioUnidad, row, 1);
+        model.setValueAt(cantidad, row, 2);
+        model.setValueAt(subtotal, row, 3);
     }
 
     @SuppressWarnings("unchecked")
@@ -104,6 +162,12 @@ public class AddPedido extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel2.setText("Vendedor:");
 
+        CbNombreVendedor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CbNombreVendedorActionPerformed(evt);
+            }
+        });
+
         jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel8.setText("Cliente:");
 
@@ -115,11 +179,11 @@ public class AddPedido extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Producto", "Descripcion", "Precio Unidad", "Cantidad", "Subtotal"
+                "Producto", "Precio Unidad", "Cantidad", "Subtotal"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.Float.class, java.lang.Integer.class, java.lang.Float.class
+                java.lang.String.class, java.lang.Float.class, java.lang.Integer.class, java.lang.Float.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -127,6 +191,10 @@ public class AddPedido extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(JtableCarrito);
+        if (JtableCarrito.getColumnModel().getColumnCount() > 0) {
+            JtableCarrito.getColumnModel().getColumn(0).setMinWidth(120);
+            JtableCarrito.getColumnModel().getColumn(0).setMaxWidth(150);
+        }
 
         jLabel10.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel10.setText("Precio Total:");
@@ -199,10 +267,9 @@ public class AddPedido extends javax.swing.JFrame {
                             .addComponent(jLabel2)
                             .addComponent(jLabel10))
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(CbNombreCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(CbNombreVendedor, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtPrecioTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(6, 6, 6)
@@ -212,8 +279,9 @@ public class AddPedido extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnQuitar)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnLimpiarTabla)))))
-                .addContainerGap(24, Short.MAX_VALUE))
+                                .addComponent(btnLimpiarTabla))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))))
+                .addContainerGap(29, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -272,11 +340,26 @@ public class AddPedido extends javax.swing.JFrame {
     }//GEN-LAST:event_txtPrecioTotalActionPerformed
 
     private void btnAñadirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAñadirActionPerformed
-
+        añadirAlCarrito añadirCarritoFrame = new añadirAlCarrito();
+        añadirCarritoFrame.setAddPedidoFrame(this);
+        añadirCarritoFrame.setVisible(true);
     }//GEN-LAST:event_btnAñadirActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
-        // TODO add your handling code here:
+        int selectedRow = JtableCarrito.getSelectedRow();
+        if (selectedRow != -1) {
+            String producto = (String) JtableCarrito.getValueAt(selectedRow, 0);
+            float precioUnidad = (Float) JtableCarrito.getValueAt(selectedRow, 1);
+            int cantidad = (Integer) JtableCarrito.getValueAt(selectedRow, 2);
+            float subtotal = (Float) JtableCarrito.getValueAt(selectedRow, 3);
+
+            modificarEnCarrito modificarFrame = new modificarEnCarrito();
+            modificarFrame.setAddPedidoFrame(this);
+            modificarFrame.setDatos(producto, precioUnidad, cantidad, subtotal, selectedRow);
+            modificarFrame.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(this, "Selecciona una fila para modificar.");
+        }
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnQuitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitarActionPerformed
@@ -304,7 +387,55 @@ public class AddPedido extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLimpiarTablaActionPerformed
 
     private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
-        
+         try {
+            if (CbNombreVendedor.getSelectedIndex() == 0 || CbNombreCliente.getSelectedIndex() == 0) {
+                JOptionPane.showMessageDialog(this, "Por favor, selecciona un vendedor y un cliente.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            //obtenemos ID del vendedor y del cliente seleccionados
+            String nombreVendedor = (String) CbNombreVendedor.getSelectedItem();
+            String nombreCliente = (String) CbNombreCliente.getSelectedItem();
+
+            int idVendedor = vendedorServicios.obtenerIdVendedorPorNombre(nombreVendedor);
+            int idCliente = clienteServicios.obtenerIdClientePorNombre(nombreCliente);
+
+            //creamos un nuevo objeto Pedido
+            Pedido nuevoPedido = new Pedido();
+            nuevoPedido.setFechaPedido(new java.util.Date());
+            nuevoPedido.setEstado(Pedido.Estado.EN_PREPARACION);
+            nuevoPedido.setIdVendedor(idVendedor);
+            nuevoPedido.setIdCliente(idCliente);
+
+            //creamos los detalles del pedido
+            for (int i = 0; i < JtableCarrito.getRowCount(); i++) {
+                // Obtener el nombre del producto
+                String nombreProducto = (String) JtableCarrito.getValueAt(i, 0);
+                Producto producto = productoServicios.buscarProductoPorNombre(nombreProducto);
+                if (producto == null) {
+                    JOptionPane.showMessageDialog(this, "Producto no encontrado: " + nombreProducto, "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                float precioVenta = (float) JtableCarrito.getValueAt(i, 1);
+                int cantidad = (int) JtableCarrito.getValueAt(i, 2);
+
+                DetallePedido detalle = new DetallePedido(cantidad, precioVenta, producto, nuevoPedido.getIdentificador());
+                nuevoPedido.agregarDetalle(detalle);
+            }
+
+            //agregamos el pedido a la base de datos
+            boolean resultado = pedidosServicios.agregarPedido(nuevoPedido);
+
+            if (resultado) {
+                JOptionPane.showMessageDialog(this, "Pedido añadido exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Error al añadir el pedido. Inténtelo de nuevo.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Ocurrió un error al confirmar el pedido.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnConfirmarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
@@ -318,6 +449,10 @@ public class AddPedido extends javax.swing.JFrame {
             this.dispose();
         }
     }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void CbNombreVendedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CbNombreVendedorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_CbNombreVendedorActionPerformed
 
     /**
      * @param args the command line arguments

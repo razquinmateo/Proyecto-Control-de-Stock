@@ -52,4 +52,9 @@ public class ControladorVendedor implements IControladorVendedor  {
     public Vendedor buscarVendedor(int id) {
         return vendedorServicios.buscarVendedor(id);
     }
+    
+    @Override
+    public int obtenerIdVendedorPorNombre(String nombreVendedor){
+        return vendedorServicios.obtenerIdVendedorPorNombre(nombreVendedor);
+    }
 }

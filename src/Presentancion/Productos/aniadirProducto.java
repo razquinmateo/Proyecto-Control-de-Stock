@@ -49,6 +49,7 @@ public class aniadirProducto extends javax.swing.JFrame {
     private void cargarCategorias() {
         List<String> nombresCategorias = categoriaServicios.obtenerNombresCategorias();
         CbCategoria.removeAllItems();
+        CbCategoria.addItem("--Selecciona una categoria--");
         for (String nombre : nombresCategorias) {
             CbCategoria.addItem(nombre);
         }
@@ -144,6 +145,12 @@ public class aniadirProducto extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setText("AÑADIR PRODUCTO");
+
+        CbCategoria.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CbCategoriaActionPerformed(evt);
+            }
+        });
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel7.setText("Categoria:");
@@ -304,6 +311,10 @@ public class aniadirProducto extends javax.swing.JFrame {
             this.dispose();
         }
     }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void CbCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CbCategoriaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_CbCategoriaActionPerformed
 
     /**
      * @param args the command line arguments

@@ -127,4 +127,22 @@ public class VendedorServicios {
         }
         return vendedor;
     }
+    
+    public int obtenerIdVendedorPorNombre(String nombreVendedor) {
+        String sql = "SELECT id FROM vendedor WHERE nombre = ?";
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setString(1, nombreVendedor);
+            try (ResultSet resultSet = ps.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getInt("id");
+                } else {
+                    throw new SQLException("No se encontró un vendedor con el nombre: " + nombreVendedor);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
 }
