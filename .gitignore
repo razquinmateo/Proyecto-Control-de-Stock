@@ -1,1 +1,8 @@
 /dist/
+<<<<<<< HEAD
+=======
+*.class
+build/built-jar.properties
+nbproject/project.properties
+
+>>>>>>> 9e5e1102d56b8e5e5484dbc23f558c0313d50eaf
