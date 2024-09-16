@@ -1,24 +1,12 @@
 package Presentacion;
 
 import logica.Fabrica;
-
-
-import Presentancion.Productos.datosProductos;
-import Presentancion.Categoria.datosCategorias;
-import Presentancion.Vendedores.datosVendedores;
 import Presentancion.Clientes.ClientesPrincipal;
-import Presentancion.Proveedor.datosProveedor;
-
-import Presentancion.Pedidos.ActualizarPedido;
-import Presentancion.Pedidos.AddPedido;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import logica.Clases.Pedido;
-import logica.Controladores.ControladorPedido;
-import logica.Interfaces.IControladorPedido;
 import logica.Interfaces.IControladorUsuario;
 
 /*
@@ -33,43 +21,15 @@ import logica.Interfaces.IControladorUsuario;
 public class GestorPedidosUI extends javax.swing.JFrame {
     
     private IControladorUsuario ICU;
-    private IControladorPedido ICP;
-    private ActualizarPedido actualizarPedido = new ActualizarPedido();
 
     public GestorPedidosUI() {
         initComponents();
         this.ICU = Fabrica.getInstance().getIControladorUsuario();
-        this.ICP = Fabrica.getInstance().getIControladorPedido();
-        this.setTitle("Gestion de Pedidos");
-        this.setLocationRelativeTo(null); // Centra la ventana
-        this.cargarDatosDePedidos();
     }
     
     private void cargarDatosDePedidos() {
 
-        ArrayList<Pedido> pedidosDeBaseDeDatos = this.ICP.getPedidos();
-        DefaultTableModel modelo = (DefaultTableModel) this.tblPedidos.getModel();
 
-        // Crear un renderizador que centre el contenido
-        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
-
-        // Centra la primera columna
-        tblPedidos.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
-
-        for (Pedido pedido : pedidosDeBaseDeDatos) {
-            String nombreVendedor = ICP.obtenerNombreVendedorPorId(pedido.getIdVendedor());
-            String nombreCliente = ICP.obtenerNombreClientePorId(pedido.getIdCliente());
-            Object[] nuevaRow = {
-                pedido.getIdentificador(),
-                pedido.getFechaPedido(),
-                pedido.getEstado(),
-                nombreVendedor,
-                nombreCliente
-            };
-            modelo.addRow(nuevaRow);
-
-        }
     }
     
     private void limpiarTablaUsuarios() {
@@ -277,12 +237,11 @@ public class GestorPedidosUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnDatosProveedoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDatosProveedoresActionPerformed
-        datosProveedor ventanaDatosProveedores = new datosProveedor();
-        ventanaDatosProveedores.setVisible(true);
+
     }//GEN-LAST:event_btnDatosProveedoresActionPerformed
 
     private void btnDatosClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDatosClientesActionPerformed
-        //crea una nueva instancia de la ventana ClientesPrincipal
+           //crea una nueva instancia de la ventana ClientesPrincipal
         ClientesPrincipal ventanaClientesPrincipal = new ClientesPrincipal();
     
         //hace que la ventana sea visible
@@ -290,27 +249,15 @@ public class GestorPedidosUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btnDatosClientesActionPerformed
 
     private void btnDatosVendedoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDatosVendedoresActionPerformed
-        //crea una nueva instancia de la ventana datosVendedores
-        datosVendedores ventanaDatosVendedor = new datosVendedores();
-    
-        //hace que la ventana sea visible
-        ventanaDatosVendedor.setVisible(true);
+
     }//GEN-LAST:event_btnDatosVendedoresActionPerformed
 
     private void btnDatosProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDatosProductosActionPerformed
-        //crea una nueva instancia de la ventana datosProductos
-        datosProductos ventanaDatosProductos = new datosProductos();
-    
-        //hace que la ventana sea visible
-        ventanaDatosProductos.setVisible(true);
+
     }//GEN-LAST:event_btnDatosProductosActionPerformed
 
     private void btnDatosCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDatosCategoriaActionPerformed
-        //crea una nueva instancia de la ventana datosCategorias
-        datosCategorias ventanaDatosCategoria = new datosCategorias();
-    
-        //hace que la ventana sea visible
-        ventanaDatosCategoria.setVisible(true);
+
     }//GEN-LAST:event_btnDatosCategoriaActionPerformed
 
     private void btnRecargarPedidos1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRecargarPedidos1ActionPerformed
@@ -318,72 +265,15 @@ public class GestorPedidosUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRecargarPedidos1ActionPerformed
 
     private void btnAddPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddPedidoActionPerformed
-        AddPedido ventanaAddPedido = new AddPedido();
-    
-        ventanaAddPedido.setVisible(true);
+
     }//GEN-LAST:event_btnAddPedidoActionPerformed
 
     private void btnActualizarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarPedidoActionPerformed
-        int row = tblPedidos.getSelectedRow();
-
-        if (row >= 0) {
-            // Obtener el ID del pedido de la tabla
-            int idPedido = (int) tblPedidos.getValueAt(row, 0);
-
-            // Obtener el pedido desde el controlador
-            ControladorPedido controlador = ControladorPedido.getInstance();
-            Pedido pedido = controlador.getPedidos().stream()
-            .filter(p -> p.getIdentificador() == idPedido)
-            .findFirst()
-            .orElse(null);
-
-            if (pedido != null) {
-                //Se abre la ventana de detalles
-                actualizarPedido.setPedido(pedido);
-                actualizarPedido.setPedidoId(idPedido);
-                actualizarPedido.setVisible(true);
-
-            } else {
-                JOptionPane.showMessageDialog(null, "Pedido no encontrado");
-            }
-        } else {
-            JOptionPane.showMessageDialog(null, "Seleccione un pedido de la tabla");
-        }
+       
     }//GEN-LAST:event_btnActualizarPedidoActionPerformed
 
     private void btnTerminarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTerminarPedidoActionPerformed
-        //obtenemos la fila seleccionada
-        int filaSeleccionada = tblPedidos.getSelectedRow();
-
-        if (filaSeleccionada != -1) {
-            //obtenemos el ID del pedido desde la primera columna
-            int idPedido = (int) tblPedidos.getValueAt(filaSeleccionada, 0);
-
-            //mostramos cuadro de diálogo para seleccionar el nuevo estado
-            String[] estados = {"CANCELADO", "ENTREGADO"};
-            String estadoSeleccionado = (String) JOptionPane.showInputDialog(
-                    this,
-                    "Selecciona el nuevo estado del pedido:",
-                    "Cambiar Estado",
-                    JOptionPane.QUESTION_MESSAGE,
-                    null,
-                    estados,
-                    estados[0]);
-
-            if (estadoSeleccionado != null) {
-                //llamamos al servicio para actualizar el estado del pedido
-                boolean exito = ICP.actualizarEstadoPedido(idPedido, estadoSeleccionado);
-
-                if (exito) {
-                    JOptionPane.showMessageDialog(this, "Estado del pedido actualizado correctamente.");
-                    recargarDatosDelPedido();
-                } else {
-                    JOptionPane.showMessageDialog(this, "Error al actualizar el estado del pedido.", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        } else {
-            JOptionPane.showMessageDialog(this, "Por favor, selecciona un pedido para actualizar el estado.");
-        }
+  
     }//GEN-LAST:event_btnTerminarPedidoActionPerformed
 
     /**
