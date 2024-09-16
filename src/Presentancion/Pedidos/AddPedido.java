@@ -37,6 +37,7 @@ public class AddPedido extends javax.swing.JFrame {
 
     public AddPedido() {
         initComponents();
+        this.setTitle("Añadir Pedido");
         this.setLocationRelativeTo(null);
         this.vendedorServicios = new VendedorServicios();
         this.clienteServicios = new ClienteServicios();

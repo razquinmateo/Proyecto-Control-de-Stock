@@ -37,6 +37,7 @@ public class datosProveedor extends javax.swing.JFrame {
     private javax.swing.JTextField txtCorreo;*/
     public datosProveedor() {
         initComponents();
+        this.setTitle("Datos de Proveedor");
         this.setLocationRelativeTo(null);
         this.ICU = Fabrica.getInstance().getIControladorUsuario();
         this.ICPE = Fabrica.getInstance().getIControladorProveedor();

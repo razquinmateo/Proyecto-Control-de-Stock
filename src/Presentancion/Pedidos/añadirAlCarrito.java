@@ -30,6 +30,7 @@ public class añadirAlCarrito extends javax.swing.JFrame {
      */
     public añadirAlCarrito() {
         initComponents();
+        this.setTitle("Añadir al Carrito");
         cargarProductos();
         configurarListeners();
         this.setLocationRelativeTo(null);

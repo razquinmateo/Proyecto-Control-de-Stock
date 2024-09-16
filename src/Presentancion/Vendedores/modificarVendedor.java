@@ -23,7 +23,7 @@ public class modificarVendedor extends javax.swing.JFrame {
 
     public modificarVendedor() {
         initComponents();
-        this.setTitle("Modificar Cliente");
+        this.setTitle("Modificar Vendedor");
         this.setLocationRelativeTo(null);
         
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);

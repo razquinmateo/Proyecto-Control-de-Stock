@@ -32,6 +32,7 @@ public class modificarEnCarrito extends javax.swing.JFrame {
     public modificarEnCarrito() {
         
         initComponents();
+        this.setTitle("Modificar Carrito");
         cargarProductos();
         configurarListeners();
         this.setLocationRelativeTo(null);

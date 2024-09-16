@@ -20,6 +20,7 @@ public class AñadirProveedor extends javax.swing.JFrame {
      */
     public AñadirProveedor() {
         initComponents();
+        this.setTitle("Añadir Proveedor");
         this.setLocationRelativeTo(null);
         //manejamos el evento de cierre de la ventana
             setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
