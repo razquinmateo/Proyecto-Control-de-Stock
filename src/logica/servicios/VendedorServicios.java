@@ -7,6 +7,7 @@ package logica.servicios;
 import Persistencia.ConexionDB;
 import logica.Clases.Vendedor;
 import java.sql.Connection;
+import java.sql.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -93,8 +94,7 @@ public class VendedorServicios {
                 vendedor.setCorreo(rs.getString("correo_electronico"));
                 vendedor.setTelefono(rs.getString("telefono"));
                 vendedor.setDireccion(rs.getString("direccion"));
-                Timestamp fechaContratacion = rs.getTimestamp("fecha_contratacion");
-                vendedor.setFechaContratacion(new java.util.Date(fechaContratacion.getTime()));
+                vendedor.setFechaContratacion((rs.getDate("fecha_contratacion")));
                 vendedores.add(vendedor);
             }
         } catch (SQLException ex) {
