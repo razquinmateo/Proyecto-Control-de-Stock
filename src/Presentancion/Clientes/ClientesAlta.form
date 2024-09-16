@@ -32,14 +32,14 @@
                           <Group type="102" alignment="1" attributes="0">
                               <Component id="JLabel12" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="txtNombre2" min="-2" pref="210" max="-2" attributes="0"/>
+                              <Component id="txtNombre1" min="-2" pref="210" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
                               <Component id="JLabel11" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="32767" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="jLabel7" min="-2" pref="188" max="-2" attributes="0"/>
-                                  <Component id="txtRut1" min="-2" pref="210" max="-2" attributes="0"/>
+                                  <Component id="txtRut" min="-2" pref="210" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -47,12 +47,12 @@
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="JLabel14" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="32767" attributes="0"/>
-                              <Component id="txtCorreo1" min="-2" pref="210" max="-2" attributes="0"/>
+                              <Component id="txtCorreo" min="-2" pref="210" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="JLabel13" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="txtTelefono1" min="-2" pref="210" max="-2" attributes="0"/>
+                              <Component id="txtTelefono" min="-2" pref="210" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -73,22 +73,22 @@
               <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="txtRut1" alignment="3" min="-2" pref="31" max="-2" attributes="0"/>
+                  <Component id="txtRut" alignment="3" min="-2" pref="31" max="-2" attributes="0"/>
                   <Component id="JLabel11" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="txtNombre2" alignment="3" min="-2" pref="31" max="-2" attributes="0"/>
+                  <Component id="txtNombre1" alignment="3" min="-2" pref="31" max="-2" attributes="0"/>
                   <Component id="JLabel12" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="txtTelefono1" alignment="3" min="-2" pref="31" max="-2" attributes="0"/>
+                  <Component id="txtTelefono" alignment="3" min="-2" pref="31" max="-2" attributes="0"/>
                   <Component id="JLabel13" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="txtCorreo1" alignment="3" min="-2" pref="31" max="-2" attributes="0"/>
+                  <Component id="txtCorreo" alignment="3" min="-2" pref="31" max="-2" attributes="0"/>
                   <Component id="JLabel14" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
@@ -118,7 +118,7 @@
         <Property name="text" type="java.lang.String" value="RUT:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="txtRut1">
+    <Component class="javax.swing.JTextField" name="txtRut">
     </Component>
     <Component class="javax.swing.JLabel" name="JLabel12">
       <Properties>
@@ -128,9 +128,9 @@
         <Property name="text" type="java.lang.String" value="Nombre:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="txtNombre2">
+    <Component class="javax.swing.JTextField" name="txtNombre1">
     </Component>
-    <Component class="javax.swing.JTextField" name="txtTelefono1">
+    <Component class="javax.swing.JTextField" name="txtTelefono">
     </Component>
     <Component class="javax.swing.JLabel" name="JLabel13">
       <Properties>
@@ -148,7 +148,7 @@
         <Property name="text" type="java.lang.String" value="Correo:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="txtCorreo1">
+    <Component class="javax.swing.JTextField" name="txtCorreo">
     </Component>
     <Component class="javax.swing.JButton" name="btnCancelar1">
       <Properties>
@@ -171,6 +171,9 @@
           <Dimension value="[112, 39]"/>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAgregar1ActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

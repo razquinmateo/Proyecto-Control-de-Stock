@@ -246,6 +246,17 @@ public class datosVendedores extends javax.swing.JFrame {
     
         if (selectedRow >= 0) {
             int id = (Integer) tblListarVendedores.getValueAt(selectedRow, 0);
+            
+            //verificamos si el vendedor está asociado a algún pedido
+            VendedorServicios servicios = new VendedorServicios();
+            
+            if (servicios.vendedorEstaAsociadoAPedido(id)) {
+            JOptionPane.showMessageDialog(this, 
+                    "No se puede eliminar el vendedor porque está asociado a un pedido.", 
+                    "Advertencia", 
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+            }
 
             int confirm = JOptionPane.showConfirmDialog(this, 
                     "¿Está seguro de que desea eliminar este vendedor?", 
@@ -253,7 +264,6 @@ public class datosVendedores extends javax.swing.JFrame {
                     JOptionPane.YES_NO_OPTION);
 
             if (confirm == JOptionPane.YES_OPTION) {
-                VendedorServicios servicios = new VendedorServicios();
                 boolean exito = servicios.eliminarVendedor(id);
 
                 if (exito) {

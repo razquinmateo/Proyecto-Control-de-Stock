@@ -15,4 +15,6 @@ public interface IControladorVendedor {
     public abstract ArrayList<Vendedor> listarVendedores();
     public abstract Vendedor buscarVendedor(int id);
     public abstract int obtenerIdVendedorPorNombre(String nombreVendedor);
+    public abstract boolean cedulaEnUso(int cedula);
+    public abstract boolean vendedorEstaAsociadoAPedido(int id);
 }

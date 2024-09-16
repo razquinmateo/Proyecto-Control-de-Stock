@@ -22,36 +22,37 @@ public class PedidosServicios {
     
     //obtiene todos los datos de los pedidos y los devuelve en un ArrayList
     public ArrayList<Pedido> getPedidos() {
-        ArrayList<Pedido> pedidos = new ArrayList<>();
-
+    ArrayList<Pedido> pedidos = new ArrayList<>();
         try {
-            String sql = "SELECT p.Identificador, p.FechaPedido, p.Estado, p.Total, "
-                    + "p.VendedorID, p.ClienteID, c.Nom_Empresa as nombre_cliente, "
-                    + "v.Nombre as nombre_vendedor, v.Cedula as cedula_vendedor, v.Telefono as telefono_vendedor "
-                    + "FROM pedido p "
-                    + "JOIN cliente c ON p.ClienteID = c.ID "
-                    + "JOIN vendedor v ON p.VendedorID = v.ID";
+        String sql = "SELECT p.Identificador, p.FechaPedido, p.Estado, p.Total, "
+                + "p.VendedorID, p.ClienteID, c.Nom_Empresa as nombre_cliente, "
+                + "v.Nombre as nombre_vendedor, v.Cedula as cedula_vendedor, v.Telefono as telefono_vendedor "
+                + "FROM pedido p "
+                + "JOIN cliente c ON p.ClienteID = c.ID "
+                + "JOIN vendedor v ON p.VendedorID = v.ID "
+                + "ORDER BY FIELD(p.Estado, 'EN_PREPARACION', 'EN_VIAJE', 'ENTREGADO', 'CANCELADO'), p.FechaPedido DESC";
 
-            Statement statement = conexion.createStatement();
-            ResultSet resultSet = statement.executeQuery(sql);
+        Statement statement = conexion.createStatement();
+        ResultSet resultSet = statement.executeQuery(sql);
 
-            while (resultSet.next()) {
-                int identificador = resultSet.getInt("Identificador");
-                Date fechaPedido = resultSet.getDate("FechaPedido");
-                String estadoStr = resultSet.getString("Estado");
-                Estado estado = Estado.valueOf(estadoStr);
-                float total = resultSet.getFloat("Total");
-                int idVendedor = resultSet.getInt("VendedorID");
-                int idCliente = resultSet.getInt("ClienteID");
+        while (resultSet.next()) {
+            int identificador = resultSet.getInt("Identificador");
+            Date fechaPedido = resultSet.getDate("FechaPedido");
+            String estadoStr = resultSet.getString("Estado");
+            Pedido.Estado estado = Pedido.Estado.valueOf(estadoStr);
+            float total = resultSet.getFloat("Total");
+            int idVendedor = resultSet.getInt("VendedorID");
+            int idCliente = resultSet.getInt("ClienteID");
 
-                Pedido pedido = new Pedido(identificador, fechaPedido, estado, total, idVendedor, idCliente);
-                pedidos.add(pedido);
-            }
+            Pedido pedido = new Pedido(identificador, fechaPedido, estado, total, idVendedor, idCliente);
+            pedidos.add(pedido);
+        }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return pedidos;
     }
+
 
     //obtiene el nombre de la tabla vendedor con el id del pedido, para mostrar el nombre del vendedor en lugar del id
     public String getNombreVendedorPorId(int idVendedor) throws SQLException {
@@ -136,7 +137,7 @@ public class PedidosServicios {
         return false;
     }
     
-    
+    //auxiliar para obtener los nom de los vendedores (para el combobox)
     public List<String> obtenerNombresVendedores() {
         List<String> nombres = new ArrayList<>();
         try{
@@ -153,6 +154,7 @@ public class PedidosServicios {
        return nombres;
     }
 
+    //auxiliar para obtener los nom de los clientes (para el combobox)
     public List<String> obtenerNombresClientes() {
         List<String> nombres = new ArrayList<>();
         try{
@@ -168,5 +170,21 @@ public class PedidosServicios {
         }
         return nombres;
     }
+    
+    public boolean actualizarEstadoPedido(int idPedido, String nuevoEstado) {
+        String sql = "UPDATE pedido SET estado = ? WHERE identificador = ?";
+        try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
+            stmt.setString(1, nuevoEstado);
+            stmt.setInt(2, idPedido);
+
+            int filasActualizadas = stmt.executeUpdate();
+            return filasActualizadas > 0;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
+    
 
 }

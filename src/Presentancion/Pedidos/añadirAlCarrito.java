@@ -272,6 +272,15 @@ public class añadirAlCarrito extends javax.swing.JFrame {
         float precioUnidad = (float) precioProducto;
         int cantidad = Integer.parseInt(txtCantidad.getText());
         float subtotal = Float.parseFloat(txtSubtotal.getText().replace(',', '.'));
+        
+        //verificar si txtCantidad contiene un número válido
+        try {
+            cantidad = Integer.parseInt(txtCantidad.getText().trim());
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "La cantidad debe ser un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
 
         if (addPedidoFrame != null) {
             addPedidoFrame.agregarProductoATabla(producto, precioUnidad, cantidad, subtotal);

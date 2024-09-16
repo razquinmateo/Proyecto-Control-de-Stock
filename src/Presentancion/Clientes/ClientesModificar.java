@@ -10,6 +10,7 @@ import java.util.Date;
 import javax.swing.JOptionPane;
 import logica.Clases.Cliente;
 import logica.Controladores.ControladorCliente;
+import logica.servicios.ClienteServicios;
 
 /**
  *
@@ -215,30 +216,36 @@ public static int rutCliente;
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
         try {
-        // Obtener los datos actualizados desde los campos de texto
-        String nombre = txtNombre1.getText();
-        String email = txtCorreo.getText();
-        int rut = Integer.parseInt(txtRut.getText());  // El RUT no debe cambiar
-        String telefono = txtTelefono.getText();
+            //obtenemos los datos actualizados desde los campos de texto
+            String nombre = txtNombre1.getText();
+            String email = txtCorreo.getText();
+            int rut = Integer.parseInt(txtRut.getText());
+            String telefono = txtTelefono.getText();
 
-        // Crear un objeto Cliente con los datos actualizados
-        Cliente clienteActualizado = new Cliente(nombre, email, rut, telefono, new Date());
+            //verificamos si el nombre ya está en uso
+            ClienteServicios clienteServicios = new ClienteServicios();
+            if (clienteServicios.existeNombreCliente(nombre)) {
+                JOptionPane.showMessageDialog(this, "Ya existe un cliente con ese nombre", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            
+            //creamos un objeto Cliente con los datos actualizados
+            Cliente clienteActualizado = new Cliente(nombre, email, rut, telefono, new Date());
 
-        // Llamar al método para actualizar el cliente
-        ControladorCliente controlador = ControladorCliente.getInstance();
-        boolean actualizado = controlador.actualizarCliente(clienteActualizado);
+            //llamamos al método para actualizar el cliente
+            ControladorCliente controlador = ControladorCliente.getInstance();
+            boolean actualizado = controlador.actualizarCliente(clienteActualizado);
 
-        if (actualizado) {
-            // Mostrar mensaje de éxito
-            JOptionPane.showMessageDialog(this, "Cliente actualizado correctamente");
-            this.dispose();  // Cerrar la ventana si se actualiza correctamente
-        } else {
-            // Mostrar mensaje de error si no se pudo actualizar
-            JOptionPane.showMessageDialog(this, "Error al actualizar el cliente", "Error", JOptionPane.ERROR_MESSAGE);
+            if (actualizado) {
+                JOptionPane.showMessageDialog(this, "Cliente actualizado correctamente");
+                this.dispose();
+            } else {
+                // Mostrar mensaje de error si no se pudo actualizar
+                JOptionPane.showMessageDialog(this, "Error al actualizar el cliente", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al actualizar cliente: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Error al actualizar cliente: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-    }
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed

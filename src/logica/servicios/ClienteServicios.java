@@ -148,4 +148,19 @@ public class ClienteServicios {
         }
     }
     
+    public boolean existeNombreCliente(String nombre) {
+        String sql = "SELECT COUNT(*) FROM cliente WHERE nom_empresa = ?";
+        try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
+            stmt.setString(1, nombre);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+
 }

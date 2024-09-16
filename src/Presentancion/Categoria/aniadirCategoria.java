@@ -153,23 +153,38 @@ public class aniadirCategoria extends javax.swing.JFrame {
     }//GEN-LAST:event_txtDescripcionActionPerformed
 
     private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
-        //obtenemos los datos de los campos de texto
+        // obtenemos los datos de los campos de texto
         String nombre = txtNombre.getText().trim();
         String descripcion = txtDescripcion.getText().trim();
 
         //comprobamos que los campos no estén vacíos
-        if(nombre.isEmpty() || descripcion.isEmpty()) {
+        if (nombre.isEmpty() || descripcion.isEmpty()) {
             javax.swing.JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
             return;
         }
+        
+        //verificamos que el nombre contenga solo letras
+        if (!nombre.matches("[a-zA-Z]+")) {
+            javax.swing.JOptionPane.showMessageDialog(this, "El nombre solo debe contener letras.", "Advertencia", javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        CategoriaServicios categoriaServicios = new CategoriaServicios();
+        //verificamos si la categoría con el mismo nombre ya existe
+        Categoria categoriaExistente = categoriaServicios.buscarCategoriaPorNombre(nombre);
 
-        //creamos una nueva instancia de Categoria
+        if (categoriaExistente != null) {
+            //si ya existe una categoría con el mismo nombre
+            javax.swing.JOptionPane.showMessageDialog(this, "Ya existe una categoría con este nombre.", "Advertencia", javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        //si no existe la categoria, creamos una nueva instancia de Categoria
         Categoria nuevaCategoria = new Categoria();
         nuevaCategoria.setNombre(nombre);
         nuevaCategoria.setDescripcion(descripcion);
 
         //llamamos el altaCategoria
-        CategoriaServicios categoriaServicios = new CategoriaServicios();
         boolean exito = categoriaServicios.altaCategoria(nuevaCategoria);
 
         //verificamos si se añadió correctamente

@@ -144,5 +144,36 @@ public class VendedorServicios {
             return -1;
         }
     }
+    
+    public boolean cedulaEnUso(int cedula) {
+        String sql = "SELECT COUNT(*) FROM vendedor WHERE cedula = ?";
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setInt(1, cedula);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    public boolean vendedorEstaAsociadoAPedido(int id) {
+        String sql = "SELECT COUNT(*) FROM pedido WHERE vendedorID = ?";
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
+    
 }

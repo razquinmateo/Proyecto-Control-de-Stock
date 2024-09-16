@@ -68,4 +68,24 @@ public class ControladorProducto implements IControladorProducto {
     public Producto buscarProductoPorNombre(String nombreProducto){
         return productoServicios.buscarProductoPorNombre(nombreProducto);
     }
+    
+    @Override
+    public boolean nombreProductoExiste(String nombre){
+        return productoServicios.nombreProductoExiste(nombre);
+    }
+    
+    @Override
+    public boolean skuProductoExiste(String sku){
+        return productoServicios.skuProductoExiste(sku);
+    }
+    
+    @Override
+    public Producto buscarProductoPorSKU(String sku){
+        return productoServicios.buscarProductoPorSKU(sku);
+    }
+    
+    @Override
+    public boolean productoEnPedidos(int idProducto){
+        return productoServicios.productoEnPedidos(idProducto);
+    }
 }

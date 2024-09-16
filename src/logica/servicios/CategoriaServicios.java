@@ -136,4 +136,25 @@ public class CategoriaServicios {
         
         return categoria;
     }
+    
+    //auxiliar para verificar si hay productos dentro de esta categoria
+    public boolean categoriaTieneProductos(int categoriaId) {
+        int cantidadProductos = 0;
+        String sql = "SELECT COUNT(*) FROM producto WHERE ID = ?";
+            try (PreparedStatement ps = conexion.prepareStatement(sql)){
+                ps.setInt(1, categoriaId);
+                ResultSet rs = ps.executeQuery();
+                
+                if (rs.next()) {
+                    cantidadProductos = rs.getInt(1);
+                }
+                
+                rs.close();
+                ps.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
+            return cantidadProductos > 0;
+    }
 }

@@ -25,4 +25,5 @@ public interface IControladorPedido {
     public abstract boolean validarCliente(int idCliente); 
     public abstract List<String> obtenerNombresVendedores();
     public abstract List<String> obtenerNombresClientes();
+    public abstract boolean actualizarEstadoPedido(int idPedido, String nuevoEstado);
 }

@@ -171,17 +171,44 @@ public class modificarCategoria extends javax.swing.JFrame {
         //obtenemos el ID de la categoria que se está editando
         CategoriaServicios servicios = new CategoriaServicios();
 
-        String nombre = txtNombre.getText();  
-        String descripcion = txtDescripcion.getText();
+        String nuevoNombre = txtNombre.getText();  
+        String nuevaDescripcion = txtDescripcion.getText();
         
         //verificamos que los campos no estén vacíos
-        if (nombre.isEmpty() || descripcion.isEmpty()) {
+        if (nuevoNombre.isEmpty() || nuevaDescripcion.isEmpty()) {
             //mostramos un mensaje de error si algún campo está vacío
             javax.swing.JOptionPane.showMessageDialog(this, "Todos los campos deben ser completados.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
             return;
         }
         
-        Categoria categoriaActualizada = new Categoria(id, nombre, descripcion);
+        //verificamos que el nombre contenga solo letras
+        if (!nuevoNombre.matches("[a-zA-Z]+")) {
+            javax.swing.JOptionPane.showMessageDialog(this, "El nombre solo debe contener letras.", "Advertencia", javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        //obtenemos el nombre actual desde la base de datos
+        Categoria categoriaOriginal = servicios.buscarCategoria(id);
+        if (categoriaOriginal == null) {
+            JOptionPane.showMessageDialog(this, "No se pudo encontrar la categoría original.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        String nombreOriginal = categoriaOriginal.getNombre();
+        
+        //verificamos si el nombre ha cambiado
+        if (!nuevoNombre.equals(nombreOriginal)) {
+            //si el nombre ha cambiado, verificamos si el nuevo nombre ya existe
+            Categoria categoriaExistente = servicios.buscarCategoriaPorNombre(nuevoNombre);
+            if (categoriaExistente != null) {
+                JOptionPane.showMessageDialog(this, "Ya existe una categoría con este nombre. Elija otro.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+        }
+        
+        
+        //si el nombre no cambió o no existe duplicado, hacemos la modificar
+        Categoria categoriaActualizada = new Categoria(id, nuevoNombre, nuevaDescripcion);
     
         boolean exito = servicios.modificarCategoria(id, categoriaActualizada);
 

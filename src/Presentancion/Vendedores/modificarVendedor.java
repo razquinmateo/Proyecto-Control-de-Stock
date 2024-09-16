@@ -277,6 +277,12 @@ public class modificarVendedor extends javax.swing.JFrame {
             return;
         }
         
+        //verificamos si la cédula ya está en uso
+        if (servicios.cedulaEnUso(cedula) && cedula != vendedorExistente.getCedula()) {
+            JOptionPane.showMessageDialog(this, "La cédula ya está en uso. Por favor, elija otra.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
         //verificamos que el correo tenga un formato válido
         if (!correo.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
             javax.swing.JOptionPane.showMessageDialog(this, "El correo no tiene un formato válido.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);

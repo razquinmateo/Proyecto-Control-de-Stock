@@ -158,10 +158,64 @@ public class ProductoServicios {
     //auxiliar para buscar producto por nombre
     public Producto buscarProductoPorNombre(String nombreProducto) {
         Producto producto = null;
+            try {
+                String sql = "SELECT * FROM producto WHERE nombre = ?";
+                PreparedStatement ps = conexion.prepareStatement(sql);
+                ps.setString(1, nombreProducto);
+                ResultSet rs = ps.executeQuery();
+
+                if (rs.next()) {
+                    producto = new Producto();
+                    producto.setId(rs.getInt("id"));
+                    producto.setNombre(rs.getString("nombre"));
+                    producto.setDescripcion(rs.getString("descripcion"));
+                    producto.setSKU(rs.getString("SKU"));
+                    producto.setStock(rs.getInt("stock"));
+                    producto.setPrecioVenta(rs.getFloat("precioVenta"));
+                    producto.setCategoria(buscarCategoriaPorId(rs.getInt("CategoriaID")));
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            return producto;
+    }
+    
+    public boolean nombreProductoExiste(String nombre) {
+        String sql = "SELECT COUNT(*) FROM producto WHERE nombre = ?";
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setString(1, nombre);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+    
+    public boolean skuProductoExiste(String sku) {
+        String sql = "SELECT COUNT(*) FROM producto WHERE SKU = ?";
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setString(1, sku);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+    
+    public Producto buscarProductoPorSKU(String sku) {
+        Producto producto = null;
         try {
-            String sql = "SELECT * FROM producto WHERE nombre = ?";
+            String sql = "SELECT * FROM producto WHERE SKU = ?";
             PreparedStatement ps = conexion.prepareStatement(sql);
-            ps.setString(1, nombreProducto);
+            ps.setString(1, sku);
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
@@ -178,5 +232,19 @@ public class ProductoServicios {
             ex.printStackTrace();
         }
         return producto;
-}
+    }
+    
+    public boolean productoEnPedidos(int idProducto) {
+        String sql = "SELECT COUNT(*) FROM pedido_producto WHERE ProductoID = ?";
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setInt(1, idProducto);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

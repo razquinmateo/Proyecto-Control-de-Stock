@@ -20,4 +20,8 @@ public interface IControladorProducto {
     public abstract ArrayList<String> obtenerNombresProductos();
     public abstract ArrayList<Float> obtenerPreciosProductos();
     public abstract Producto buscarProductoPorNombre(String nombreProducto);
+    public abstract boolean nombreProductoExiste(String nombre);
+    public abstract boolean skuProductoExiste(String sku);
+    public abstract Producto buscarProductoPorSKU(String sku);
+    public abstract boolean productoEnPedidos(int idProducto);
 }

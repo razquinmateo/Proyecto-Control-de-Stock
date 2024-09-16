@@ -24,5 +24,6 @@ public interface IControladorCliente {
     public abstract Cliente obtenerClientePorRut(int rut);
     public abstract boolean actualizarCliente(Cliente cliente);
     public abstract int obtenerIdClientePorNombre(String nombreCliente);
+    public abstract boolean existeNombreCliente(String nombre);
     
 }

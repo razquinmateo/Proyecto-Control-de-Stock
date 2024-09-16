@@ -57,4 +57,14 @@ public class ControladorVendedor implements IControladorVendedor  {
     public int obtenerIdVendedorPorNombre(String nombreVendedor){
         return vendedorServicios.obtenerIdVendedorPorNombre(nombreVendedor);
     }
+    
+    @Override
+    public boolean cedulaEnUso(int cedula){
+        return vendedorServicios.cedulaEnUso(cedula);
+    }
+    
+    @Override
+    public boolean vendedorEstaAsociadoAPedido(int id){
+        return vendedorServicios.vendedorEstaAsociadoAPedido(id);
+    }
 }

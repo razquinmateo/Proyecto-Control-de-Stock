@@ -296,6 +296,16 @@ public class modificarEnCarrito extends javax.swing.JFrame {
         int cantidad = Integer.parseInt(txtCantidad.getText());
         float precioUnidad = (float) precioProducto;
         float subtotal = Float.parseFloat(txtSubtotal.getText().replace(',', '.'));
+        
+        //verificar si txtCantidad contiene un número válido
+        try {
+            cantidad = Integer.parseInt(txtCantidad.getText().trim());
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "La cantidad debe ser un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        
         addPedidoFrame.actualizarFila(selectedRow, producto, precioUnidad, cantidad, subtotal);
         this.dispose();
     }//GEN-LAST:event_btnConfirmarActionPerformed

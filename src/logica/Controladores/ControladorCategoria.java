@@ -64,4 +64,9 @@ public class ControladorCategoria implements IControladorCategoria {
     public Categoria buscarCategoriaPorNombre(String nombre){
         return categoriaServicios.buscarCategoriaPorNombre(nombre);
     }
+    
+    @Override
+    public boolean categoriaTieneProductos(int categoriaId){
+        return categoriaServicios.categoriaTieneProductos(categoriaId);
+    }
 }

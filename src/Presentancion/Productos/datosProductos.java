@@ -242,6 +242,17 @@ public class datosProductos extends javax.swing.JFrame {
     
         if (selectedRow >= 0) {
             int id = (Integer) tblListarProductos.getValueAt(selectedRow, 0);
+            
+            ProductoServicios productoServicios = new ProductoServicios();
+        
+            //verificamos si el producto está asociado a algún pedido
+            if (productoServicios.productoEnPedidos(id)) {
+                JOptionPane.showMessageDialog(this, 
+                        "No se puede eliminar el producto porque está asociado a uno o más pedidos.", 
+                        "Advertencia", 
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
 
             int confirmar = JOptionPane.showConfirmDialog(this, 
                     "¿Está seguro de que desea eliminar este producto?", 

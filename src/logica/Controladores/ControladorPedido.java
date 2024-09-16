@@ -130,5 +130,10 @@ public class ControladorPedido implements IControladorPedido {
     public List<String> obtenerNombresClientes() {
         return servicioPedidos.obtenerNombresVendedores();
     }
+    
+    @Override
+    public boolean actualizarEstadoPedido(int idPedido, String nuevoEstado){
+        return servicioPedidos.actualizarEstadoPedido(idPedido, nuevoEstado);
+    }
 
 }

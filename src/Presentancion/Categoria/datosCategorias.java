@@ -233,14 +233,28 @@ public class datosCategorias extends javax.swing.JFrame {
     
         if (selectedRow >= 0) {
             int id = (Integer) tblListarCategorias.getValueAt(selectedRow, 0);
+            
+            CategoriaServicios servicios = new CategoriaServicios();
+            
+            //verificamos si hay productos asociados con esta categoría
+            boolean tieneProductos = servicios.categoriaTieneProductos(id);
+            
+            if (tieneProductos) {
+                JOptionPane.showMessageDialog(this, 
+                        "No puede eliminar esta categoría. Hay productos asociados a ella.\n" + 
+                        "Primero elimine o reasigne esos productos.", 
+                        "Error", 
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
-            int confirm = JOptionPane.showConfirmDialog(this, 
-                    "¿Está seguro de que desea eliminar esta categoria?", 
+            //confirmarmos la eliminación si no hay productos asociados
+            int confirmar = JOptionPane.showConfirmDialog(this, 
+                    "¿Está seguro de que desea eliminar esta categoría?", 
                     "Confirmar Eliminación", 
                     JOptionPane.YES_NO_OPTION);
 
-            if (confirm == JOptionPane.YES_OPTION) {
-                CategoriaServicios servicios = new CategoriaServicios();
+            if (confirmar == JOptionPane.YES_OPTION) {
                 boolean exito = servicios.eliminarCategoria(id);
 
                 if (exito) {

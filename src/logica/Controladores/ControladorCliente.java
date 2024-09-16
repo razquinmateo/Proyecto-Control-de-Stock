@@ -86,5 +86,10 @@ public class ControladorCliente implements IControladorCliente {
     public int obtenerIdClientePorNombre(String nombreCliente){
         return ClienteServicios.obtenerIdClientePorNombre(nombreCliente);
     }
+    
+    @Override
+    public boolean existeNombreCliente(String nombre){
+        return ClienteServicios.existeNombreCliente(nombre);
+    }
 
 }

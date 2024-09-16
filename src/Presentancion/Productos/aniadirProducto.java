@@ -262,6 +262,12 @@ public class aniadirProducto extends javax.swing.JFrame {
             return;
         }
         
+        //verificamos que el nombre solo contenga letras
+        if (!nombre.matches("[a-zA-Z]+")) {
+            JOptionPane.showMessageDialog(this, "El nombre del producto solo debe contener letras.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
         float precioVenta;
         int stock;
 
@@ -270,6 +276,18 @@ public class aniadirProducto extends javax.swing.JFrame {
             stock = Integer.parseInt(stockStr);
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Precio de venta y stock deben ser numéricos válidos.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        ProductoServicios productoServicios = new ProductoServicios();
+
+        if (productoServicios.nombreProductoExiste(nombre)) {
+            JOptionPane.showMessageDialog(this, "El nombre del producto ya está en uso. Por favor, elija otro nombre.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (productoServicios.skuProductoExiste(sku)) {
+            JOptionPane.showMessageDialog(this, "El SKU del producto ya está en uso. Por favor, elija otro SKU.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
         
@@ -289,7 +307,6 @@ public class aniadirProducto extends javax.swing.JFrame {
         producto.setCategoria(categoriaSeleccionada);
     
         //agregamos el producto a la base de datos
-        ProductoServicios productoServicios = new ProductoServicios();
         boolean exito = productoServicios.altaProducto(producto);
 
         if (exito) {

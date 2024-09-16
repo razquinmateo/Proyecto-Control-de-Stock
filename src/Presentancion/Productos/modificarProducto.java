@@ -303,7 +303,13 @@ public class modificarProducto extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-
+        
+        //verificamos que el nombre solo contenga letras
+        if (!nombre.matches("[a-zA-Z]+")) {
+            JOptionPane.showMessageDialog(this, "El nombre del producto solo debe contener letras.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
         float precioVenta;
         int stock;
 
@@ -312,6 +318,19 @@ public class modificarProducto extends javax.swing.JFrame {
             stock = Integer.parseInt(stockStr);
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Precio de venta y stock deben ser numéricos válidos.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        ProductoServicios productoServicios = new ProductoServicios();
+        
+        //verificamos si el nombre o el SKU ya están en uso
+        Producto productoExistentePorNombre = productoServicios.buscarProductoPorNombre(nombre);
+        Producto productoExistentePorSKU = productoServicios.buscarProductoPorSKU(sku);
+
+        // Verificar si el nombre o el SKU ya están en uso y no corresponden al producto actual
+        if ((productoExistentePorNombre != null && productoExistentePorNombre.getId() != id) || 
+        (productoExistentePorSKU != null && productoExistentePorSKU.getId() != id)) {
+            JOptionPane.showMessageDialog(this, "El nombre o el SKU ya están en uso por otro producto.", "Advertencia", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -334,7 +353,6 @@ public class modificarProducto extends javax.swing.JFrame {
         producto.setCategoria(categoriaSeleccionada);
 
         //modificamos el producto en la base de datos
-        ProductoServicios productoServicios = new ProductoServicios();
         boolean exito = productoServicios.modificarProducto(id, producto);
 
         if (exito) {

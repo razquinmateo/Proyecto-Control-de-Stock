@@ -20,4 +20,5 @@ public interface IControladorCategoria {
     public abstract Categoria buscarCategoria(int id);
     public abstract List<String> obtenerNombresCategorias();
     public abstract Categoria buscarCategoriaPorNombre(String nombre);
+    public abstract boolean categoriaTieneProductos(int categoriaId);
 }

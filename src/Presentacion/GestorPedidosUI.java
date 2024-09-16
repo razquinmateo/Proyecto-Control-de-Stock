@@ -7,6 +7,8 @@ import Presentancion.Productos.datosProductos;
 import Presentancion.Categoria.datosCategorias;
 import Presentancion.Vendedores.datosVendedores;
 import Presentancion.Clientes.ClientesPrincipal;
+import Presentancion.Proveedor.datosProveedor;
+
 import Presentancion.Pedidos.ActualizarPedido;
 import Presentancion.Pedidos.AddPedido;
 import java.util.ArrayList;
@@ -33,7 +35,6 @@ public class GestorPedidosUI extends javax.swing.JFrame {
     private IControladorUsuario ICU;
     private IControladorPedido ICP;
     private ActualizarPedido actualizarPedido = new ActualizarPedido();
-    private AddPedido agregarPedido = new AddPedido();
 
     public GestorPedidosUI() {
         initComponents();
@@ -99,7 +100,7 @@ public class GestorPedidosUI extends javax.swing.JFrame {
         btnRecargarPedidos1 = new javax.swing.JButton();
         btnAddPedido = new javax.swing.JButton();
         btnActualizarPedido = new javax.swing.JButton();
-        btnEliminarPedido = new javax.swing.JButton();
+        btnTerminarPedido = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblPedidos = new javax.swing.JTable();
         menuBar = new javax.swing.JMenuBar();
@@ -179,12 +180,12 @@ public class GestorPedidosUI extends javax.swing.JFrame {
             }
         });
 
-        btnEliminarPedido.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnEliminarPedido.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Presentancion/Iconos/icons8-cancel-32.png"))); // NOI18N
-        btnEliminarPedido.setText("Eliminar Pedido");
-        btnEliminarPedido.addActionListener(new java.awt.event.ActionListener() {
+        btnTerminarPedido.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnTerminarPedido.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Presentancion/Iconos/icons8-cancel-32.png"))); // NOI18N
+        btnTerminarPedido.setText("Terminar Pedido");
+        btnTerminarPedido.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEliminarPedidoActionPerformed(evt);
+                btnTerminarPedidoActionPerformed(evt);
             }
         });
 
@@ -224,7 +225,7 @@ public class GestorPedidosUI extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnRecargarPedidos1))
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(39, Short.MAX_VALUE)
+                        .addContainerGap(32, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(btnDatosVendedores, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnDatosClientes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -238,7 +239,7 @@ public class GestorPedidosUI extends javax.swing.JFrame {
                                 .addGap(55, 55, 55)
                                 .addComponent(btnActualizarPedido)
                                 .addGap(53, 53, 53)
-                                .addComponent(btnEliminarPedido))
+                                .addComponent(btnTerminarPedido))
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 562, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(19, 19, 19))
         );
@@ -268,7 +269,7 @@ public class GestorPedidosUI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnActualizarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnAddPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnEliminarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnTerminarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(12, 12, 12))
         );
 
@@ -276,7 +277,8 @@ public class GestorPedidosUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnDatosProveedoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDatosProveedoresActionPerformed
-        
+        datosProveedor ventanaDatosProveedores = new datosProveedor();
+        ventanaDatosProveedores.setVisible(true);
     }//GEN-LAST:event_btnDatosProveedoresActionPerformed
 
     private void btnDatosClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDatosClientesActionPerformed
@@ -316,7 +318,9 @@ public class GestorPedidosUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRecargarPedidos1ActionPerformed
 
     private void btnAddPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddPedidoActionPerformed
-        this.agregarPedido.setVisible(true);
+        AddPedido ventanaAddPedido = new AddPedido();
+    
+        ventanaAddPedido.setVisible(true);
     }//GEN-LAST:event_btnAddPedidoActionPerformed
 
     private void btnActualizarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarPedidoActionPerformed
@@ -347,31 +351,40 @@ public class GestorPedidosUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnActualizarPedidoActionPerformed
 
-    private void btnEliminarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarPedidoActionPerformed
-        // Obtener la fila seleccionada
+    private void btnTerminarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTerminarPedidoActionPerformed
+        //obtenemos la fila seleccionada
         int filaSeleccionada = tblPedidos.getSelectedRow();
 
         if (filaSeleccionada != -1) {
-
-            // Obtener el ID del pedido de la primera columna
+            //obtenemos el ID del pedido desde la primera columna
             int idPedido = (int) tblPedidos.getValueAt(filaSeleccionada, 0);
 
-            // Mostrar cuadro de diálogo de confirmación
-            int confirmacion = JOptionPane.showConfirmDialog(this,
-                    "¿Estás seguro de que deseas eliminar este pedido?",
-                    "Confirmar eliminación",
-                    JOptionPane.YES_NO_OPTION);
+            //mostramos cuadro de diálogo para seleccionar el nuevo estado
+            String[] estados = {"CANCELADO", "ENTREGADO"};
+            String estadoSeleccionado = (String) JOptionPane.showInputDialog(
+                    this,
+                    "Selecciona el nuevo estado del pedido:",
+                    "Cambiar Estado",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    estados,
+                    estados[0]);
 
-            if (confirmacion == JOptionPane.YES_OPTION) {
-                // Llamar al servicio para eliminar el pedido
-                this.ICP.eliminarPedido(idPedido);
-                recargarDatosDelPedido();
+            if (estadoSeleccionado != null) {
+                //llamamos al servicio para actualizar el estado del pedido
+                boolean exito = ICP.actualizarEstadoPedido(idPedido, estadoSeleccionado);
+
+                if (exito) {
+                    JOptionPane.showMessageDialog(this, "Estado del pedido actualizado correctamente.");
+                    recargarDatosDelPedido();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Error al actualizar el estado del pedido.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
-
         } else {
-            JOptionPane.showMessageDialog(this, "Por favor, selecciona un pedido para eliminar.");
+            JOptionPane.showMessageDialog(this, "Por favor, selecciona un pedido para actualizar el estado.");
         }
-    }//GEN-LAST:event_btnEliminarPedidoActionPerformed
+    }//GEN-LAST:event_btnTerminarPedidoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -418,8 +431,8 @@ public class GestorPedidosUI extends javax.swing.JFrame {
     private javax.swing.JButton btnDatosProductos;
     private javax.swing.JButton btnDatosProveedores;
     private javax.swing.JButton btnDatosVendedores;
-    private javax.swing.JButton btnEliminarPedido;
     private javax.swing.JButton btnRecargarPedidos1;
+    private javax.swing.JButton btnTerminarPedido;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JMenuBar menuBar;

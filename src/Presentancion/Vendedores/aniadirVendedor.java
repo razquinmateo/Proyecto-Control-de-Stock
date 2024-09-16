@@ -223,7 +223,7 @@ public class aniadirVendedor extends javax.swing.JFrame {
             return;
         }
 
-    //obtenemos los datos de los campos de texto
+        //obtenemos los datos de los campos de texto
         String nombre = txtNombre.getText();
         String cedulaStr = txtCedula.getText();
         String correo = txtCorreo.getText();

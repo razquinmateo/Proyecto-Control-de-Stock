@@ -106,7 +106,7 @@ public class ClientesPrincipal extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Rut", "Nombre", "Telefono", "Correo"
+                "RUT", "Nombre", "Telefono", "Correo"
             }
         ) {
             Class[] types = new Class [] {
@@ -182,7 +182,7 @@ public class ClientesPrincipal extends javax.swing.JFrame {
                     .addComponent(btnModificarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnAltaCliente2, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnEliminarcliente, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(21, Short.MAX_VALUE))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -248,7 +248,7 @@ public class ClientesPrincipal extends javax.swing.JFrame {
 
         if (selectedRow != -1) {
             // Obtener el RUT del cliente seleccionado
-            int rutCliente = (int) tablaClientes2.getValueAt(selectedRow, 0); // Asumiendo que la columna 0 es el RUT
+            int rutCliente = (int) tablaClientes2.getValueAt(selectedRow, 0);
 
             // Mostrar cuadro de confirmación
             int confirmacion = JOptionPane.showConfirmDialog(this, "¿Estás seguro de que deseas eliminar al cliente con RUT: " + rutCliente + "?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
@@ -257,8 +257,6 @@ public class ClientesPrincipal extends javax.swing.JFrame {
                 // Llamar al método para eliminar al cliente
                 ClienteServicios servicio = new ClienteServicios();
                 if(servicio.eliminarCliente(rutCliente)) {
-                    // Refrescar la tabla de clientes
-                    //cargarDatosEnTabla();
                     JOptionPane.showMessageDialog(this, "Cliente eliminado exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                 } else {
                     JOptionPane.showMessageDialog(this, "No se pudo eliminar el cliente.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -277,13 +275,11 @@ public class ClientesPrincipal extends javax.swing.JFrame {
             return;
         }
 
-        // Obtener el RUT de la columna correspondiente (ej. columna 0)
+        // Obtener el RUT de la columna correspondiente ( columna 0)
         int rut = (int) tablaClientes2.getValueAt(filaSeleccionada, 0);
         // Asignar el RUT a la variable estática
         ClientesModificar.rutCliente = rut;
 
-        // Centrar la ventana en la pantalla
-        // Abrir el formulario de modificación y pasar el RUT
         try {
             ClientesModificar frameClientesModificar = new ClientesModificar();
             frameClientesModificar.setLocationRelativeTo(null);
