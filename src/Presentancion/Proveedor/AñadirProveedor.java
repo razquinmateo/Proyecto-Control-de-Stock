@@ -219,6 +219,12 @@ public class AñadirProveedor extends javax.swing.JFrame {
             } catch (NumberFormatException e) {
                 throw new Exception("El teléfono debe ser un número válido.");
             }
+            
+            //verificamos que el teléfono tenga entre 9 y 15 dígitos
+            if (!telefonoStr.matches("\\d{9,15}")) {
+                javax.swing.JOptionPane.showMessageDialog(this, "El teléfono debe tener entre 9 y 15 dígitos.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
             ProveedorServicios servicios = new ProveedorServicios();
             
