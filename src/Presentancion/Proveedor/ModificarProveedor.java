@@ -277,7 +277,7 @@ public class ModificarProveedor extends javax.swing.JFrame {
         
         Proveedor proveedorActualizado = new Proveedor(id, nombre, telefono, direccion, correo);
     
-        boolean exito = servicios.modificarProveedor(id, proveedorExistente);
+        boolean exito = servicios.modificarProveedor(id, proveedorActualizado);
 
         if(exito) {
             JOptionPane.showMessageDialog(this, "Vendedor modificado exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
