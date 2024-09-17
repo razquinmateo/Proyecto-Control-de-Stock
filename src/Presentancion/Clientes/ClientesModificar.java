@@ -229,6 +229,31 @@ public static int rutCliente;
                 return;
             }
             
+            if (nombre.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "El campo 'Nombre' está vacío", "Error", JOptionPane.ERROR_MESSAGE);
+                txtNombre1.requestFocus();
+                return;
+            }
+
+            if (email.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "El campo 'Correo' está vacío", "Error", JOptionPane.ERROR_MESSAGE);
+                txtCorreo.requestFocus();
+                return;
+            }
+
+            if (telefono.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "El campo 'Teléfono' está vacío", "Error", JOptionPane.ERROR_MESSAGE);
+                txtTelefono.requestFocus();
+                return;
+            }
+
+            String rutText = txtRut.getText().trim(); //convertimos a String
+            if(rutText.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "El campo 'RUT' está vacío", "Error", JOptionPane.ERROR_MESSAGE);
+                txtRut.requestFocus();
+                return;
+            }
+            
             //creamos un objeto Cliente con los datos actualizados
             Cliente clienteActualizado = new Cliente(nombre, email, rut, telefono, new Date());
 

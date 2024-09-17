@@ -182,7 +182,7 @@ public class modificarCategoria extends javax.swing.JFrame {
         }
         
         //verificamos que el nombre contenga solo letras
-        if (!nuevoNombre.matches("[a-zA-Z]+")) {
+        if (!nuevoNombre.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
             javax.swing.JOptionPane.showMessageDialog(this, "El nombre solo debe contener letras.", "Advertencia", javax.swing.JOptionPane.WARNING_MESSAGE);
             return;
         }

@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ProveedorServicios {
 
@@ -158,4 +159,55 @@ public class ProveedorServicios {
         }
         return false;
     }
+    
+    public List<String> obtenerNombresProveedores() {
+        List<String> nombresProveedores = new ArrayList<>();
+        try {
+            String sql = "SELECT Nombre FROM proveedor";
+            PreparedStatement ps = conexion.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                nombresProveedores.add(rs.getString("nombre"));
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return nombresProveedores;
+    }
+    
+    public int obtenerProveedorIDPorNombre(String nombre) {
+        int proveedorID = -1;//valor por defecto si lo encuentra
+        String query = "SELECT ID FROM proveedor WHERE Nombre = ?";
+        try (PreparedStatement stmt = conexion.prepareStatement(query)) {
+            stmt.setString(1, nombre);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    proveedorID = rs.getInt("ID");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return proveedorID;
+    }
+    
+    public String obtenerNombreProveedorPorID(int proveedorID) {
+        String nombreProveedor = null;
+        String query = "SELECT Nombre FROM proveedor WHERE ID = ?";
+
+        try (PreparedStatement stmt = conexion.prepareStatement(query)) {
+            stmt.setInt(1, proveedorID);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                nombreProveedor = rs.getString("Nombre");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return nombreProveedor;
+    }
+
 }

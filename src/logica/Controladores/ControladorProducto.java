@@ -8,6 +8,7 @@ import logica.Clases.Producto;
 import logica.Interfaces.IControladorProducto;
 import logica.servicios.ProductoServicios;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -87,5 +88,15 @@ public class ControladorProducto implements IControladorProducto {
     @Override
     public boolean productoEnPedidos(int idProducto){
         return productoServicios.productoEnPedidos(idProducto);
+    }
+    
+    @Override
+    public List<Integer> obtenerProveedoresPorProductoID(int productoID){
+        return productoServicios.obtenerProveedoresPorProductoID(productoID);
+    }
+    
+    @Override
+    public void eliminarProveedoresPorProductoID(int productoID){
+        productoServicios.eliminarProveedoresPorProductoID(productoID);
     }
 }

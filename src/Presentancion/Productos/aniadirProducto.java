@@ -7,11 +7,14 @@ package Presentancion.Productos;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
+import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
+import javax.swing.ListModel;
 import logica.Clases.Categoria;
 import logica.Clases.Producto;
 import logica.servicios.CategoriaServicios;
 import logica.servicios.ProductoServicios;
+import logica.servicios.ProveedorServicios;
 
 /**
  *
@@ -20,6 +23,8 @@ import logica.servicios.ProductoServicios;
 public class aniadirProducto extends javax.swing.JFrame {
 
     private CategoriaServicios categoriaServicios;
+    private ProveedorServicios proveedorServicios;
+    private DefaultListModel<String> listModel;
     
     /**
      * Creates new form aniadirProducto
@@ -29,7 +34,11 @@ public class aniadirProducto extends javax.swing.JFrame {
         this.setTitle("Añadir Producto");
         this.setLocationRelativeTo(null);
         categoriaServicios = new CategoriaServicios();
+        proveedorServicios = new ProveedorServicios();
+        listModel = new DefaultListModel<>();
+        jListProveedores.setModel(listModel);
         cargarCategorias();
+        cargarProveedores();
 
             setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
             addWindowListener(new WindowAdapter() {
@@ -52,6 +61,15 @@ public class aniadirProducto extends javax.swing.JFrame {
         CbCategoria.addItem("--Selecciona una categoria--");
         for (String nombre : nombresCategorias) {
             CbCategoria.addItem(nombre);
+        }
+    }
+    
+    private void cargarProveedores() {
+        List<String> nombresProveedores = proveedorServicios.obtenerNombresProveedores();
+        CbProveedor.removeAllItems();
+        CbProveedor.addItem("--Selecciona un proveedor--");
+        for (String nombre : nombresProveedores) {
+            CbProveedor.addItem(nombre);
         }
     }
 
@@ -79,6 +97,12 @@ public class aniadirProducto extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         CbCategoria = new javax.swing.JComboBox<>();
         jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jListProveedores = new javax.swing.JList<>();
+        btnAñadirProveedor = new javax.swing.JButton();
+        btnLimpiarProveedores = new javax.swing.JButton();
+        CbProveedor = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -155,40 +179,80 @@ public class aniadirProducto extends javax.swing.JFrame {
         jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel7.setText("Categoria:");
 
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel8.setText("Proveedor(es):");
+
+        jScrollPane1.setViewportView(jListProveedores);
+
+        btnAñadirProveedor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Presentancion/Iconos/icons8-plus-24.png"))); // NOI18N
+        btnAñadirProveedor.setText("Añadir");
+        btnAñadirProveedor.setBorderPainted(false);
+        btnAñadirProveedor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAñadirProveedorActionPerformed(evt);
+            }
+        });
+
+        btnLimpiarProveedores.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Presentancion/Iconos/icons8-delete-24.png"))); // NOI18N
+        btnLimpiarProveedores.setText("Limpiar");
+        btnLimpiarProveedores.setBorderPainted(false);
+        btnLimpiarProveedores.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimpiarProveedoresActionPerformed(evt);
+            }
+        });
+
+        CbProveedor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CbProveedorActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(50, Short.MAX_VALUE)
+                .addContainerGap(61, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addGap(128, 128, 128))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel3)
+                                        .addComponent(jLabel5)
+                                        .addComponent(jLabel6)
+                                        .addComponent(jLabel4)
+                                        .addComponent(jLabel2)
+                                        .addComponent(jLabel7))
+                                    .addGap(37, 37, 37)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(CbCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(txtNombre, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
+                                            .addComponent(txtSKU, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
+                                            .addComponent(txtStock, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
+                                            .addComponent(txtPrecioVenta, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
+                                            .addComponent(txtDescripcion, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE))))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jLabel8)
+                                    .addGap(30, 30, 30)
+                                    .addComponent(CbProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(btnConfirmar, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(58, 58, 58)
                                 .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel5)
-                                    .addComponent(jLabel6)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel7))
-                                .addGap(37, 37, 37)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(CbCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(txtNombre, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
-                                        .addComponent(txtSKU, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
-                                        .addComponent(txtStock, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
-                                        .addComponent(txtPrecioVenta, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
-                                        .addComponent(txtDescripcion, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)))))
-                        .addGap(67, 67, 67))))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(btnAñadirProveedor)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(btnLimpiarProveedores))))
+                        .addGap(56, 56, 56))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -219,7 +283,17 @@ public class aniadirProducto extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(CbCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(CbProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAñadirProveedor)
+                    .addComponent(btnLimpiarProveedores))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnConfirmar, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -263,7 +337,7 @@ public class aniadirProducto extends javax.swing.JFrame {
         }
         
         //verificamos que el nombre solo contenga letras
-        if (!nombre.matches("[a-zA-Z]+")) {
+        if (!nombre.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
             JOptionPane.showMessageDialog(this, "El nombre del producto solo debe contener letras.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -310,6 +384,28 @@ public class aniadirProducto extends javax.swing.JFrame {
         boolean exito = productoServicios.altaProducto(producto);
 
         if (exito) {
+            //si se pudo agregar el producto, obtenemos el ID del producto recién agregado
+            Producto productoEncontrado = productoServicios.buscarProductoPorNombre(nombre);
+            int productoID = productoEncontrado.getId();
+
+            //verificamos si hay proveedores en la lista
+            DefaultListModel<String> modeloProveedores = (DefaultListModel<String>) jListProveedores.getModel();
+            if (modeloProveedores.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Debe agregar al menos un proveedor al producto.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            //agregamos relaciones producto-proveedor en la base de datos
+            for (int i = 0; i < modeloProveedores.size(); i++) {
+                String proveedorNombre = modeloProveedores.getElementAt(i);
+                int proveedorID = proveedorServicios.obtenerProveedorIDPorNombre(proveedorNombre);
+                if (proveedorID != -1) {
+                    //agregamos la relación producto-proveedor a la base de datos
+                    productoServicios.agregarProductoProveedor(productoID, proveedorID);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Proveedor " + proveedorNombre + " no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
             JOptionPane.showMessageDialog(this, "Producto agregado exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
             this.dispose();
         } else {
@@ -332,6 +428,33 @@ public class aniadirProducto extends javax.swing.JFrame {
     private void CbCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CbCategoriaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_CbCategoriaActionPerformed
+
+    private void btnAñadirProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAñadirProveedorActionPerformed
+        String proveedorSeleccionado = (String) CbProveedor.getSelectedItem();
+    
+        if(proveedorSeleccionado != "--Selecciona un proveedor--"){
+            if (proveedorSeleccionado != null && !proveedorSeleccionado.isEmpty()) {
+                if (!listModel.contains(proveedorSeleccionado)) {
+                    listModel.addElement(proveedorSeleccionado);
+                } else {
+                    JOptionPane.showMessageDialog(this, "El proveedor ya está en la lista.");
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Por favor selecciona un proveedor.");
+            }
+        }else{
+            JOptionPane.showMessageDialog(this, "Por favor selecciona un proveedor.");
+        }
+        
+    }//GEN-LAST:event_btnAñadirProveedorActionPerformed
+
+    private void btnLimpiarProveedoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarProveedoresActionPerformed
+        listModel.clear();
+    }//GEN-LAST:event_btnLimpiarProveedoresActionPerformed
+
+    private void CbProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CbProveedorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_CbProveedorActionPerformed
 
     /**
      * @param args the command line arguments
@@ -370,8 +493,11 @@ public class aniadirProducto extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> CbCategoria;
+    private javax.swing.JComboBox<String> CbProveedor;
+    private javax.swing.JButton btnAñadirProveedor;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnConfirmar;
+    private javax.swing.JButton btnLimpiarProveedores;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -379,6 +505,9 @@ public class aniadirProducto extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JList<String> jListProveedores;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField txtDescripcion;
     private javax.swing.JTextField txtNombre;
     private javax.swing.JTextField txtPrecioVenta;

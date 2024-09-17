@@ -9,6 +9,7 @@ import logica.Clases.Producto;
 import logica.Clases.Categoria;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -247,4 +248,46 @@ public class ProductoServicios {
         }
         return false;
     }
+    
+    public boolean agregarProductoProveedor(int productoID, int proveedorID) {
+        String query = "INSERT INTO producto_proveedor (ProductoID, ProveedorID) VALUES (?, ?)";
+        try (PreparedStatement stmt = conexion.prepareStatement(query)) {
+            stmt.setInt(1, productoID);
+            stmt.setInt(2, proveedorID);
+            int filasAfectadas = stmt.executeUpdate();
+            return filasAfectadas > 0;//retorna true si se insertó al menos una fila
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;//retorna false si ocurrió un error o no se insertó ninguna fila
+    }
+    
+    public List<Integer> obtenerProveedoresPorProductoID(int productoID) {
+        List<Integer> proveedorIDs = new ArrayList<>();
+        String query = "SELECT ProveedorID FROM producto_proveedor WHERE ProductoID = ?";
+
+        try (PreparedStatement stmt = conexion.prepareStatement(query)) {
+            stmt.setInt(1, productoID);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                proveedorIDs.add(rs.getInt("ProveedorID"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return proveedorIDs;
+    }
+    
+    public void eliminarProveedoresPorProductoID(int productoID) {
+        String query = "DELETE FROM producto_proveedor WHERE ProductoID = ?";
+        try (PreparedStatement stmt = conexion.prepareStatement(query)) {
+            stmt.setInt(1, productoID);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace(); // Manejo de errores
+        }
+    }
+
 }

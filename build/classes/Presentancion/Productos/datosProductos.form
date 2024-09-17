@@ -92,7 +92,7 @@
                 <Column editable="true" title="Nombre" type="java.lang.String"/>
                 <Column editable="true" title="Descripcion" type="java.lang.String"/>
                 <Column editable="true" title="SKU" type="java.lang.String"/>
-                <Column editable="true" title="Precio Venta" type="java.lang.Float"/>
+                <Column editable="true" title="Precio" type="java.lang.Float"/>
                 <Column editable="true" title="Stock" type="java.lang.String"/>
                 <Column editable="true" title="Categoria" type="java.lang.String"/>
               </Table>
@@ -109,22 +109,22 @@
                   <Editor/>
                   <Renderer/>
                 </Column>
-                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                <Column maxWidth="260" minWidth="250" prefWidth="-1" resizable="true">
                   <Title/>
                   <Editor/>
                   <Renderer/>
                 </Column>
-                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                <Column maxWidth="110" minWidth="100" prefWidth="-1" resizable="true">
                   <Title/>
                   <Editor/>
                   <Renderer/>
                 </Column>
-                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                <Column maxWidth="60" minWidth="50" prefWidth="-1" resizable="true">
                   <Title/>
                   <Editor/>
                   <Renderer/>
                 </Column>
-                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                <Column maxWidth="70" minWidth="60" prefWidth="-1" resizable="true">
                   <Title/>
                   <Editor/>
                   <Renderer/>

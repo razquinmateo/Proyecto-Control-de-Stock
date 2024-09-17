@@ -7,6 +7,7 @@ package logica.Interfaces;
 
 import logica.Clases.Proveedor;
 import java.util.ArrayList;
+import java.util.List;
 
 public interface IControladorProveedor {
     
@@ -24,4 +25,6 @@ public interface IControladorProveedor {
     
     public abstract boolean tieneProductosAsociados(int proveedorId);
     public abstract boolean nombreProveedorEnUso(String nombre);
+    public abstract List<String> obtenerNombresProveedores();
+    public abstract int obtenerProveedorIDPorNombre(String nombre);
 }

@@ -164,7 +164,7 @@ public class aniadirCategoria extends javax.swing.JFrame {
         }
         
         //verificamos que el nombre contenga solo letras
-        if (!nombre.matches("[a-zA-Z]+")) {
+        if (!nombre.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
             javax.swing.JOptionPane.showMessageDialog(this, "El nombre solo debe contener letras.", "Advertencia", javax.swing.JOptionPane.WARNING_MESSAGE);
             return;
         }

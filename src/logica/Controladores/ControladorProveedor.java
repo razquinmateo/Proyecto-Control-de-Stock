@@ -8,6 +8,7 @@ import logica.Clases.Proveedor;
 import logica.Interfaces.IControladorProveedor;
 import logica.servicios.ProveedorServicios;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -61,5 +62,15 @@ public class ControladorProveedor implements IControladorProveedor {
    @Override
    public boolean nombreProveedorEnUso(String nombre){
        return proveedorServicios.nombreProveedorEnUso(nombre);
+   }
+   
+   @Override
+   public List<String> obtenerNombresProveedores(){
+       return proveedorServicios.obtenerNombresProveedores();
+   }
+   
+   @Override
+   public int obtenerProveedorIDPorNombre(String nombre){
+       return proveedorServicios.obtenerProveedorIDPorNombre(nombre);
    }
 }

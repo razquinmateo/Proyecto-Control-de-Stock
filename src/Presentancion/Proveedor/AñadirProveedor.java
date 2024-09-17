@@ -210,6 +210,12 @@ public class AñadirProveedor extends javax.swing.JFrame {
             if (nombre.isEmpty() || telefonoStr.isEmpty() || direccion.isEmpty() || correo.isEmpty()) {
                 throw new Exception("Todos los campos deben ser completados.");
             }
+            
+            //verificamos que el nombre solo contenga letras y espacios
+            if (!nombre.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
+                javax.swing.JOptionPane.showMessageDialog(this, "El nombre solo puede contener letras y espacios.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
             // verificar que el correo electrónico contenga un arroba y .com
             if (!correo.contains("@") || !correo.contains(".com")) {

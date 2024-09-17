@@ -107,7 +107,7 @@ public class datosProductos extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Nombre", "Descripcion", "SKU", "Precio Venta", "Stock", "Categoria"
+                "ID", "Nombre", "Descripcion", "SKU", "Precio", "Stock", "Categoria"
             }
         ) {
             Class[] types = new Class [] {
@@ -122,6 +122,14 @@ public class datosProductos extends javax.swing.JFrame {
         if (tblListarProductos.getColumnModel().getColumnCount() > 0) {
             tblListarProductos.getColumnModel().getColumn(0).setMinWidth(50);
             tblListarProductos.getColumnModel().getColumn(0).setMaxWidth(60);
+            tblListarProductos.getColumnModel().getColumn(2).setMinWidth(250);
+            tblListarProductos.getColumnModel().getColumn(2).setMaxWidth(260);
+            tblListarProductos.getColumnModel().getColumn(3).setMinWidth(100);
+            tblListarProductos.getColumnModel().getColumn(3).setMaxWidth(110);
+            tblListarProductos.getColumnModel().getColumn(4).setMinWidth(50);
+            tblListarProductos.getColumnModel().getColumn(4).setMaxWidth(60);
+            tblListarProductos.getColumnModel().getColumn(5).setMinWidth(60);
+            tblListarProductos.getColumnModel().getColumn(5).setMaxWidth(70);
         }
 
         btnAltaProducto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Presentancion/Iconos/icons8-plus-32.png"))); // NOI18N
@@ -268,6 +276,7 @@ public class datosProductos extends javax.swing.JFrame {
                             "Producto eliminado exitosamente.", 
                             "Éxito", 
                             JOptionPane.INFORMATION_MESSAGE);
+                    cargarDatos();
                 } else {
                     JOptionPane.showMessageDialog(this, 
                             "Error al eliminar el producto.", 

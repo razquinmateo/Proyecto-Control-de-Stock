@@ -7,11 +7,13 @@ package Presentancion.Productos;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
+import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import logica.Clases.Categoria;
 import logica.Clases.Producto;
 import logica.servicios.CategoriaServicios;
 import logica.servicios.ProductoServicios;
+import logica.servicios.ProveedorServicios;
 
 /**
  *
@@ -20,12 +22,19 @@ import logica.servicios.ProductoServicios;
 public class modificarProducto extends javax.swing.JFrame {
 
     private int id;
+    private DefaultListModel<String> listModel;
+    private ProveedorServicios proveedorServicios;
+    private ProductoServicios productoServicios;
     /**
      * Creates new form modificarProducto
      */
     public modificarProducto() {
         initComponents();
         this.setLocationRelativeTo(null);
+        listModel = new DefaultListModel<>();
+        jListProveedores.setModel(listModel);
+        proveedorServicios = new ProveedorServicios();
+        productoServicios = new ProductoServicios();
         this.setTitle("Modificar Producto");
 
             setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -37,6 +46,7 @@ public class modificarProducto extends javax.swing.JFrame {
                 }
             });
             cargarCategorias();
+            cargarProveedores();
         }
 
         private void manejoCiereVentana() {
@@ -84,7 +94,6 @@ public class modificarProducto extends javax.swing.JFrame {
     }
     
     private void cargarProducto() {
-        ProductoServicios productoServicios = new ProductoServicios();
         Producto producto = productoServicios.buscarProducto(id);
         if (producto != null) {
             setNombre(producto.getNombre());
@@ -93,10 +102,38 @@ public class modificarProducto extends javax.swing.JFrame {
             setPrecioVenta(producto.getPrecioVenta());
             setStock(producto.getStock());
             setCategoria(producto.getCategoria());
+            
+            cargarProveedoresAsociados();
         } else {
             JOptionPane.showMessageDialog(this, "Producto no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+    
+    private void cargarProveedores() {
+        List<String> nombresProveedores = proveedorServicios.obtenerNombresProveedores();
+        CbProveedor.removeAllItems();
+        CbProveedor.addItem("--Selecciona un proveedor--");
+        for (String nombre : nombresProveedores) {
+            CbProveedor.addItem(nombre);
+        }
+    }
+    
+    private void cargarProveedoresAsociados() {
+        //obtenemos los IDs de los proveedores asociados al producto
+        List<Integer> proveedorIDs = productoServicios.obtenerProveedoresPorProductoID(id);
+
+        //kimpiamos el modelo de la lista
+        listModel.clear();
+
+        //obtenemos los nombres de los proveedores basados en los IDs
+        for (int proveedorID : proveedorIDs) {
+            String nombreProveedor = proveedorServicios.obtenerNombreProveedorPorID(proveedorID);
+            if (nombreProveedor != null) {
+                listModel.addElement(nombreProveedor);
+            }
+        }
+    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -122,6 +159,12 @@ public class modificarProducto extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         btnConfirmar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
+        jLabel8 = new javax.swing.JLabel();
+        CbProveedor = new javax.swing.JComboBox<>();
+        btnAñadirProveedor = new javax.swing.JButton();
+        btnLimpiarProveedores = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jListProveedores = new javax.swing.JList<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -198,13 +241,56 @@ public class modificarProducto extends javax.swing.JFrame {
             }
         });
 
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel8.setText("Proveedor(es):");
+
+        CbProveedor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CbProveedorActionPerformed(evt);
+            }
+        });
+
+        btnAñadirProveedor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Presentancion/Iconos/icons8-plus-24.png"))); // NOI18N
+        btnAñadirProveedor.setText("Añadir");
+        btnAñadirProveedor.setBorderPainted(false);
+        btnAñadirProveedor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAñadirProveedorActionPerformed(evt);
+            }
+        });
+
+        btnLimpiarProveedores.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Presentancion/Iconos/icons8-delete-24.png"))); // NOI18N
+        btnLimpiarProveedores.setText("Limpiar");
+        btnLimpiarProveedores.setBorderPainted(false);
+        btnLimpiarProveedores.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimpiarProveedoresActionPerformed(evt);
+            }
+        });
+
+        jScrollPane1.setViewportView(jListProveedores);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(120, 120, 120)
+                .addComponent(jLabel1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(50, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel8)
+                        .addGap(30, 30, 30)
+                        .addComponent(CbProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(btnAñadirProveedor)
+                            .addGap(18, 18, 18)
+                            .addComponent(btnLimpiarProveedores)))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnConfirmar, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(58, 58, 58)
@@ -227,10 +313,6 @@ public class modificarProducto extends javax.swing.JFrame {
                                 .addComponent(txtPrecioVenta, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
                                 .addComponent(txtDescripcion, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)))))
                 .addGap(67, 67, 67))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(120, 120, 120)
-                .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -261,7 +343,17 @@ public class modificarProducto extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(CbCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(CbProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAñadirProveedor)
+                    .addComponent(btnLimpiarProveedores))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnConfirmar, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -305,7 +397,7 @@ public class modificarProducto extends javax.swing.JFrame {
         }
         
         //verificamos que el nombre solo contenga letras
-        if (!nombre.matches("[a-zA-Z]+")) {
+        if (!nombre.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
             JOptionPane.showMessageDialog(this, "El nombre del producto solo debe contener letras.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -327,7 +419,7 @@ public class modificarProducto extends javax.swing.JFrame {
         Producto productoExistentePorNombre = productoServicios.buscarProductoPorNombre(nombre);
         Producto productoExistentePorSKU = productoServicios.buscarProductoPorSKU(sku);
 
-        // Verificar si el nombre o el SKU ya están en uso y no corresponden al producto actual
+        //verificamos si el nombre o el SKU ya están en uso y no corresponden al producto actual
         if ((productoExistentePorNombre != null && productoExistentePorNombre.getId() != id) || 
         (productoExistentePorSKU != null && productoExistentePorSKU.getId() != id)) {
             JOptionPane.showMessageDialog(this, "El nombre o el SKU ya están en uso por otro producto.", "Advertencia", JOptionPane.WARNING_MESSAGE);
@@ -356,6 +448,24 @@ public class modificarProducto extends javax.swing.JFrame {
         boolean exito = productoServicios.modificarProducto(id, producto);
 
         if (exito) {
+            //nos aseguramos que el JList de proveedores no esté vacío
+            if (listModel.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Debe seleccionar al menos un proveedor.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            //limpiamos las filas existentes en producto_proveedor
+            productoServicios.eliminarProveedoresPorProductoID(id);
+
+            //agregamos las nuevas filas en producto_proveedor
+            ProveedorServicios proveedorServicios = new ProveedorServicios();
+            for (int i = 0; i < listModel.size(); i++) {
+                String nombreProveedor = listModel.getElementAt(i);
+                int proveedorID = proveedorServicios.obtenerProveedorIDPorNombre(nombreProveedor);
+                if (proveedorID != -1) {
+                    productoServicios.agregarProductoProveedor(id, proveedorID);
+                }
+            }
             JOptionPane.showMessageDialog(this, "Producto modificado exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
             this.dispose();
         } else {
@@ -378,6 +488,33 @@ public class modificarProducto extends javax.swing.JFrame {
     private void CbCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CbCategoriaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_CbCategoriaActionPerformed
+
+    private void CbProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CbProveedorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_CbProveedorActionPerformed
+
+    private void btnAñadirProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAñadirProveedorActionPerformed
+        String proveedorSeleccionado = (String) CbProveedor.getSelectedItem();
+
+        if(proveedorSeleccionado != "--Selecciona un proveedor--"){
+            if (proveedorSeleccionado != null && !proveedorSeleccionado.isEmpty()) {
+                if (!listModel.contains(proveedorSeleccionado)) {
+                    listModel.addElement(proveedorSeleccionado);
+                } else {
+                    JOptionPane.showMessageDialog(this, "El proveedor ya está en la lista.");
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Por favor selecciona un proveedor.");
+            }
+        }else{
+            JOptionPane.showMessageDialog(this, "Por favor selecciona un proveedor.");
+        }
+
+    }//GEN-LAST:event_btnAñadirProveedorActionPerformed
+
+    private void btnLimpiarProveedoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarProveedoresActionPerformed
+        listModel.clear();
+    }//GEN-LAST:event_btnLimpiarProveedoresActionPerformed
 
     /**
      * @param args the command line arguments
@@ -416,8 +553,11 @@ public class modificarProducto extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> CbCategoria;
+    private javax.swing.JComboBox<String> CbProveedor;
+    private javax.swing.JButton btnAñadirProveedor;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnConfirmar;
+    private javax.swing.JButton btnLimpiarProveedores;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -425,6 +565,9 @@ public class modificarProducto extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JList<String> jListProveedores;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField txtDescripcion;
     private javax.swing.JTextField txtNombre;
     private javax.swing.JTextField txtPrecioVenta;

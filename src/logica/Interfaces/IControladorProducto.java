@@ -6,6 +6,7 @@ package logica.Interfaces;
 
 import logica.Clases.Producto;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -24,4 +25,6 @@ public interface IControladorProducto {
     public abstract boolean skuProductoExiste(String sku);
     public abstract Producto buscarProductoPorSKU(String sku);
     public abstract boolean productoEnPedidos(int idProducto);
+    public abstract List<Integer> obtenerProveedoresPorProductoID(int productoID);
+    public abstract void eliminarProveedoresPorProductoID(int productoID);
 }
