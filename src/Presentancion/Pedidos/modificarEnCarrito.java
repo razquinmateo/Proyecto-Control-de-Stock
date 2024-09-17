@@ -23,6 +23,7 @@ import logica.servicios.ProductoServicios;
 public class modificarEnCarrito extends javax.swing.JFrame {
 
     private AddPedido addPedidoFrame;
+    private ActualizarPedido actualizarPedidoFrame;
     private double precioProducto;
     private int selectedRow;
     
@@ -32,7 +33,6 @@ public class modificarEnCarrito extends javax.swing.JFrame {
     public modificarEnCarrito() {
         
         initComponents();
-        this.setTitle("Modificar Carrito");
         cargarProductos();
         configurarListeners();
         this.setLocationRelativeTo(null);
@@ -56,6 +56,10 @@ public class modificarEnCarrito extends javax.swing.JFrame {
     
     public void setAddPedidoFrame(AddPedido addPedidoFrame) {
         this.addPedidoFrame = addPedidoFrame;
+    }
+    
+    public void setActualizarPedidoFrame(ActualizarPedido actualizarPedidoFrame) {
+        this.actualizarPedidoFrame = actualizarPedidoFrame;
     }
 
     private void cargarProductos() {
@@ -293,21 +297,58 @@ public class modificarEnCarrito extends javax.swing.JFrame {
     }//GEN-LAST:event_txtSubtotalActionPerformed
 
     private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
+        //obtenemos nombre del producto seleccionado
         String producto = (String) CbNombreProductos.getSelectedItem();
-        int cantidad = Integer.parseInt(txtCantidad.getText());
-        float precioUnidad = (float) precioProducto;
-        float subtotal = Float.parseFloat(txtSubtotal.getText().replace(',', '.'));
-        
-        //verificar si txtCantidad contiene un número válido
-        try {
-            cantidad = Integer.parseInt(txtCantidad.getText().trim());
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "La cantidad debe ser un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
+    
+        //validamos el nombre del producto
+        if (producto == null || producto.equals("--Selecciona un producto--")) {
+            JOptionPane.showMessageDialog(this, "Por favor, selecciona un producto válido.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-
         
-        addPedidoFrame.actualizarFila(selectedRow, producto, precioUnidad, cantidad, subtotal);
+        //obtenemos y validamos la cantidad
+        String cantidadText = txtCantidad.getText().trim();
+        int cantidad = 0;
+        if (cantidadText.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El campo de cantidad no puede estar vacío.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        try {
+            cantidad = Integer.parseInt(cantidadText);
+            if (cantidad <= 0) {
+                JOptionPane.showMessageDialog(this, "La cantidad debe ser mayor a 0.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Ingrese un número válido para la cantidad.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        //obtenemos y validamos el subtotal
+        String subtotalText = txtSubtotal.getText().trim();
+        float subtotal = 0;
+        if (subtotalText.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El subtotal no puede estar vacío.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        try {
+            subtotal = Float.parseFloat(subtotalText.replace(',', '.'));
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "El subtotal no es válido.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        //obtenemos el precio por unidad o de venta del producto
+        float precioUnidad = (float) precioProducto;
+        
+        if (addPedidoFrame != null) {
+            addPedidoFrame.actualizarFila(selectedRow, producto, precioUnidad, cantidad, subtotal);
+        }
+    
+        if (actualizarPedidoFrame != null) {
+            actualizarPedidoFrame.actualizarFila(selectedRow, producto, precioUnidad, cantidad, subtotal);
+        }
+        
         this.dispose();
     }//GEN-LAST:event_btnConfirmarActionPerformed
 
@@ -348,6 +389,7 @@ public class modificarEnCarrito extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(modificarEnCarrito.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */

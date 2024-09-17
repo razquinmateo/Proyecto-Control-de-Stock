@@ -25,5 +25,7 @@ public interface IControladorCliente {
     public abstract boolean actualizarCliente(Cliente cliente);
     public abstract int obtenerIdClientePorNombre(String nombreCliente);
     public abstract boolean existeNombreCliente(String nombre);
+    public abstract String obtenerNombreClientePorId(int idCliente);
+    public abstract List<String> obtenerNombresClientes();
     
 }

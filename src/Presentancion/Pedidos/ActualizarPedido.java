@@ -4,85 +4,316 @@
  */
 package Presentancion.Pedidos;
 
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.table.DefaultTableModel;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import javax.swing.JOptionPane;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import logica.Clases.DetallePedido;
 import logica.Clases.Pedido;
+import logica.Clases.Producto;
 import logica.Fabrica;
 import logica.Interfaces.IControladorPedido;
+import logica.servicios.ClienteServicios;
+import logica.servicios.DetallePedidoServicios;
 import logica.servicios.PedidosServicios;
+import logica.servicios.VendedorServicios;
+import logica.servicios.ProductoServicios;
 
 public class ActualizarPedido extends javax.swing.JFrame {
 
     private PedidosServicios pedidosServicios;
+    private VendedorServicios vendedorServicios;
+    private ClienteServicios clienteServicios;
+    private ProductoServicios productoServicios;
+    private DetallePedidoServicios detallePedidos;
     private IControladorPedido ICP;
-    private int pedidoId;
+    private Pedido pedidoSeleccionado;
 
     public ActualizarPedido() {
         initComponents();
         this.setTitle("Gestion de Pedidos");
-        this.pedidosServicios = new PedidosServicios();
-        this.ICP = Fabrica.getInstance().getIControladorPedido();
         this.setLocationRelativeTo(null);
-    
+        this.vendedorServicios = new VendedorServicios();
+        this.clienteServicios = new ClienteServicios();
+        this.productoServicios = new ProductoServicios();
+        this.pedidosServicios = new PedidosServicios();
+        this.detallePedidos = new DetallePedidoServicios();
+        this.ICP = Fabrica.getInstance().getIControladorPedido();
+        
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-            addWindowListener(new WindowAdapter() {
-                @Override
-                public void windowClosing(WindowEvent e) {
-                    //codigo que se ejecuta al cerrar la ventana
-                    manejoCiereVentana();
-                }
-            });
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                //codigo que se ejecuta al cerrar la ventana
+                manejoCiereVentana();
+            }
+        });
+
+        txtPrecioTotal.setEnabled(false);
+        cargarNombres();
+        cargarEstado();
+
+        //deshabilitamos los botones quitar, modificar y limpiar
+        btnQuitar.setEnabled(false);
+        btnModificar.setEnabled(false);
+        btnLimpiarTabla.setEnabled(false);
+
+        JtableCarrito.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
+            if (!e.getValueIsAdjusting()) {
+                btnQuitar.setEnabled(JtableCarrito.getSelectedRow() != -1);
+                btnModificar.setEnabled(JtableCarrito.getSelectedRow() != -1);
+            }
+        });
+
+        ((DefaultTableModel) JtableCarrito.getModel()).addTableModelListener(e -> {
+            btnLimpiarTabla.setEnabled(JtableCarrito.getRowCount() > 0);
+        });
+
+        //añadimos un TableModelListener a la tabla para actualizar el total
+        ((DefaultTableModel) JtableCarrito.getModel()).addTableModelListener(new TableModelListener() {
+            @Override
+            public void tableChanged(TableModelEvent e) {
+                // Solo actualiza si la tabla cambia
+                actualizarPrecioTotal();
+            }
+        });
+
+    }
+
+    private void manejoCiereVentana() {
+        //cierra la ventana actual ()
+        this.dispose();
+    }
+
+    //cargamos los nombres a los combobox
+    private void cargarNombres() {
+        CbNombreVendedor.addItem("--Selecciona un vendedor--");
+        CbNombreCliente.addItem("--Selecciona un cliente--");
+        
+        List<String> nombresVendedores = vendedorServicios.obtenerNombresVendedores();
+        List<String> nombresClientes = clienteServicios.obtenerNombresClientes();
+
+        for (String nombre : nombresVendedores) {
+            CbNombreVendedor.addItem(nombre);
         }
 
-        private void manejoCiereVentana() {
-           //cierra la ventana actual ()
-           this.dispose();
+        for (String nombre : nombresClientes) {
+            CbNombreCliente.addItem(nombre);
         }
-
-    // Carga los valores en los jtextfield's
+    }
+    
+    //cargamos los estados (entregado y cancelado se hacen en terminar pedido)
+    private void cargarEstado() {
+        CbEstado.addItem("--Selecciona un estado--");
+        CbEstado.addItem("EN_PREPARACION");
+        CbEstado.addItem("EN_VIAJE");
+    }
+    
+    //traemos el objeto pedido desde GestorPedidoUI
     public void setPedido(Pedido pedido) {
-        txtTotalPedido.setText(String.valueOf(pedido.getTotal()));
-        txtEstadoPedido.setText(pedido.getEstado().name());
+        this.pedidoSeleccionado = pedido;
+        cargarDatosPedido();
+    }
+    
+    
+    private void cargarDatosPedido() {
+    
+        //cargamos los datos del pedido seleccionado en los comboboxes
+        CbNombreVendedor.setSelectedItem(vendedorServicios.getNombreVendedorPorId(pedidoSeleccionado.getIdVendedor()));
+        CbNombreCliente.setSelectedItem(clienteServicios.getNombreClientePorId(pedidoSeleccionado.getIdCliente()));
+        CbEstado.setSelectedItem(pedidoSeleccionado.getEstado().toString());
+    
+
+        //configuramos el modelo de la tabla
+        DefaultTableModel model = (DefaultTableModel) JtableCarrito.getModel();
+        model.setColumnIdentifiers(new String[]{"Nombre", "Precio Unidad", "Cantidad", "Subtotal"});
+        model.setRowCount(0);//limpiamos la tabla
+
+        //cargamos los productos en la tabla
+            for (DetallePedido detalle : detallePedidos.obtenerDetallesPedido(pedidoSeleccionado.getIdentificador())) {
+                model.addRow(new Object[]{
+                    detalle.getProducto().getNombre(),
+                    detalle.getPrecioVenta(),
+                    detalle.getCantidad(),
+                    detalle.subTotal()
+                });
+            }
+
+        //automaticamente actualiza el precio total
+        actualizarPrecioTotal();
     }
 
-    public void setPedidoId(int id) {
-        this.pedidoId = id;
+    //funcion que se usa en añadirAlCarrito para traer los datos acá
+    public void agregarProductoATabla(String producto, float precioUnidad, int cantidad, float subtotal) {
+        DefaultTableModel model = (DefaultTableModel) JtableCarrito.getModel();
+        boolean productoExistente = false;
+
+        //itera sobre las filas existentes en la tabla para verificar si el producto ya está agregado
+        for (int i = 0; i < model.getRowCount(); i++) {
+            String productoEnTabla = (String) model.getValueAt(i, 0);
+            if (productoEnTabla.equals(producto)) {
+                //si el producto ya existe, actualiza la cantidad y el subtotal
+                int cantidadActual = (int) model.getValueAt(i, 2);
+                float subtotalActual = (float) model.getValueAt(i, 3);
+
+                //sumamos la cantidad nueva a la existente
+                int nuevaCantidad = cantidadActual + cantidad;
+                float nuevoSubtotal = subtotalActual + subtotal;
+
+                //actualizamos la fila con la nueva cantidad y subtotal
+                model.setValueAt(nuevaCantidad, i, 2);//actualiza la cantidad
+                model.setValueAt(nuevoSubtotal, i, 3);//actualiza el subtotal
+
+                productoExistente = true;
+                break;
+            }
+        }
+
+        //si el producto no existe en la tabla, lo agregamos como una nueva fila
+        if (!productoExistente) {
+            model.addRow(new Object[]{producto, precioUnidad, cantidad, subtotal});
+        }
     }
+    
+    //auxiliar para actualizar el precio total
+    private void actualizarPrecioTotal() {
+        DefaultTableModel model = (DefaultTableModel) JtableCarrito.getModel();
+        float total = 0;
+
+        for (int i = 0; i < model.getRowCount(); i++) {
+            Float subtotal = (Float) model.getValueAt(i, 3); // Columna "Subtotal"
+            if (subtotal != null) {
+                total += subtotal;
+            }
+        }
+
+        txtPrecioTotal.setText(String.format("%.2f", total));
+    }
+
+    //funcion que se usa en modifcarEnCarrito para traer los datos acá
+    public void actualizarFila(int row, String producto, float precioUnidad, int cantidad, float subtotal) {
+        DefaultTableModel model = (DefaultTableModel) JtableCarrito.getModel();
+
+        model.setValueAt(producto, row, 0);
+        model.setValueAt(precioUnidad, row, 1);
+        model.setValueAt(cantidad, row, 2);
+        model.setValueAt(subtotal, row, 3);
+    }
+    
+    
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        txtTotalPedido = new javax.swing.JTextField();
-        txtEstadoPedido = new javax.swing.JTextField();
-        btnActualizarPedido = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        CbNombreVendedor = new javax.swing.JComboBox<>();
+        CbNombreCliente = new javax.swing.JComboBox<>();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        JtableCarrito = new javax.swing.JTable();
+        btnAñadir = new javax.swing.JButton();
+        btnModificar = new javax.swing.JButton();
+        btnQuitar = new javax.swing.JButton();
+        btnLimpiarTabla = new javax.swing.JButton();
+        txtPrecioTotal = new javax.swing.JTextField();
+        btnConfirmar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        CbEstado = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setText("ACTUALIZAR PEDIDO");
 
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel4.setText("Estado");
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel2.setText("Vendedor:");
 
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel5.setText("Total");
-
-        btnActualizarPedido.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnActualizarPedido.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Presentancion/Iconos/icons8-plus-32.png"))); // NOI18N
-        btnActualizarPedido.setText("Actualizar");
-        btnActualizarPedido.addActionListener(new java.awt.event.ActionListener() {
+        CbNombreVendedor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnActualizarPedidoActionPerformed(evt);
+                CbNombreVendedorActionPerformed(evt);
             }
         });
 
-        btnCancelar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel8.setText("Cliente:");
+
+        jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel9.setText("Carrito:");
+
+        JtableCarrito.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Producto", "Precio Unidad", "Cantidad", "Subtotal"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.Float.class, java.lang.Integer.class, java.lang.Float.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(JtableCarrito);
+
+        btnAñadir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Presentancion/Iconos/icons8-plus-32.png"))); // NOI18N
+        btnAñadir.setText("Añadir");
+        btnAñadir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAñadirActionPerformed(evt);
+            }
+        });
+
+        btnModificar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Presentancion/Iconos/icons8-modify-32.png"))); // NOI18N
+        btnModificar.setText("Modificar");
+        btnModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModificarActionPerformed(evt);
+            }
+        });
+
+        btnQuitar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Presentancion/Iconos/icons8-cancel-32.png"))); // NOI18N
+        btnQuitar.setText("Quitar");
+        btnQuitar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnQuitarActionPerformed(evt);
+            }
+        });
+
+        btnLimpiarTabla.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Presentancion/Iconos/icons8-broom-32 (1).png"))); // NOI18N
+        btnLimpiarTabla.setText("Limpiar");
+        btnLimpiarTabla.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimpiarTablaActionPerformed(evt);
+            }
+        });
+
+        txtPrecioTotal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPrecioTotalActionPerformed(evt);
+            }
+        });
+
+        btnConfirmar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Presentancion/Iconos/icons8-checkmark-32.png"))); // NOI18N
+        btnConfirmar.setText("Confirmar");
+        btnConfirmar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnConfirmarActionPerformed(evt);
+            }
+        });
+
         btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Presentancion/Iconos/icons8-cancel-32.png"))); // NOI18N
         btnCancelar.setText("Cancelar");
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
@@ -91,6 +322,12 @@ public class ActualizarPedido extends javax.swing.JFrame {
             }
         });
 
+        jLabel10.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel10.setText("Precio Total:");
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel3.setText("Estado");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -98,91 +335,221 @@ public class ActualizarPedido extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(78, 78, 78)
-                        .addComponent(jLabel1))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(53, 53, 53)
+                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addGap(35, 35, 35)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtTotalPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtEstadoPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel10)
+                                    .addComponent(jLabel9))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(18, 18, 18)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(txtPrecioTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addGroup(layout.createSequentialGroup()
+                                                        .addGap(6, 6, 6)
+                                                        .addComponent(btnAñadir)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(btnModificar))
+                                                    .addGroup(layout.createSequentialGroup()
+                                                        .addGap(42, 42, 42)
+                                                        .addComponent(btnConfirmar, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addGroup(layout.createSequentialGroup()
+                                                        .addComponent(btnQuitar)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(btnLimpiarTabla))))))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 447, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jLabel8)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel3))
+                                .addGap(29, 29, 29)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(CbNombreCliente, 0, 210, Short.MAX_VALUE)
+                                    .addComponent(CbNombreVendedor, 0, 210, Short.MAX_VALUE)
+                                    .addComponent(CbEstado, 0, 210, Short.MAX_VALUE)))))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(42, 42, 42)
-                        .addComponent(btnActualizarPedido)
-                        .addGap(26, 26, 26)
-                        .addComponent(btnCancelar)))
-                .addContainerGap(45, Short.MAX_VALUE))
+                        .addGap(199, 199, 199)
+                        .addComponent(jLabel1)))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(38, 38, 38)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtEstadoPedido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel1)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtTotalPedido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5))
-                .addGap(36, 36, 36)
+                    .addComponent(jLabel2)
+                    .addComponent(CbNombreVendedor, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnActualizarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(41, Short.MAX_VALUE))
+                    .addComponent(jLabel8)
+                    .addComponent(CbNombreCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(CbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAñadir)
+                    .addComponent(btnModificar)
+                    .addComponent(btnQuitar)
+                    .addComponent(btnLimpiarTabla))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtPrecioTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnConfirmar, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(20, 20, 20))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    // Boton eliminar pedido
-    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        int confirmar = JOptionPane.showConfirmDialog(this, 
-        "¿Estás seguro de que deseas cancelar? Los cambios no guardados se perderán.", 
-        "Confirmar Cancelación", 
-        JOptionPane.YES_NO_OPTION);
+    private void CbNombreVendedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CbNombreVendedorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_CbNombreVendedorActionPerformed
 
-        if(confirmar == JOptionPane.YES_OPTION) {
+    private void btnAñadirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAñadirActionPerformed
+        añadirAlCarrito añadirCarritoFrame = new añadirAlCarrito();
+        añadirCarritoFrame.setActualizarPedidoFrame(this);
+        añadirCarritoFrame.setVisible(true);
+    }//GEN-LAST:event_btnAñadirActionPerformed
+
+    private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
+        int selectedRow = JtableCarrito.getSelectedRow();
+        if (selectedRow != -1) {
+            String producto = (String) JtableCarrito.getValueAt(selectedRow, 0);
+            float precioUnidad = (Float) JtableCarrito.getValueAt(selectedRow, 1);
+            int cantidad = (Integer) JtableCarrito.getValueAt(selectedRow, 2);
+            float subtotal = (Float) JtableCarrito.getValueAt(selectedRow, 3);
+
+            modificarEnCarrito modificarFrame = new modificarEnCarrito();
+            modificarFrame.setActualizarPedidoFrame(this);
+            modificarFrame.setDatos(producto, precioUnidad, cantidad, subtotal, selectedRow);
+            modificarFrame.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(this, "Selecciona una fila para modificar.");
+        }
+    }//GEN-LAST:event_btnModificarActionPerformed
+
+    private void btnQuitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitarActionPerformed
+        int filaSeleccionada = JtableCarrito.getSelectedRow();
+        if (filaSeleccionada != -1) {
+            int confirmar = JOptionPane.showConfirmDialog(this,
+                    "¿Estás seguro de que deseas eliminar el producto seleccionado?",
+                    "Confirmar Eliminación",
+                    JOptionPane.YES_NO_OPTION);
+
+            if (confirmar == JOptionPane.YES_OPTION) {
+                ((DefaultTableModel) JtableCarrito.getModel()).removeRow(filaSeleccionada);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    "Por favor, selecciona una fila para eliminar.",
+                    "Selección Requerida",
+                    JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_btnQuitarActionPerformed
+
+    private void btnLimpiarTablaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarTablaActionPerformed
+        ((DefaultTableModel) JtableCarrito.getModel()).setRowCount(0);
+        btnLimpiarTabla.setEnabled(false);
+    }//GEN-LAST:event_btnLimpiarTablaActionPerformed
+
+    private void txtPrecioTotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecioTotalActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPrecioTotalActionPerformed
+
+    private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
+        //validaciones básicas
+        if (JtableCarrito.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(this, "El carrito está vacío. Añade al menos un producto antes de confirmar.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        if (CbNombreVendedor.getSelectedIndex() == 0 || CbNombreCliente.getSelectedIndex() == 0 || CbEstado.getSelectedIndex() == 0) {
+            JOptionPane.showMessageDialog(this, "Por favor, completa todos los campos.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        //obtenemos el ID del vendedor y del cliente seleccionados
+        String nombreVendedor = (String) CbNombreVendedor.getSelectedItem();
+        String nombreCliente = (String) CbNombreCliente.getSelectedItem();
+        
+        int idVendedor = vendedorServicios.obtenerIdVendedorPorNombre(nombreVendedor);
+        int idCliente = clienteServicios.obtenerIdClientePorNombre(nombreCliente);
+        
+        //tambien obtenemos el estado
+        Pedido.Estado estado = Pedido.Estado.valueOf((String) CbEstado.getSelectedItem());
+
+        //actualizamos el objeto pedido
+        pedidoSeleccionado.setIdVendedor(idVendedor);
+        pedidoSeleccionado.setIdCliente(idCliente);
+        pedidoSeleccionado.setEstado(estado);
+
+        //obtenemos los detalles (carrito) actuales del pedido
+        DefaultTableModel model = (DefaultTableModel) JtableCarrito.getModel();
+        List<DetallePedido> detalles = new ArrayList<>();
+        for (int i = 0; i < model.getRowCount(); i++) {
+            String nombreProducto = (String) model.getValueAt(i, 0);
+            Producto producto = productoServicios.buscarProductoPorNombre(nombreProducto);
+            if (producto == null) {
+                JOptionPane.showMessageDialog(this, "Producto no encontrado: " + nombreProducto, "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            float precioVenta = (float) model.getValueAt(i, 1);
+            int cantidad = (int) model.getValueAt(i, 2);
+            float subtotal = (float) model.getValueAt(i, 3);
+
+            DetallePedido detalle = new DetallePedido(cantidad, precioVenta, producto, pedidoSeleccionado.getIdentificador());
+            detalles.add(detalle);
+        }
+
+        //actualizamos en la base de datos
+        boolean resultado = pedidosServicios.actualizarPedido(pedidoSeleccionado);
+        
+        if (resultado) {
+            //si se pudo actualizar el pedido, tambie actualizamos los detalles del pedido en la base de datos
+            boolean resultadoDetalles = detallePedidos.actualizarDetallesPedido(pedidoSeleccionado.getIdentificador(), detalles);
+            if (resultadoDetalles) {
+                JOptionPane.showMessageDialog(this, "Pedido actualizado exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Error al actualizar los detalles del pedido. Inténtelo de nuevo.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Error al actualizar el pedido. Inténtelo de nuevo.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnConfirmarActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        int confirmar = JOptionPane.showConfirmDialog(this,
+                "¿Estás seguro de que deseas cancelar? Los cambios no guardados se perderán.",
+                "Confirmar Cancelación",
+                JOptionPane.YES_NO_OPTION);
+
+        if (confirmar == JOptionPane.YES_OPTION) {
             //cerramos la ventana actual
             this.dispose();
         }
     }//GEN-LAST:event_btnCancelarActionPerformed
-
-    // Boton actualizar pedido
-    private void btnActualizarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarPedidoActionPerformed
-        try {
-//            String estado = txtEstadoPedido.getText();
-            String estadoIngresado = txtEstadoPedido.getText().toUpperCase();
-            float total = Float.parseFloat(txtTotalPedido.getText());
-
-            Pedido.Estado estado;
-            try {
-                // Validar si el estado ingresado corresponde a un valor del enum
-                estado = Pedido.Estado.valueOf(estadoIngresado);
-            } catch (IllegalArgumentException e) {
-                // Mostrar mensaje de error si el estado no es válido
-                JOptionPane.showMessageDialog(this,
-                        "El estado ingresado no es válido. Use uno de los siguientes: "
-                        + java.util.Arrays.toString(Pedido.Estado.values()),
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE);
-                return; 
-            }
-
-            ICP.actualizarPedido(pedidoId, estado, total);
-
-            // Mensaje de éxito
-            JOptionPane.showMessageDialog(this, "Pedido actualizado correctamente");
-            this.dispose();
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error al actualizar el pedido: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_btnActualizarPedidoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -217,6 +584,14 @@ public class ActualizarPedido extends javax.swing.JFrame {
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -227,12 +602,23 @@ public class ActualizarPedido extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnActualizarPedido;
+    private javax.swing.JComboBox<String> CbEstado;
+    private javax.swing.JComboBox<String> CbNombreCliente;
+    private javax.swing.JComboBox<String> CbNombreVendedor;
+    private javax.swing.JTable JtableCarrito;
+    private javax.swing.JButton btnAñadir;
     private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnConfirmar;
+    private javax.swing.JButton btnLimpiarTabla;
+    private javax.swing.JButton btnModificar;
+    private javax.swing.JButton btnQuitar;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JTextField txtEstadoPedido;
-    private javax.swing.JTextField txtTotalPedido;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField txtPrecioTotal;
     // End of variables declaration//GEN-END:variables
 }

@@ -3,11 +3,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package logica.Controladores;
+
+import java.sql.SQLException;
 import logica.Interfaces.IControladorCliente;
 import logica.Clases.Cliente;
 import logica.servicios.ClienteServicios;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -92,4 +95,14 @@ public class ControladorCliente implements IControladorCliente {
         return ClienteServicios.existeNombreCliente(nombre);
     }
 
+    @Override
+    public String obtenerNombreClientePorId(int idCliente) {
+        String nombreCliente = "";
+        return nombreCliente = ClienteServicios.getNombreClientePorId(idCliente);
+    }
+
+    @Override
+    public List<String> obtenerNombresClientes() {
+        return ClienteServicios.obtenerNombresClientes();
+    }
 }

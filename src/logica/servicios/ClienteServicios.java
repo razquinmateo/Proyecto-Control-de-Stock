@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.sql.Date;
+import java.util.List;
 import logica.Clases.Cliente;
 
 /**
@@ -61,18 +62,18 @@ public class ClienteServicios {
         
     public boolean existeRut(int rut) {
     String sql = "SELECT COUNT(*) FROM cliente WHERE num_rut = ?";
-    try {
-        PreparedStatement stmt = conexion.prepareStatement(sql);
-        stmt.setInt(1, rut);
-        ResultSet rs = stmt.executeQuery();
-        if (rs.next()) {
-            return rs.getInt(1) > 0;
+        try {
+            PreparedStatement stmt = conexion.prepareStatement(sql);
+            stmt.setInt(1, rut);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
         }
-    } catch (SQLException ex) {
-        ex.printStackTrace();
+        return false;
     }
-    return false;
-}
     
     public boolean eliminarCliente(int rut) {
         String sql = "DELETE FROM cliente WHERE num_rut = ?";
@@ -163,4 +164,38 @@ public class ClienteServicios {
         return false;
     }
 
+    public String getNombreClientePorId(int idCliente) {
+        String nombre = null;
+        String sql = "SELECT Nom_Empresa FROM cliente WHERE ID = ?";
+
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setInt(1, idCliente);
+            ResultSet resultSet = ps.executeQuery();
+
+            if (resultSet.next()) {
+                nombre = resultSet.getString("Nom_Empresa");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.err.println("Error al obtener el nombre del cliente: " + e.getMessage());
+        }
+
+        return nombre;
+    }
+    
+    public List<String> obtenerNombresClientes() {
+        List<String> nombres = new ArrayList<>();
+        try {
+            String sql = "SELECT nom_empresa FROM cliente";
+            PreparedStatement ps = conexion.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                nombres.add(rs.getString("nom_empresa"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return nombres;
+    }
 }

@@ -4,10 +4,12 @@
  */
 package logica.Controladores;
 
+import java.sql.SQLException;
 import logica.Clases.Vendedor;
 import logica.Interfaces.IControladorVendedor;
 import logica.servicios.VendedorServicios;
 import java.util.ArrayList;
+import java.util.List;
 /**
  *
  * @author UnwantedOpinion
@@ -66,5 +68,17 @@ public class ControladorVendedor implements IControladorVendedor  {
     @Override
     public boolean vendedorEstaAsociadoAPedido(int id){
         return vendedorServicios.vendedorEstaAsociadoAPedido(id);
+    }
+    
+    @Override
+    //Devuelve el nombre del vendedor
+    public String obtenerNombreVendedorPorId(int idVendedor) {
+        String nombreVendedor = "";
+        return nombreVendedor = vendedorServicios.getNombreVendedorPorId(idVendedor);
+    }
+    
+    @Override
+    public List<String> obtenerNombresVendedores() {
+        return vendedorServicios.obtenerNombresVendedores();
     }
 }

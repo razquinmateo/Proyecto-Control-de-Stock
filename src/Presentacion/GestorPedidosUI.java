@@ -2,24 +2,26 @@ package Presentacion;
 
 import logica.Fabrica;
 
-
 import Presentancion.Productos.datosProductos;
 import Presentancion.Categoria.datosCategorias;
 import Presentancion.Vendedores.datosVendedores;
 import Presentancion.Clientes.ClientesPrincipal;
-import Presentancion.Proveedor.datosProveedor;
-
 import Presentancion.Pedidos.ActualizarPedido;
 import Presentancion.Pedidos.AddPedido;
+import Presentancion.Proveedor.datosProveedor;
+
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import logica.Clases.Pedido;
-import logica.Controladores.ControladorPedido;
+import logica.Interfaces.IControladorCliente;
 import logica.Interfaces.IControladorPedido;
 import logica.Interfaces.IControladorUsuario;
+import logica.Interfaces.IControladorVendedor;
+import logica.servicios.PedidosServicios;
+import logica.servicios.VendedorServicios;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -34,12 +36,17 @@ public class GestorPedidosUI extends javax.swing.JFrame {
     
     private IControladorUsuario ICU;
     private IControladorPedido ICP;
+    private IControladorVendedor ICV;
+    private IControladorCliente ICC;
     private ActualizarPedido actualizarPedido = new ActualizarPedido();
+    private AddPedido agregarPedido = new AddPedido();
 
     public GestorPedidosUI() {
         initComponents();
         this.ICU = Fabrica.getInstance().getIControladorUsuario();
         this.ICP = Fabrica.getInstance().getIControladorPedido();
+        this.ICV = Fabrica.getInstance().getIControladorVendedor();
+        this.ICC = Fabrica.getInstance().getIControladorCliente();
         this.setTitle("Gestion de Pedidos");
         this.setLocationRelativeTo(null); // Centra la ventana
         this.cargarDatosDePedidos();
@@ -58,8 +65,8 @@ public class GestorPedidosUI extends javax.swing.JFrame {
         tblPedidos.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
 
         for (Pedido pedido : pedidosDeBaseDeDatos) {
-            String nombreVendedor = ICP.obtenerNombreVendedorPorId(pedido.getIdVendedor());
-            String nombreCliente = ICP.obtenerNombreClientePorId(pedido.getIdCliente());
+            String nombreVendedor = ICV.obtenerNombreVendedorPorId(pedido.getIdVendedor());
+            String nombreCliente = ICC.obtenerNombreClientePorId(pedido.getIdCliente());
             Object[] nuevaRow = {
                 pedido.getIdentificador(),
                 pedido.getFechaPedido(),
@@ -318,36 +325,30 @@ public class GestorPedidosUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRecargarPedidos1ActionPerformed
 
     private void btnAddPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddPedidoActionPerformed
-        AddPedido ventanaAddPedido = new AddPedido();
-    
-        ventanaAddPedido.setVisible(true);
+        this.agregarPedido.setVisible(true);
     }//GEN-LAST:event_btnAddPedidoActionPerformed
 
     private void btnActualizarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarPedidoActionPerformed
-        int row = tblPedidos.getSelectedRow();
+        int selectedRow = tblPedidos.getSelectedRow();
+            if (selectedRow != -1) {
+            //obtenemos el ID del pedido desde la tabla
+            int idPedido = (int) tblPedidos.getValueAt(selectedRow, 0);
 
-        if (row >= 0) {
-            // Obtener el ID del pedido de la tabla
-            int idPedido = (int) tblPedidos.getValueAt(row, 0);
-
-            // Obtener el pedido desde el controlador
-            ControladorPedido controlador = ControladorPedido.getInstance();
-            Pedido pedido = controlador.getPedidos().stream()
-            .filter(p -> p.getIdentificador() == idPedido)
-            .findFirst()
-            .orElse(null);
+            //obtenemos el pedido desde PedidosServicios
+            PedidosServicios pedidosServicios = new PedidosServicios();
+            Pedido pedido = pedidosServicios.obtenerPedidoPorId(idPedido);
 
             if (pedido != null) {
-                //Se abre la ventana de detalles
-                actualizarPedido.setPedido(pedido);
-                actualizarPedido.setPedidoId(idPedido);
-                actualizarPedido.setVisible(true);
-
+                //crea y muestra la ventana de actualización
+                ActualizarPedido actualizarPedidoFrame = new ActualizarPedido();
+                actualizarPedidoFrame.setPedido(pedido);
+                actualizarPedidoFrame.setVisible(true);
             } else {
-                JOptionPane.showMessageDialog(null, "Pedido no encontrado");
+                JOptionPane.showMessageDialog(this, "No se pudo encontrar el pedido.");
             }
+
         } else {
-            JOptionPane.showMessageDialog(null, "Seleccione un pedido de la tabla");
+            JOptionPane.showMessageDialog(this, "Selecciona un pedido para modificar.");
         }
     }//GEN-LAST:event_btnActualizarPedidoActionPerformed
 
@@ -411,6 +412,8 @@ public class GestorPedidosUI extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(GestorPedidosUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 

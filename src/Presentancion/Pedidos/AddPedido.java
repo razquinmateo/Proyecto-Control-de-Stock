@@ -37,7 +37,6 @@ public class AddPedido extends javax.swing.JFrame {
 
     public AddPedido() {
         initComponents();
-        this.setTitle("Añadir Pedido");
         this.setLocationRelativeTo(null);
         this.vendedorServicios = new VendedorServicios();
         this.clienteServicios = new ClienteServicios();
@@ -90,8 +89,8 @@ public class AddPedido extends javax.swing.JFrame {
         private void cargarNombres() {
         CbNombreVendedor.addItem("--Selecciona un vendedor--");
         CbNombreCliente.addItem("--Selecciona un cliente--");
-        List<String> nombresVendedores = pedidosServicios.obtenerNombresVendedores();
-        List<String> nombresClientes = pedidosServicios.obtenerNombresClientes();
+        List<String> nombresVendedores = vendedorServicios.obtenerNombresVendedores();
+        List<String> nombresClientes = clienteServicios.obtenerNombresClientes();
 
         for (String nombre : nombresVendedores) {
             CbNombreVendedor.addItem(nombre);
@@ -101,16 +100,40 @@ public class AddPedido extends javax.swing.JFrame {
             CbNombreCliente.addItem(nombre);
         }
     }
-        
-   public void agregarProductoATabla(String producto, float precioUnidad, int cantidad, float subtotal) {
-        //obtenemos el modelo de la tabla
+    
+    //funcion que se usa en añadirAlCarrito para traer los datos acá
+    public void agregarProductoATabla(String producto, float precioUnidad, int cantidad, float subtotal) {
         DefaultTableModel model = (DefaultTableModel) JtableCarrito.getModel();
+        boolean productoExistente = false;
 
-        //agregamos una nueva fila con los datos del producto
-        model.addRow(new Object[]{producto, precioUnidad, cantidad, subtotal});
+        //itera sobre las filas existentes en la tabla para verificar si el producto ya está agregado
+        for (int i = 0; i < model.getRowCount(); i++) {
+            String productoEnTabla = (String) model.getValueAt(i, 0);
+            if (productoEnTabla.equals(producto)) {
+                //si el producto ya existe, actualiza la cantidad y el subtotal
+                int cantidadActual = (int) model.getValueAt(i, 2);
+                float subtotalActual = (float) model.getValueAt(i, 3);
+
+                //sumamos la cantidad nueva a la existente
+                int nuevaCantidad = cantidadActual + cantidad;
+                float nuevoSubtotal = subtotalActual + subtotal;
+
+                //actualizamos la fila con la nueva cantidad y subtotal
+                model.setValueAt(nuevaCantidad, i, 2);//actualiza la cantidad
+                model.setValueAt(nuevoSubtotal, i, 3);//actualiza el subtotal
+
+                productoExistente = true;
+                break;
+            }
+        }
+
+        //si el producto no existe en la tabla, lo agregamos como una nueva fila
+        if (!productoExistente) {
+            model.addRow(new Object[]{producto, precioUnidad, cantidad, subtotal});
+        }
     }
 
-   //auxiliar para actualizar el precio total
+    //auxiliar para actualizar el precio total
     private void actualizarPrecioTotal() {
         DefaultTableModel model = (DefaultTableModel) JtableCarrito.getModel();
         float total = 0;
@@ -389,6 +412,12 @@ public class AddPedido extends javax.swing.JFrame {
 
     private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
          try {
+            //verifica si la tabla tiene al menos una fila
+            if (JtableCarrito.getRowCount() == 0) {
+                JOptionPane.showMessageDialog(this, "El carrito está vacío. Añade al menos un producto antes de confirmar.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+             
             if (CbNombreVendedor.getSelectedIndex() == 0 || CbNombreCliente.getSelectedIndex() == 0) {
                 JOptionPane.showMessageDialog(this, "Por favor, selecciona un vendedor y un cliente.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -480,6 +509,7 @@ public class AddPedido extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(AddPedido.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */

@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.sql.Timestamp;
+import java.util.List;
 
 /**
  *
@@ -94,7 +95,8 @@ public class VendedorServicios {
                 vendedor.setCorreo(rs.getString("correo_electronico"));
                 vendedor.setTelefono(rs.getString("telefono"));
                 vendedor.setDireccion(rs.getString("direccion"));
-                vendedor.setFechaContratacion((rs.getDate("fecha_contratacion")));
+                Timestamp fechaContratacion = rs.getTimestamp("fecha_contratacion");
+                vendedor.setFechaContratacion(new java.util.Date(fechaContratacion.getTime()));
                 vendedores.add(vendedor);
             }
         } catch (SQLException ex) {
@@ -175,5 +177,39 @@ public class VendedorServicios {
         return false;
     }
 
+    //obtiene el nombre de la tabla vendedor con el id del pedido, para mostrar el nombre del vendedor en lugar del id
+    public String getNombreVendedorPorId(int idVendedor) {
+        String nombre = null;
+        String sql = "SELECT nombre FROM vendedor WHERE id = ?";
+
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setInt(1, idVendedor);
+            ResultSet resultSet = ps.executeQuery();
+
+            if (resultSet.next()) {
+             nombre = resultSet.getString("nombre");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.err.println("Error al obtener el nombre del vendedor: " + e.getMessage());
+        }
+
+        return nombre;
+    }
     
+    public List<String> obtenerNombresVendedores() {
+        List<String> nombres = new ArrayList<>();
+        try {
+            String sql = "SELECT nombre FROM vendedor";
+            PreparedStatement ps = conexion.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                nombres.add(rs.getString("nombre"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return nombres;
+    }
 }

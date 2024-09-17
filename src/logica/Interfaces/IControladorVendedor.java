@@ -7,6 +7,7 @@ package logica.Interfaces;
 
 import logica.Clases.Vendedor;
 import java.util.ArrayList;
+import java.util.List;
 
 public interface IControladorVendedor {
     public abstract boolean altaVendedor(Vendedor vendedor);
@@ -17,4 +18,6 @@ public interface IControladorVendedor {
     public abstract int obtenerIdVendedorPorNombre(String nombreVendedor);
     public abstract boolean cedulaEnUso(int cedula);
     public abstract boolean vendedorEstaAsociadoAPedido(int id);
+    public abstract String obtenerNombreVendedorPorId(int idVendedor); 
+    public abstract List<String> obtenerNombresVendedores();
 }

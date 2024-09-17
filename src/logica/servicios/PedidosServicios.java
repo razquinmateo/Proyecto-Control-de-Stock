@@ -22,63 +22,35 @@ public class PedidosServicios {
     
     //obtiene todos los datos de los pedidos y los devuelve en un ArrayList
     public ArrayList<Pedido> getPedidos() {
-    ArrayList<Pedido> pedidos = new ArrayList<>();
+        ArrayList<Pedido> pedidos = new ArrayList<>();
+
         try {
-        String sql = "SELECT p.Identificador, p.FechaPedido, p.Estado, p.Total, "
-                + "p.VendedorID, p.ClienteID, c.Nom_Empresa as nombre_cliente, "
-                + "v.Nombre as nombre_vendedor, v.Cedula as cedula_vendedor, v.Telefono as telefono_vendedor "
-                + "FROM pedido p "
-                + "JOIN cliente c ON p.ClienteID = c.ID "
-                + "JOIN vendedor v ON p.VendedorID = v.ID "
-                + "ORDER BY FIELD(p.Estado, 'EN_PREPARACION', 'EN_VIAJE', 'ENTREGADO', 'CANCELADO'), p.FechaPedido DESC";
+            String sql = "SELECT p.Identificador, p.FechaPedido, p.Estado, p.Total, "
+                    + "p.VendedorID, p.ClienteID, c.Nom_Empresa as nombre_cliente, "
+                    + "v.Nombre as nombre_vendedor, v.Cedula as cedula_vendedor, v.Telefono as telefono_vendedor "
+                    + "FROM pedido p "
+                    + "JOIN cliente c ON p.ClienteID = c.ID "
+                    + "JOIN vendedor v ON p.VendedorID = v.ID";
 
-        Statement statement = conexion.createStatement();
-        ResultSet resultSet = statement.executeQuery(sql);
+            Statement statement = conexion.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql);
 
-        while (resultSet.next()) {
-            int identificador = resultSet.getInt("Identificador");
-            Date fechaPedido = resultSet.getDate("FechaPedido");
-            String estadoStr = resultSet.getString("Estado");
-            Pedido.Estado estado = Pedido.Estado.valueOf(estadoStr);
-            float total = resultSet.getFloat("Total");
-            int idVendedor = resultSet.getInt("VendedorID");
-            int idCliente = resultSet.getInt("ClienteID");
+            while (resultSet.next()) {
+                int identificador = resultSet.getInt("Identificador");
+                Date fechaPedido = resultSet.getDate("FechaPedido");
+                String estadoStr = resultSet.getString("Estado");
+                Estado estado = Estado.valueOf(estadoStr);
+                float total = resultSet.getFloat("Total");
+                int idVendedor = resultSet.getInt("VendedorID");
+                int idCliente = resultSet.getInt("ClienteID");
 
-            Pedido pedido = new Pedido(identificador, fechaPedido, estado, total, idVendedor, idCliente);
-            pedidos.add(pedido);
-        }
+                Pedido pedido = new Pedido(identificador, fechaPedido, estado, total, idVendedor, idCliente);
+                pedidos.add(pedido);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return pedidos;
-    }
-
-
-    //obtiene el nombre de la tabla vendedor con el id del pedido, para mostrar el nombre del vendedor en lugar del id
-    public String getNombreVendedorPorId(int idVendedor) throws SQLException {
-        String sql = "SELECT nombre FROM vendedor WHERE id = ?";
-        PreparedStatement ps = conexion.prepareStatement(sql);
-        ps.setInt(1, idVendedor);
-
-        ResultSet resultSet = ps.executeQuery();
-
-        if (resultSet.next()) {
-            return resultSet.getString("nombre");
-        }
-        return null;
-    }
-
-    public String getNombreClientePorId(int idCliente) throws SQLException {
-        String sql = "SELECT Nom_Empresa FROM cliente WHERE ID = ?";
-        PreparedStatement ps = conexion.prepareStatement(sql);
-        ps.setInt(1, idCliente);
-
-        ResultSet resultSet = ps.executeQuery();
-
-        if (resultSet.next()) {
-            return resultSet.getString("Nom_Empresa");
-        }
-        return null;
     }
 
     public boolean eliminarPedido(int idPedido) {
@@ -97,12 +69,15 @@ public class PedidosServicios {
         return false;
     }
 
-    public boolean actualizarPedido(int idPedido, Estado estado, float total) {
-        String sql = "UPDATE pedido SET estado = ?, total = ? WHERE Identificador = ?";
+    public boolean actualizarPedido(Pedido pedido) {
+        String sql = "UPDATE pedido SET FechaPedido = ?, Estado = ?, Total = ?, VendedorID = ?, ClienteID = ? WHERE Identificador = ?";
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
-            ps.setString(1, estado.name());
-            ps.setFloat(2, total);
-            ps.setInt(3, idPedido);
+            ps.setTimestamp(1, new java.sql.Timestamp(pedido.getFechaPedido().getTime()));
+            ps.setString(2, pedido.getEstado().name());
+            ps.setFloat(3, pedido.getTotal());
+            ps.setInt(4, pedido.getIdVendedor());
+            ps.setInt(5, pedido.getIdCliente());
+            ps.setInt(6, pedido.getIdentificador());
             int rowsAffected = ps.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException e) {
@@ -126,7 +101,7 @@ public class PedidosServicios {
                 if (generatedKeys.next()) {
                     int pedidoID = generatedKeys.getInt(1);
                     pedido.setIdentificador(pedidoID);
-                    
+
                     //inserta los detalles del pedido asociados
                     return detallePedidoServicios.agregarDetallePedido(pedidoID, pedido.getDetallesPedidos());
                 }
@@ -137,38 +112,32 @@ public class PedidosServicios {
         return false;
     }
     
-    //auxiliar para obtener los nom de los vendedores (para el combobox)
-    public List<String> obtenerNombresVendedores() {
-        List<String> nombres = new ArrayList<>();
-        try{
-            String sql = "SELECT nombre FROM vendedor";
-            PreparedStatement ps = conexion.prepareStatement(sql);
+    public Pedido obtenerPedidoPorId(int idPedido) {
+        Pedido pedido = null;
+        
+        String sql = "SELECT Identificador, FechaPedido, Estado, Total, VendedorID, ClienteID "
+                + "FROM pedido WHERE Identificador = ?";
+        
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setInt(1, idPedido);
             ResultSet rs = ps.executeQuery();
 
-           while (rs.next()) {
-               nombres.add(rs.getString("nombre"));
-           }
-       } catch (SQLException e) {
-           e.printStackTrace();
-       }
-       return nombres;
-    }
+            if (rs.next()) {
+                int identificador = rs.getInt("Identificador");
+                Date fechaPedido = rs.getDate("FechaPedido");
+                String estadoStr = rs.getString("Estado");
+                Pedido.Estado estado = Pedido.Estado.valueOf(estadoStr);
+                float total = rs.getFloat("Total");
+                int idVendedor = rs.getInt("VendedorID");
+                int idCliente = rs.getInt("ClienteID");
 
-    //auxiliar para obtener los nom de los clientes (para el combobox)
-    public List<String> obtenerNombresClientes() {
-        List<String> nombres = new ArrayList<>();
-        try{
-            String sql = "SELECT nom_empresa FROM cliente";
-            PreparedStatement ps = conexion.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
-
-           while (rs.next()) {
-            nombres.add(rs.getString("nom_empresa"));
-        }
+                pedido = new Pedido(identificador, fechaPedido, estado, total, idVendedor, idCliente);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return nombres;
+        
+        return pedido;
     }
     
     public boolean actualizarEstadoPedido(int idPedido, String nuevoEstado) {
