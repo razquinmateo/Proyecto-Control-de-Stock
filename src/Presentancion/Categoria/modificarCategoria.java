@@ -41,7 +41,7 @@ public class modificarCategoria extends javax.swing.JFrame {
            this.dispose();
         }
         
-        public void setId(int id) {
+    public void setId(int id) {
         this.id = id;
     }
 

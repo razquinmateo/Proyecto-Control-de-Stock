@@ -330,7 +330,7 @@ public class GestorPedidosUI extends javax.swing.JFrame {
 
     private void btnActualizarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarPedidoActionPerformed
         int selectedRow = tblPedidos.getSelectedRow();
-            if (selectedRow != -1) {
+        if (selectedRow != -1) {
             //obtenemos el ID del pedido desde la tabla
             int idPedido = (int) tblPedidos.getValueAt(selectedRow, 0);
 
