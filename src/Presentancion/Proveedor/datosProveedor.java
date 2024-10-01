@@ -55,14 +55,14 @@ public class datosProveedor extends javax.swing.JFrame {
 
             //deshabilitamos los botones mod y elim
             btnMProveedor.setEnabled(false);
-            btnEProveedor.setEnabled(false);
+            btnDesProveedor.setEnabled(false);
 
             //agregamos un listener para la tabla que active los botones al seleccionar una fila
             tablaProveedor.getSelectionModel().addListSelectionListener(e -> {
                 //si hay una fila seleccionada, habilitar los botones
                 boolean seleccionValida = tablaProveedor.getSelectedRow() >= 0;
                 btnMProveedor.setEnabled(seleccionValida);
-                btnEProveedor.setEnabled(seleccionValida);
+                btnDesProveedor.setEnabled(seleccionValida);
             });
         }
 
@@ -88,6 +88,7 @@ public class datosProveedor extends javax.swing.JFrame {
             proveedor.getTelefono(),
             proveedor.getDireccion(),
             proveedor.getCorreoElectronico(),
+            proveedor.getActivo()  == true ? "Sí" : "No"
         };
         modelo.addRow(nuevaRow);
     }
@@ -106,7 +107,7 @@ public class datosProveedor extends javax.swing.JFrame {
         tablaProveedor = new javax.swing.JTable();
         btnAProvedor = new javax.swing.JButton();
         btnMProveedor = new javax.swing.JButton();
-        btnEProveedor = new javax.swing.JButton();
+        btnDesProveedor = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         btnActualizar = new javax.swing.JButton();
 
@@ -117,11 +118,11 @@ public class datosProveedor extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Nombre", "Teléfono", "Dirección", "Correo_Electronico"
+                "ID", "Nombre", "Teléfono", "Dirección", "Correo_Electronico", "Activo"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -132,6 +133,10 @@ public class datosProveedor extends javax.swing.JFrame {
         if (tablaProveedor.getColumnModel().getColumnCount() > 0) {
             tablaProveedor.getColumnModel().getColumn(0).setMinWidth(50);
             tablaProveedor.getColumnModel().getColumn(0).setMaxWidth(60);
+            tablaProveedor.getColumnModel().getColumn(2).setMinWidth(100);
+            tablaProveedor.getColumnModel().getColumn(2).setMaxWidth(110);
+            tablaProveedor.getColumnModel().getColumn(5).setMinWidth(30);
+            tablaProveedor.getColumnModel().getColumn(5).setMaxWidth(50);
         }
 
         btnAProvedor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Presentancion/Iconos/icons8-plus-32.png"))); // NOI18N
@@ -150,11 +155,11 @@ public class datosProveedor extends javax.swing.JFrame {
             }
         });
 
-        btnEProveedor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Presentancion/Iconos/icons8-cancel-32.png"))); // NOI18N
-        btnEProveedor.setText("Eliminar Proveedor");
-        btnEProveedor.addActionListener(new java.awt.event.ActionListener() {
+        btnDesProveedor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Presentancion/Iconos/icons8-cancel-32.png"))); // NOI18N
+        btnDesProveedor.setText("Deshabilitar Proveedor");
+        btnDesProveedor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEProveedorActionPerformed(evt);
+                btnDesProveedorActionPerformed(evt);
             }
         });
 
@@ -174,11 +179,11 @@ public class datosProveedor extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(43, 43, 43)
-                .addComponent(btnAProvedor)
-                .addGap(84, 84, 84)
-                .addComponent(btnMProveedor)
+                .addComponent(btnAProvedor, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(51, 51, 51)
+                .addComponent(btnMProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnEProveedor)
+                .addComponent(btnDesProveedor)
                 .addGap(29, 29, 29))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(48, Short.MAX_VALUE)
@@ -201,7 +206,7 @@ public class datosProveedor extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnEProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDesProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnMProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnAProvedor, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(24, 24, 24))
@@ -215,32 +220,42 @@ public class datosProveedor extends javax.swing.JFrame {
         añadirProveedor.setVisible(true);
     }//GEN-LAST:event_btnAProvedorActionPerformed
 
-    private void btnEProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEProveedorActionPerformed
+    private void btnDesProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDesProveedorActionPerformed
         int filaSeleccionada = tablaProveedor.getSelectedRow();
 
         if (filaSeleccionada >= 0) {
             int id = (Integer) tablaProveedor.getValueAt(filaSeleccionada, 0);
             ProveedorServicios servicios = new ProveedorServicios();
 
+            //confirmamos la deshabilitación
             int confirmacion = JOptionPane.showConfirmDialog(this, 
-                    "¿Está seguro de que desea eliminar este proveedor?", 
-                    "Confirmar Eliminación", 
+                    "¿Está seguro de que desea deshabilitar este proveedor?", 
+                    "Confirmar Deshabilitación", 
                     JOptionPane.YES_NO_OPTION);
 
             if (confirmacion == JOptionPane.YES_OPTION) {
-                boolean exito = servicios.eliminarProveedor(id);
+                boolean exito = servicios.deshabilitarProveedor(id);
 
                 if (exito) {
-                    JOptionPane.showMessageDialog(this, "Proveedor eliminado exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this, 
+                            "Proveedor deshabilitado exitosamente.", 
+                            "Éxito", 
+                            JOptionPane.INFORMATION_MESSAGE);
                     actualizarTablaProveedores();
                 } else {
-                    JOptionPane.showMessageDialog(this, "No se pudo eliminar el proveedor. Es posible que tenga productos asociados.", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, 
+                            "No se pudo deshabilitar el proveedor.", 
+                            "Error", 
+                            JOptionPane.ERROR_MESSAGE);
                 }
             }
         } else {
-            JOptionPane.showMessageDialog(this, "Debe seleccionar un proveedor para eliminar.");
+            JOptionPane.showMessageDialog(this, 
+                    "Debe seleccionar un proveedor para deshabilitar.", 
+                    "Advertencia", 
+                    JOptionPane.WARNING_MESSAGE);
         }
-    }//GEN-LAST:event_btnEProveedorActionPerformed
+    }//GEN-LAST:event_btnDesProveedorActionPerformed
 
     private void btnMProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMProveedorActionPerformed
         int filaSeleccionada = tablaProveedor.getSelectedRow();
@@ -251,23 +266,28 @@ public class datosProveedor extends javax.swing.JFrame {
             String telefono = (String) tablaProveedor.getValueAt(filaSeleccionada, 2);
             String direccion = (String) tablaProveedor.getValueAt(filaSeleccionada, 3);
             String correo = (String) tablaProveedor.getValueAt(filaSeleccionada, 4);
+            String activoStr = (String) tablaProveedor.getValueAt(filaSeleccionada, 5);
+            
+            //comparamos con equals() y convertimos a boolean
+            Boolean activo = activoStr.equals("Sí");
 
-        int confirmacion = JOptionPane.showConfirmDialog(this, 
-                "¿Está seguro de que desea modificar este vendedor?", 
-                "Confirmar Modificación", 
-                JOptionPane.YES_NO_OPTION);
-        
-        
-        if (confirmacion == JOptionPane.YES_OPTION) {
-            ModificarProveedor modificarProveedor = new ModificarProveedor();
-            modificarProveedor.setId(id);
-            modificarProveedor.setNombre(nombre);
-            modificarProveedor.setTelefono(telefono);
-            modificarProveedor.setDireccion(direccion);
-            modificarProveedor.setCorreo(correo);
-            modificarProveedor.setVisible(true);
+            int confirmacion = JOptionPane.showConfirmDialog(this, 
+                    "¿Está seguro de que desea modificar este vendedor?", 
+                    "Confirmar Modificación", 
+                    JOptionPane.YES_NO_OPTION);
 
-        }
+
+            if (confirmacion == JOptionPane.YES_OPTION) {
+                ModificarProveedor modificarProveedor = new ModificarProveedor();
+                modificarProveedor.setId(id);
+                modificarProveedor.setNombre(nombre);
+                modificarProveedor.setTelefono(telefono);
+                modificarProveedor.setDireccion(direccion);
+                modificarProveedor.setCorreo(correo);
+                modificarProveedor.setActivo(activo);
+                modificarProveedor.setVisible(true);
+
+            }
         } else {
             javax.swing.JOptionPane.showMessageDialog(this, "Debe seleccionar un vendedor para modificar.");
         }
@@ -450,7 +470,7 @@ public class datosProveedor extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAProvedor;
     private javax.swing.JButton btnActualizar;
-    private javax.swing.JButton btnEProveedor;
+    private javax.swing.JButton btnDesProveedor;
     private javax.swing.JButton btnMProveedor;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;

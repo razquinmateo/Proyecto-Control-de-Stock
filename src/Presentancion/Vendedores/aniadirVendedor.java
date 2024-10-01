@@ -271,8 +271,8 @@ public class aniadirVendedor extends javax.swing.JFrame {
             return;
         }
 
-        //verificamos que el teléfono tenga entre 9 y 15 dígitos
-        if (!telefono.matches("\\d{9,15}")) {
+        //verificamos que el teléfono tenga entre 8 y 15 dígitos
+        if (!telefono.matches("\\d{8,15}")) {
             javax.swing.JOptionPane.showMessageDialog(this, "El teléfono debe tener entre 9 y 15 dígitos.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
             return;
         }

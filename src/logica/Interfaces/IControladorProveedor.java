@@ -18,7 +18,7 @@ public interface IControladorProveedor {
     public abstract boolean modificarProveedor(int id, Proveedor proveedor);
     
     // Método para eliminar proveedor
-    public abstract boolean eliminarProveedor(int id);
+    public abstract boolean deshabilitarProveedor(int id);
     
     // Método para listar proveedores
     public abstract ArrayList<Proveedor> listarProveedores();

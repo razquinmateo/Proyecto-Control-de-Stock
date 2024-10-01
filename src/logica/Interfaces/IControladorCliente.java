@@ -19,7 +19,7 @@ public interface IControladorCliente {
     public abstract ArrayList<Cliente> listarClientes();
     public abstract boolean agregarCliente(String nombre, String email, int rut, String telefono, Date fechaRegistro);
     public abstract boolean existeRut(int rut);
-    public abstract boolean eliminarCliente(int rut);
+    public abstract boolean deshabilitarCliente(int rut);
     public abstract DefaultTableModel cargarDatosEnTabla();
     public abstract Cliente obtenerClientePorRut(int rut);
     public abstract boolean actualizarCliente(Cliente cliente);
@@ -27,5 +27,6 @@ public interface IControladorCliente {
     public abstract boolean existeNombreCliente(String nombre);
     public abstract String obtenerNombreClientePorId(int idCliente);
     public abstract List<String> obtenerNombresClientes();
+    public abstract List<String> obtenerNombresClientesActivos();
     
 }

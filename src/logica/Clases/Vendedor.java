@@ -19,6 +19,7 @@ public class Vendedor {
     private String correo;
     private String direccion;
     private Date fechaContratacion;
+    private Boolean activo;
     
     public Vendedor(){
         
@@ -34,7 +35,7 @@ public class Vendedor {
         this.fechaContratacion = fechaContratacion;
     }
     
-    public Vendedor(int id, String nomUsuario, String contrasenia, String nombre, int cedula, String telefono, String correo, String direccion, Date fechaContratacion) {
+    public Vendedor(int id, String nomUsuario, String contrasenia, String nombre, int cedula, String telefono, String correo, String direccion, Date fechaContratacion, Boolean activo) {
         this.id = id;
         this.nomUsuario = nomUsuario;
         this.contrasenia = contrasenia;
@@ -44,6 +45,7 @@ public class Vendedor {
         this.correo = correo;
         this.direccion = direccion;
         this.fechaContratacion = fechaContratacion;
+        this.activo = activo;
     }
 
     public int getId() {
@@ -117,5 +119,12 @@ public class Vendedor {
     public void setFechaContratacion(Date fechaContratacion) {
         this.fechaContratacion = fechaContratacion;
     }
-    
+
+    public Boolean getActivo() {
+        return activo;
+    }
+
+    public void setActivo(Boolean activo) {
+        this.activo = activo;
+    }
 }

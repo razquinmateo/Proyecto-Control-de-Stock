@@ -12,7 +12,7 @@ import java.util.List;
 public interface IControladorVendedor {
     public abstract boolean altaVendedor(Vendedor vendedor);
     public abstract boolean modificarVendedor(int id, Vendedor vendedor);
-    public abstract boolean eliminarVendedor(int id);
+    public abstract boolean deshabilitarVendedor(int id);
     public abstract ArrayList<Vendedor> listarVendedores();
     public abstract Vendedor buscarVendedor(int id);
     public abstract int obtenerIdVendedorPorNombre(String nombreVendedor);
@@ -20,4 +20,5 @@ public interface IControladorVendedor {
     public abstract boolean vendedorEstaAsociadoAPedido(int id);
     public abstract String obtenerNombreVendedorPorId(int idVendedor); 
     public abstract List<String> obtenerNombresVendedores();
+    public abstract List<String> obtenerNombresVendedoresActivos();
 }

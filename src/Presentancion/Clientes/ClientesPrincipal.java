@@ -6,8 +6,10 @@ package Presentancion.Clientes;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import logica.Clases.Cliente;
 import logica.Controladores.ControladorCliente;
 import logica.servicios.ClienteServicios;
 
@@ -42,12 +44,25 @@ public class ClientesPrincipal extends javax.swing.JFrame {
         }
 
     private void actualizarTablaClientes() {
-        // Obtener la instancia del controlador
-        ControladorCliente controlador = ControladorCliente.getInstance();
-        // Obtener el modelo actualizado
-        DefaultTableModel modeloTabla = controlador.cargarDatosEnTabla();
-        // Asignar el modelo a la tabla
-        tablaClientes2.setModel(modeloTabla);
+        ClienteServicios clienteServicios = new ClienteServicios();
+        ArrayList<Cliente> clientes = clienteServicios.getClientes();
+
+        //obtenemos el modelo de la tabla
+        DefaultTableModel modelo = (DefaultTableModel) tablaClientes2.getModel();
+        
+        //limpiamos la tabla antes de agregar los nuevos datos
+        modelo.setRowCount(0);
+
+        //agregamos filas a la tabla
+        for (Cliente cliente : clientes) {
+            modelo.addRow(new Object[]{
+                cliente.getNum_rut(),
+                cliente.getNom_empresa(),
+                cliente.getTelefono(),
+                cliente.getCorreo_electronico(),
+                (cliente.getActivo() != null && cliente.getActivo()) ? "Sí" : "No"
+            });
+        }
     }
     
     /**
@@ -61,7 +76,7 @@ public class ClientesPrincipal extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         btnModificarCliente = new javax.swing.JButton();
-        btnEliminarcliente = new javax.swing.JButton();
+        btnDeshabcliente = new javax.swing.JButton();
         btnAltaCliente2 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -81,12 +96,12 @@ public class ClientesPrincipal extends javax.swing.JFrame {
             }
         });
 
-        btnEliminarcliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Presentancion/Iconos/icons8-cancel-32.png"))); // NOI18N
-        btnEliminarcliente.setText("Eliminar Cliente");
-        btnEliminarcliente.setEnabled(false);
-        btnEliminarcliente.addActionListener(new java.awt.event.ActionListener() {
+        btnDeshabcliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Presentancion/Iconos/icons8-cancel-32.png"))); // NOI18N
+        btnDeshabcliente.setText("Deshabilitar Cliente");
+        btnDeshabcliente.setEnabled(false);
+        btnDeshabcliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEliminarclienteActionPerformed(evt);
+                btnDeshabclienteActionPerformed(evt);
             }
         });
 
@@ -106,11 +121,11 @@ public class ClientesPrincipal extends javax.swing.JFrame {
 
             },
             new String [] {
-                "RUT", "Nombre", "Telefono", "Correo"
+                "RUT", "Nombre", "Telefono", "Correo", "Activo"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -137,6 +152,10 @@ public class ClientesPrincipal extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(tablaClientes2);
+        if (tablaClientes2.getColumnModel().getColumnCount() > 0) {
+            tablaClientes2.getColumnModel().getColumn(4).setMinWidth(30);
+            tablaClientes2.getColumnModel().getColumn(4).setMaxWidth(50);
+        }
 
         btnRecargar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnRecargar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Presentancion/Iconos/icons8-update-24.png"))); // NOI18N
@@ -151,22 +170,23 @@ public class ClientesPrincipal extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(136, 136, 136)
-                        .addComponent(btnRecargar))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 541, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnAltaCliente2, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btnModificarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btnEliminarcliente, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27))
+                        .addGap(22, 22, 22)
+                        .addComponent(btnAltaCliente2, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnModificarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(12, 12, 12)
+                        .addComponent(btnDeshabcliente, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addGap(136, 136, 136)
+                                .addComponent(btnRecargar))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 541, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(32, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -177,24 +197,24 @@ public class ClientesPrincipal extends javax.swing.JFrame {
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnModificarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnAltaCliente2, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnEliminarcliente, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(17, Short.MAX_VALUE))
+                    .addComponent(btnDeshabcliente, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 565, Short.MAX_VALUE)
+            .addGap(0, 645, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 553, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addContainerGap(20, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 611, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(14, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -222,10 +242,10 @@ public class ClientesPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
         // Habilitar el botón de eliminar si se selecciona una fila
         if (tablaClientes2.getSelectedRow() != -1) {
-            btnEliminarcliente.setEnabled(true);
+            btnDeshabcliente.setEnabled(true);
             btnModificarCliente.setEnabled(true);
         } else {
-            btnEliminarcliente.setEnabled(false);
+            btnDeshabcliente.setEnabled(false);
             btnModificarCliente.setEnabled(false);
         }
     }//GEN-LAST:event_tablaClientes2MouseClicked
@@ -242,30 +262,41 @@ public class ClientesPrincipal extends javax.swing.JFrame {
         ventanaAltaCliente.setVisible(true);
     }//GEN-LAST:event_btnAltaCliente2ActionPerformed
 
-    private void btnEliminarclienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarclienteActionPerformed
-        // TODO add your handling code here:
+    private void btnDeshabclienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeshabclienteActionPerformed
         int selectedRow = tablaClientes2.getSelectedRow();
 
         if (selectedRow != -1) {
-            // Obtener el RUT del cliente seleccionado
+            //obtenemos el RUT del cliente seleccionado
             int rutCliente = (int) tablaClientes2.getValueAt(selectedRow, 0);
 
-            // Mostrar cuadro de confirmación
-            int confirmacion = JOptionPane.showConfirmDialog(this, "¿Estás seguro de que deseas eliminar al cliente con RUT: " + rutCliente + "?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+            //mostramos un cuadro de confirmación
+            int confirmacion = JOptionPane.showConfirmDialog(this, 
+                    "¿Estás seguro de que deseas deshabilitar el cliente?", 
+                    "Confirmar deshabilitación", 
+                    JOptionPane.YES_NO_OPTION);
 
             if (confirmacion == JOptionPane.YES_OPTION) {
-                // Llamar al método para eliminar al cliente
+                //llamamos al método para deshabilitar al cliente
                 ClienteServicios servicio = new ClienteServicios();
-                if(servicio.eliminarCliente(rutCliente)) {
-                    JOptionPane.showMessageDialog(this, "Cliente eliminado exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                if (servicio.deshabilitarCliente(rutCliente)) {
+                    JOptionPane.showMessageDialog(this, 
+                            "Cliente deshabilitado exitosamente.", 
+                            "Éxito", 
+                            JOptionPane.INFORMATION_MESSAGE);
                 } else {
-                    JOptionPane.showMessageDialog(this, "No se pudo eliminar el cliente.", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, 
+                            "No se pudo deshabilitar el cliente.", 
+                            "Error", 
+                            JOptionPane.ERROR_MESSAGE);
                 }
             }
         } else {
-            JOptionPane.showMessageDialog(this, "Debe seleccionar un cliente para eliminar.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, 
+                    "Debe seleccionar un cliente para deshabilitar.", 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event_btnEliminarclienteActionPerformed
+    }//GEN-LAST:event_btnDeshabclienteActionPerformed
 
     private void btnModificarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarClienteActionPerformed
         // Verificar que se haya seleccionado una fila en la tabla
@@ -327,7 +358,7 @@ public class ClientesPrincipal extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAltaCliente2;
-    private javax.swing.JButton btnEliminarcliente;
+    private javax.swing.JButton btnDeshabcliente;
     private javax.swing.JButton btnModificarCliente;
     private javax.swing.JButton btnRecargar;
     private javax.swing.JLabel jLabel2;

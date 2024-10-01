@@ -15,8 +15,10 @@ import java.util.List;
 public interface IControladorProducto {
     public abstract boolean altaProducto(Producto producto);
     public abstract boolean modificarProducto(int id, Producto producto);
-    public abstract boolean eliminarProducto(int id);
+    public abstract boolean deshabilitarProducto(int id);
     public abstract ArrayList<Producto> listarProductos();
+    public abstract ArrayList<Producto> listarProductosActivos();
+    public abstract ArrayList<Producto> listarProductosPorCategoria(String categoriaSeleccionada);
     public abstract Producto buscarProducto(int id);
     public abstract ArrayList<String> obtenerNombresProductos();
     public abstract ArrayList<Float> obtenerPreciosProductos();

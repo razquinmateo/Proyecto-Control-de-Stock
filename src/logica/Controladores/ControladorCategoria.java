@@ -41,8 +41,8 @@ public class ControladorCategoria implements IControladorCategoria {
     }
 
     @Override
-    public boolean eliminarCategoria(int id) {
-        return categoriaServicios.eliminarCategoria(id);
+    public boolean deshabilitarCategoria(int id) {
+        return categoriaServicios.deshabilitarCategoria(id);
     }
 
     @Override
@@ -50,6 +50,11 @@ public class ControladorCategoria implements IControladorCategoria {
         return categoriaServicios.listarCategorias();
     }
 
+    @Override
+    public ArrayList<Categoria> listarCategoriasActivas(){
+        return categoriaServicios.listarCategoriasActivas();
+    }
+    
     @Override
     public Categoria buscarCategoria(int id) {
         return categoriaServicios.buscarCategoria(id);

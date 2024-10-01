@@ -32,8 +32,9 @@ public class ClienteServicios {
                 int rut = rs.getInt("num_rut");
                 String telefono = rs.getString("telefono");
                 Date fechaRegistro = rs.getDate("fecha_registro"); // Asumiendo que el campo en la DB es 'fecha_registro'
+                Boolean activo = rs.getBoolean("Activo");
                 
-                Cliente cliente = new Cliente(nombre, email, rut, telefono, fechaRegistro);
+                Cliente cliente = new Cliente(nombre, email, rut, telefono, fechaRegistro, activo);
                 resultado.add(cliente);
             }
         } catch (SQLException ex) {
@@ -75,20 +76,20 @@ public class ClienteServicios {
         return false;
     }
     
-    public boolean eliminarCliente(int rut) {
-        String sql = "DELETE FROM cliente WHERE num_rut = ?";
+    public boolean deshabilitarCliente(int rut) {
+    String sql = "UPDATE cliente SET activo = 0 WHERE num_rut = ?";
 
-        try {
-            PreparedStatement stmt = conexion.prepareStatement(sql);
-            stmt.setInt(1, rut);
+    try {
+        PreparedStatement stmt = conexion.prepareStatement(sql);
+        stmt.setInt(1, rut);
 
-            int filasAfectadas = stmt.executeUpdate();
-            return filasAfectadas > 0;
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            return false;
-        }
+        int filasAfectadas = stmt.executeUpdate();
+        return filasAfectadas > 0;
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+        return false;
     }
+}
 
 // Método para obtener un cliente por su RUT
     public Cliente getClientePorRut(int rut) {
@@ -187,6 +188,22 @@ public class ClienteServicios {
         List<String> nombres = new ArrayList<>();
         try {
             String sql = "SELECT nom_empresa FROM cliente";
+            PreparedStatement ps = conexion.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                nombres.add(rs.getString("nom_empresa"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return nombres;
+    }
+    
+    public List<String> obtenerNombresClientesActivos() {
+        List<String> nombres = new ArrayList<>();
+        try {
+            String sql = "SELECT nom_empresa FROM cliente WHERE Activo = 1";
             PreparedStatement ps = conexion.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
 

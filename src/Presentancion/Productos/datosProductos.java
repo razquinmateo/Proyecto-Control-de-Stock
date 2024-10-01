@@ -40,14 +40,14 @@ public class datosProductos extends javax.swing.JFrame {
         
         //deshabilitamos los botones mod y elim
         btnModProducto.setEnabled(false);
-        btnElimProducto.setEnabled(false);
+        btnDeshProducto.setEnabled(false);
         
         //agregamos un listener para la tabla que active los botones al seleccionar una fila
         tblListarProductos.getSelectionModel().addListSelectionListener(e -> {
             //si hay una fila seleccionada, habilitar los botones
             boolean seleccionValida = tblListarProductos.getSelectedRow() >= 0;
             btnModProducto.setEnabled(seleccionValida);
-            btnElimProducto.setEnabled(seleccionValida);
+            btnDeshProducto.setEnabled(seleccionValida);
         });
     }
      
@@ -75,7 +75,8 @@ public class datosProductos extends javax.swing.JFrame {
                 producto.getSKU(),
                 producto.getPrecioVenta(),
                 producto.getStock(),
-                producto.getCategoria().getNombre()
+                producto.getCategoria().getNombre(),
+                producto.getActivo() == true ? "Sí" : "No"
             });
         }
     }
@@ -94,7 +95,7 @@ public class datosProductos extends javax.swing.JFrame {
         tblListarProductos = new javax.swing.JTable();
         btnAltaProducto = new javax.swing.JButton();
         btnModProducto = new javax.swing.JButton();
-        btnElimProducto = new javax.swing.JButton();
+        btnDeshProducto = new javax.swing.JButton();
         btnActualizar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -107,11 +108,11 @@ public class datosProductos extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Nombre", "Descripcion", "SKU", "Precio", "Stock", "Categoria"
+                "ID", "Nombre", "Descripcion", "SKU", "Precio", "Stock", "Categoria", "Activo"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Float.class, java.lang.String.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Float.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -130,6 +131,8 @@ public class datosProductos extends javax.swing.JFrame {
             tblListarProductos.getColumnModel().getColumn(4).setMaxWidth(60);
             tblListarProductos.getColumnModel().getColumn(5).setMinWidth(60);
             tblListarProductos.getColumnModel().getColumn(5).setMaxWidth(70);
+            tblListarProductos.getColumnModel().getColumn(7).setMinWidth(50);
+            tblListarProductos.getColumnModel().getColumn(7).setPreferredWidth(30);
         }
 
         btnAltaProducto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Presentancion/Iconos/icons8-plus-32.png"))); // NOI18N
@@ -148,11 +151,11 @@ public class datosProductos extends javax.swing.JFrame {
             }
         });
 
-        btnElimProducto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Presentancion/Iconos/icons8-cancel-32.png"))); // NOI18N
-        btnElimProducto.setText("Eliminar Producto");
-        btnElimProducto.addActionListener(new java.awt.event.ActionListener() {
+        btnDeshProducto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Presentancion/Iconos/icons8-cancel-32.png"))); // NOI18N
+        btnDeshProducto.setText("Deshabilitar Producto");
+        btnDeshProducto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnElimProductoActionPerformed(evt);
+                btnDeshProductoActionPerformed(evt);
             }
         });
 
@@ -174,17 +177,17 @@ public class datosProductos extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(230, 230, 230)
+                        .addGap(199, 199, 199)
                         .addComponent(btnActualizar)))
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addGap(71, 71, 71)
-                .addComponent(btnAltaProducto)
-                .addGap(83, 83, 83)
-                .addComponent(btnModProducto)
-                .addGap(72, 72, 72)
-                .addComponent(btnElimProducto)
-                .addContainerGap(71, Short.MAX_VALUE))
+                .addComponent(btnAltaProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(60, 60, 60)
+                .addComponent(btnModProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(52, 52, 52)
+                .addComponent(btnDeshProducto)
+                .addContainerGap(50, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -199,7 +202,7 @@ public class datosProductos extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAltaProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnModProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnElimProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnDeshProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(30, 30, 30))
         );
 
@@ -245,52 +248,43 @@ public class datosProductos extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnModProductoActionPerformed
 
-    private void btnElimProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnElimProductoActionPerformed
+    private void btnDeshProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeshProductoActionPerformed
         int selectedRow = tblListarProductos.getSelectedRow();
-    
+
         if (selectedRow >= 0) {
             int id = (Integer) tblListarProductos.getValueAt(selectedRow, 0);
-            
-            ProductoServicios productoServicios = new ProductoServicios();
-        
-            //verificamos si el producto está asociado a algún pedido
-            if (productoServicios.productoEnPedidos(id)) {
-                JOptionPane.showMessageDialog(this, 
-                        "No se puede eliminar el producto porque está asociado a uno o más pedidos.", 
-                        "Advertencia", 
-                        JOptionPane.WARNING_MESSAGE);
-                return;
-            }
 
+            ProductoServicios productoServicios = new ProductoServicios();
+
+            //confirmamos la deshabilitación
             int confirmar = JOptionPane.showConfirmDialog(this, 
-                    "¿Está seguro de que desea eliminar este producto?", 
-                    "Confirmar Eliminación", 
+                    "¿Está seguro de que desea deshabilitar este producto?", 
+                    "Confirmar Deshabilitación", 
                     JOptionPane.YES_NO_OPTION);
 
             if (confirmar == JOptionPane.YES_OPTION) {
-                ProductoServicios servicios = new ProductoServicios();
-                boolean exito = servicios.eliminarProducto(id);
+                boolean exito = productoServicios.deshabilitarProducto(id);
 
                 if (exito) {
                     JOptionPane.showMessageDialog(this, 
-                            "Producto eliminado exitosamente.", 
+                            "Producto deshabilitado exitosamente.", 
                             "Éxito", 
                             JOptionPane.INFORMATION_MESSAGE);
                     cargarDatos();
                 } else {
                     JOptionPane.showMessageDialog(this, 
-                            "Error al eliminar el producto.", 
+                            "Error al deshabilitar el producto.", 
                             "Error", 
                             JOptionPane.ERROR_MESSAGE);
                 }
             }
         } else {
             JOptionPane.showMessageDialog(this, 
-                    "Debe seleccionar un producto para eliminar.", 
+                    "Debe seleccionar un producto para deshabilitar.", 
                     "Advertencia", 
                     JOptionPane.WARNING_MESSAGE);
         }
-    }//GEN-LAST:event_btnElimProductoActionPerformed
+    }//GEN-LAST:event_btnDeshProductoActionPerformed
 
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
         cargarDatos();
@@ -334,7 +328,7 @@ public class datosProductos extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnActualizar;
     private javax.swing.JButton btnAltaProducto;
-    private javax.swing.JButton btnElimProducto;
+    private javax.swing.JButton btnDeshProducto;
     private javax.swing.JButton btnModProducto;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;

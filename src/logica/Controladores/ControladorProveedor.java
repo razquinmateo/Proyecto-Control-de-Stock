@@ -44,8 +44,8 @@ public class ControladorProveedor implements IControladorProveedor {
 
     // Método para eliminar proveedor
     @Override
-    public boolean eliminarProveedor(int id) {
-        return proveedorServicios.eliminarProveedor(id);
+    public boolean deshabilitarProveedor(int id) {
+        return proveedorServicios.deshabilitarProveedor(id);
     }
 
     // Método para listar proveedores

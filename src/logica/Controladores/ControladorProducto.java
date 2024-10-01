@@ -41,15 +41,25 @@ public class ControladorProducto implements IControladorProducto {
     }
 
     @Override
-    public boolean eliminarProducto(int id) {
-        return productoServicios.eliminarProducto(id);
+    public boolean deshabilitarProducto(int id) {
+        return productoServicios.deshabilitarProducto(id);
     }
 
     @Override
     public ArrayList<Producto> listarProductos() {
         return productoServicios.listarProductos();
     }
+    
+    @Override
+    public ArrayList<Producto> listarProductosActivos(){
+        return productoServicios.listarProductosActivos();
+    }
 
+    @Override
+    public ArrayList<Producto> listarProductosPorCategoria(String categoriaSeleccionada){
+        return productoServicios.listarProductosPorCategoria(categoriaSeleccionada);
+    }
+    
     @Override
     public Producto buscarProducto(int id) {
         return productoServicios.buscarProducto(id);

@@ -9,6 +9,7 @@ import Presentancion.Clientes.ClientesPrincipal;
 import Presentancion.Pedidos.ActualizarPedido;
 import Presentancion.Pedidos.AddPedido;
 import Presentancion.Proveedor.datosProveedor;
+import java.text.SimpleDateFormat;
 
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
@@ -53,7 +54,6 @@ public class GestorPedidosUI extends javax.swing.JFrame {
     }
     
     private void cargarDatosDePedidos() {
-
         ArrayList<Pedido> pedidosDeBaseDeDatos = this.ICP.getPedidos();
         DefaultTableModel modelo = (DefaultTableModel) this.tblPedidos.getModel();
 
@@ -64,18 +64,47 @@ public class GestorPedidosUI extends javax.swing.JFrame {
         // Centra la primera columna
         tblPedidos.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
 
+        //formato deseado para la fecha
+        SimpleDateFormat fechaFormato = new SimpleDateFormat("dd/MM/yyyy");
+        
         for (Pedido pedido : pedidosDeBaseDeDatos) {
             String nombreVendedor = ICV.obtenerNombreVendedorPorId(pedido.getIdVendedor());
             String nombreCliente = ICC.obtenerNombreClientePorId(pedido.getIdCliente());
+
+            //convertimos el estado a su representación deseada
+            String estadoFormateado = "";
+            switch (pedido.getEstado()) {
+                case EN_PREPARACION:
+                    estadoFormateado = "En Preparacion";
+                    break;
+                case EN_VIAJE:
+                    estadoFormateado = "En Viaje";
+                    break;
+                case ENTREGADO:
+                    estadoFormateado = "Entregado";
+                    break;
+                case CANCELADO:
+                    estadoFormateado = "Cancelado";
+                    break;
+                default:
+                    estadoFormateado = "Desconocido";
+                    break;
+            }
+            
+            String fechaFormateada = "";
+            if (pedido.getFechaPedido() != null) {
+                //formateamos la fecha a cadena
+                fechaFormateada = fechaFormato.format(pedido.getFechaPedido());
+            }
+
             Object[] nuevaRow = {
                 pedido.getIdentificador(),
-                pedido.getFechaPedido(),
-                pedido.getEstado(),
+                fechaFormateada,
+                estadoFormateado,
                 nombreVendedor,
                 nombreCliente
             };
             modelo.addRow(nuevaRow);
-
         }
     }
     
@@ -216,6 +245,8 @@ public class GestorPedidosUI extends javax.swing.JFrame {
         if (tblPedidos.getColumnModel().getColumnCount() > 0) {
             tblPedidos.getColumnModel().getColumn(0).setMinWidth(50);
             tblPedidos.getColumnModel().getColumn(0).setMaxWidth(60);
+            tblPedidos.getColumnModel().getColumn(1).setMinWidth(50);
+            tblPedidos.getColumnModel().getColumn(1).setPreferredWidth(30);
         }
 
         setJMenuBar(menuBar);

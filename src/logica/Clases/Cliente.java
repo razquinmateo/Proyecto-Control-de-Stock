@@ -16,8 +16,18 @@ public class Cliente {
     private int num_rut;
     private String telefono;
     private Date fecha_registro;
+    private Boolean activo;
 
 
+    public Cliente(String nombre, String email, int rut, String telefono, Date fechaRegistro, Boolean activo) {
+        this.nom_empresa = nombre;
+        this.correo_electronico = email;
+        this.num_rut = rut;
+        this.telefono = telefono;
+        this.fecha_registro = fechaRegistro;
+        this.activo = activo;
+    }
+    
     public Cliente(String nombre, String email, int rut, String telefono, Date fechaRegistro) {
         this.nom_empresa = nombre;
         this.correo_electronico = email;
@@ -69,6 +79,11 @@ public class Cliente {
         this.fecha_registro = fecha_registro;
     }
 
-    
-    
+    public Boolean getActivo() {
+        return activo;
+    }
+
+    public void setActivo(Boolean activo) {
+        this.activo = activo;
+    }
 }

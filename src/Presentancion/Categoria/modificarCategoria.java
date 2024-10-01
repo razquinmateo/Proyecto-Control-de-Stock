@@ -17,6 +17,7 @@ import logica.servicios.CategoriaServicios;
 public class modificarCategoria extends javax.swing.JFrame {
 
     private int id;
+    private Boolean activo;
     
     /**
      * Creates new form modificarCategoria
@@ -51,6 +52,10 @@ public class modificarCategoria extends javax.swing.JFrame {
     
     public void setDescripcion(String descripcion) {
         txtDescripcion.setText(descripcion);
+    }
+    
+    public void setActivo(Boolean activo){
+        this.activo = activo;
     }
     
     /**
@@ -208,7 +213,7 @@ public class modificarCategoria extends javax.swing.JFrame {
         
         
         //si el nombre no cambió o no existe duplicado, hacemos la modificar
-        Categoria categoriaActualizada = new Categoria(id, nuevoNombre, nuevaDescripcion);
+        Categoria categoriaActualizada = new Categoria(id, nuevoNombre, nuevaDescripcion, activo);
     
         boolean exito = servicios.modificarCategoria(id, categoriaActualizada);
 

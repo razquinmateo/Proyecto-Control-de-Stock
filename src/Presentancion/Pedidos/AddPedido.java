@@ -82,15 +82,16 @@ public class AddPedido extends javax.swing.JFrame {
         }
     
         private void manejoCiereVentana() {
-           //cierra la ventana actual ()
+           //limpiamos la tabla y cerramos la ventana actual ()
+           ((DefaultTableModel) JtableCarrito.getModel()).setRowCount(0);
            this.dispose();
         }
         
         private void cargarNombres() {
         CbNombreVendedor.addItem("--Selecciona un vendedor--");
         CbNombreCliente.addItem("--Selecciona un cliente--");
-        List<String> nombresVendedores = vendedorServicios.obtenerNombresVendedores();
-        List<String> nombresClientes = clienteServicios.obtenerNombresClientes();
+        List<String> nombresVendedores = vendedorServicios.obtenerNombresVendedoresActivos();
+        List<String> nombresClientes = clienteServicios.obtenerNombresClientesActivos();
 
         for (String nombre : nombresVendedores) {
             CbNombreVendedor.addItem(nombre);
@@ -476,6 +477,7 @@ public class AddPedido extends javax.swing.JFrame {
 
         if(confirmar == JOptionPane.YES_OPTION) {
             //cerramos la ventana actual
+            ((DefaultTableModel) JtableCarrito.getModel()).setRowCount(0);
             this.dispose();
         }
     }//GEN-LAST:event_btnCancelarActionPerformed

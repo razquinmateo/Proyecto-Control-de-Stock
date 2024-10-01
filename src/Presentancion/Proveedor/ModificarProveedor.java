@@ -17,6 +17,7 @@ import logica.servicios.ProveedorServicios;
 public class ModificarProveedor extends javax.swing.JFrame {    
     private IControladorProveedor ICPE;
     private int id;
+    private Boolean activo;
      
     public ModificarProveedor() {
         initComponents();
@@ -57,6 +58,10 @@ public class ModificarProveedor extends javax.swing.JFrame {
     
     public void setCorreo(String correo) {
         btnCorreoProv.setText(correo);
+    }
+    
+    public void setActivo(Boolean activo){
+        this.activo = activo;
     }
 
     /**
@@ -275,7 +280,7 @@ public class ModificarProveedor extends javax.swing.JFrame {
             }
         }
         
-        Proveedor proveedorActualizado = new Proveedor(id, nombre, telefono, direccion, correo);
+        Proveedor proveedorActualizado = new Proveedor(id, nombre, telefono, direccion, correo, activo);
     
         boolean exito = servicios.modificarProveedor(id, proveedorActualizado);
 

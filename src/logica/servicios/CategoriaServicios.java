@@ -46,18 +46,18 @@ public class CategoriaServicios {
         }
     }
 
-    public boolean eliminarCategoria(int id) {
-        try {
-            String sql = "DELETE FROM categoria WHERE id = ?";
-            PreparedStatement ps = conexion.prepareStatement(sql);
-            ps.setInt(1, id);
-            
-            return ps.executeUpdate() > 0;
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            return false;
-        }
+    public boolean deshabilitarCategoria(int id) {
+    try {
+        String sql = "UPDATE categoria SET activo = 0 WHERE id = ?";
+        PreparedStatement ps = conexion.prepareStatement(sql);
+        ps.setInt(1, id);
+        
+        return ps.executeUpdate() > 0;
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+        return false;
     }
+}
 
     public ArrayList<Categoria> listarCategorias() {
         ArrayList<Categoria> categorias = new ArrayList<>();
@@ -71,6 +71,28 @@ public class CategoriaServicios {
                 categoria.setId(rs.getInt("id"));
                 categoria.setNombre(rs.getString("nombre"));
                 categoria.setDescripcion(rs.getString("descripcion"));
+                categoria.setActivo(rs.getBoolean("activo"));
+                categorias.add(categoria);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return categorias;
+    }
+    
+    public ArrayList<Categoria> listarCategoriasActivas() {
+        ArrayList<Categoria> categorias = new ArrayList<>();
+        try {
+            String sql = "SELECT * FROM categoria WHERE Activo = 1";
+            PreparedStatement ps = conexion.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Categoria categoria = new Categoria();
+                categoria.setId(rs.getInt("id"));
+                categoria.setNombre(rs.getString("nombre"));
+                categoria.setDescripcion(rs.getString("descripcion"));
+                categoria.setActivo(rs.getBoolean("activo"));
                 categorias.add(categoria);
             }
         } catch (SQLException ex) {

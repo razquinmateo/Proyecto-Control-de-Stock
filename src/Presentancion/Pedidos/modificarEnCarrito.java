@@ -13,7 +13,9 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import logica.Clases.Categoria;
 import logica.Clases.Producto;
+import logica.servicios.CategoriaServicios;
 import logica.servicios.ProductoServicios;
 
 /**
@@ -33,6 +35,7 @@ public class modificarEnCarrito extends javax.swing.JFrame {
     public modificarEnCarrito() {
         
         initComponents();
+        cargarCategorias();
         cargarProductos();
         configurarListeners();
         this.setLocationRelativeTo(null);
@@ -71,11 +74,31 @@ public class modificarEnCarrito extends javax.swing.JFrame {
         }
     }
     
+    private void cargarCategorias() {
+        CbNombreCategorias.addItem("--Selecciona una categoría--");
+        CategoriaServicios categoriaServicios = new CategoriaServicios();
+        List<Categoria> categorias = categoriaServicios.listarCategorias();
+        for (Categoria categoria : categorias) {
+            CbNombreCategorias.addItem(categoria.getNombre());
+        }
+    }
+    
     private void configurarListeners() {
         CbNombreProductos.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 actualizarDescripcionYPrecio();
+            }
+        });
+
+        CbNombreCategorias.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String categoriaSeleccionada = (String) CbNombreCategorias.getSelectedItem();
+                if (!categoriaSeleccionada.equals("--Selecciona una categoría--")) {
+                    //llamamos al método para cargar los productos de la categoría seleccionada
+                    cargarProductosPorCategoria(categoriaSeleccionada, "");
+                }
             }
         });
 
@@ -98,19 +121,54 @@ public class modificarEnCarrito extends javax.swing.JFrame {
     }
     
     public void setDatos(String producto, float precioUnidad, int cantidad, float subtotal, int row) {
-        CbNombreProductos.setSelectedItem(producto);
+        //selecciona la categoría del producto en cbNombreCategorias
+        ProductoServicios productoServicios = new ProductoServicios();
+        Producto prod = productoServicios.buscarProductoPorNombre(producto);
+
+        if (prod != null) {
+            //selecciona la categoría en cbNombreCategorias
+            Categoria categoria = prod.getCategoria();
+            CbNombreCategorias.setSelectedItem(categoria.getNombre());
+
+            //cargar los productos de la misma categoría
+            cargarProductosPorCategoria(categoria.getNombre(), producto);
+        }
+
         txtCantidad.setText(String.valueOf(cantidad));
         txtSubtotal.setText(String.valueOf(subtotal));
         this.selectedRow = row;
         this.precioProducto = precioUnidad;
 
-        ProductoServicios productoServicios = new ProductoServicios();
-        Producto prod = productoServicios.buscarProductoPorNombre(producto);
-
         if (prod != null) {
             txtAreaDescripcion.setText(prod.getDescripcion());
         } else {
             txtAreaDescripcion.setText("Descripción no disponible");
+        }
+    }
+    
+    private void cargarProductosPorCategoria(String categoriaNombre, String productoSeleccionado) {
+        CbNombreProductos.removeAllItems();
+    
+        ProductoServicios productoServicios = new ProductoServicios();
+        CategoriaServicios categoriaServicios = new CategoriaServicios();
+
+        Categoria categoria = categoriaServicios.buscarCategoriaPorNombre(categoriaNombre);
+        if (categoria != null) {
+            List<Producto> productos = productoServicios.listarProductosPorCategoria(categoriaNombre);
+
+            if (!productoSeleccionado.isEmpty()) {
+                //añadimos primero el producto seleccionado
+                CbNombreProductos.addItem(productoSeleccionado);
+            } else {
+                CbNombreProductos.addItem("--Selecciona un producto--");
+            }
+
+            //añadimos los demás productos de la categoría, excluyendo el producto seleccionado
+            for (Producto producto : productos) {
+                if (!producto.getNombre().equals(productoSeleccionado)) {
+                    CbNombreProductos.addItem(producto.getNombre());
+                }
+            }
         }
     }
 
@@ -162,6 +220,8 @@ public class modificarEnCarrito extends javax.swing.JFrame {
         txtSubtotal = new javax.swing.JTextField();
         btnConfirmar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
+        CbNombreCategorias = new javax.swing.JComboBox<>();
+        jLabel9 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -218,6 +278,15 @@ public class modificarEnCarrito extends javax.swing.JFrame {
             }
         });
 
+        CbNombreCategorias.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CbNombreCategoriasActionPerformed(evt);
+            }
+        });
+
+        jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel9.setText("Categoria:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -246,18 +315,24 @@ public class modificarEnCarrito extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel7)
-                                    .addComponent(jLabel8))
+                                    .addComponent(jLabel8)
+                                    .addComponent(jLabel9))
                                 .addGap(37, 37, 37)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(CbNombreProductos, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(SPanelDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addComponent(SPanelDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(CbNombreCategorias, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                         .addGap(31, 31, 31))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap(16, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(16, 16, 16)
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(CbNombreCategorias, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(CbNombreProductos, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -364,6 +439,10 @@ public class modificarEnCarrito extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnCancelarActionPerformed
 
+    private void CbNombreCategoriasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CbNombreCategoriasActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_CbNombreCategoriasActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -401,6 +480,7 @@ public class modificarEnCarrito extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> CbNombreCategorias;
     private javax.swing.JComboBox<String> CbNombreProductos;
     private javax.swing.JScrollPane SPanelDescripcion;
     private javax.swing.JButton btnCancelar;
@@ -410,6 +490,7 @@ public class modificarEnCarrito extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JTextArea txtAreaDescripcion;
     private javax.swing.JTextField txtCantidad;
     private javax.swing.JTextField txtSubtotal;

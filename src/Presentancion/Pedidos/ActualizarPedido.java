@@ -15,6 +15,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import logica.Clases.DetallePedido;
 import logica.Clases.Pedido;
+import logica.Clases.Pedido.Estado;
 import logica.Clases.Producto;
 import logica.Fabrica;
 import logica.Interfaces.IControladorPedido;
@@ -56,29 +57,76 @@ public class ActualizarPedido extends javax.swing.JFrame {
 
         txtPrecioTotal.setEnabled(false);
         cargarNombres();
-        cargarEstado();
+        
+        //ActionListener para gestionar el cambio de estado
+        CbEstado.addActionListener(e -> {
+            //obtenemos el estado seleccionado
+            String estadoSeleccionado = (String) CbEstado.getSelectedItem();
 
-        //deshabilitamos los botones quitar, modificar y limpiar
+            //desactivamos si el estado es "Cancelado" o "Entregado"
+            if (estadoSeleccionado.equals("Cancelado") || estadoSeleccionado.equals("Entregado")) {
+                //deseleccionamos la fila si había una seleccionada
+                JtableCarrito.clearSelection();
+
+                CbNombreVendedor.setEnabled(false);
+                CbNombreCliente.setEnabled(false);
+                JtableCarrito.setEnabled(false);
+                btnAñadir.setEnabled(false);
+                btnLimpiarTabla.setEnabled(false);
+            } else if (!estadoSeleccionado.equals("--Selecciona un estado--")) {
+                //activamos para cualquier otro estado
+                CbNombreVendedor.setEnabled(true);
+                CbNombreCliente.setEnabled(true);
+                JtableCarrito.setEnabled(true);
+                btnAñadir.setEnabled(true);
+
+                //activamos el botón limpiar tabla solo si hay más de una fila
+                btnLimpiarTabla.setEnabled(JtableCarrito.getRowCount() > 0);
+            } else {
+                btnLimpiarTabla.setEnabled(false);
+            }
+        });
+
+        //deshabilitamos los botones quitar y modificar
         btnQuitar.setEnabled(false);
         btnModificar.setEnabled(false);
         btnLimpiarTabla.setEnabled(false);
 
+        //ListSelectionListener para actualizar botones de quitar y modificar
         JtableCarrito.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
             if (!e.getValueIsAdjusting()) {
-                btnQuitar.setEnabled(JtableCarrito.getSelectedRow() != -1);
-                btnModificar.setEnabled(JtableCarrito.getSelectedRow() != -1);
+                boolean rowSelected = JtableCarrito.getSelectedRow() != -1;
+                btnQuitar.setEnabled(rowSelected);
+                btnModificar.setEnabled(rowSelected);
+
+                //activamos el botón limpiar tabla si hay más de una fila
+                btnLimpiarTabla.setEnabled(JtableCarrito.getRowCount() > 0);
             }
         });
 
+        //TableModelListener para habilitar o deshabilitar el botón limpiar tabla
         ((DefaultTableModel) JtableCarrito.getModel()).addTableModelListener(e -> {
-            btnLimpiarTabla.setEnabled(JtableCarrito.getRowCount() > 0);
+            //desactivamos el botón limpiar tabla si se queda vacío
+            btnLimpiarTabla.setEnabled(JtableCarrito.getRowCount() > 0 &&
+                                       !CbEstado.getSelectedItem().equals("Cancelado") &&
+                                       !CbEstado.getSelectedItem().equals("Entregado") &&
+                                       !CbEstado.getSelectedItem().equals("--Selecciona un estado--"));
+        });
+
+        //lógica adicional para manejar el botón limpiar tabla si es necesario
+        btnLimpiarTabla.addActionListener(e -> {
+            //limpiamos la tabla
+            ((DefaultTableModel) JtableCarrito.getModel()).setRowCount(0);
+
+            //desactivamos el botón limpiar tabla tras limpiar
+            btnLimpiarTabla.setEnabled(false);
         });
 
         //añadimos un TableModelListener a la tabla para actualizar el total
         ((DefaultTableModel) JtableCarrito.getModel()).addTableModelListener(new TableModelListener() {
             @Override
             public void tableChanged(TableModelEvent e) {
-                // Solo actualiza si la tabla cambia
+                //solo actualiza si la tabla cambia
                 actualizarPrecioTotal();
             }
         });
@@ -108,10 +156,44 @@ public class ActualizarPedido extends javax.swing.JFrame {
     }
     
     //cargamos los estados (entregado y cancelado se hacen en terminar pedido)
-    private void cargarEstado() {
+    private void cargarEstado(Estado estado) {
+        CbEstado.removeAllItems();
         CbEstado.addItem("--Selecciona un estado--");
-        CbEstado.addItem("EN_PREPARACION");
-        CbEstado.addItem("EN_VIAJE");
+
+        //agregamos las opciones según el estado del pedido
+        if (estado == Estado.EN_PREPARACION) {
+        CbEstado.addItem("En Preparacion");
+        CbEstado.addItem("En Viaje");
+        } else if (estado == Estado.EN_VIAJE) {
+            CbEstado.addItem("En Preparacion");
+            CbEstado.addItem("En Viaje");
+        } else if (estado == Estado.ENTREGADO || estado == Estado.CANCELADO) {
+            // Si el estado es entregado o cancelado, mostramos todas las opciones
+            CbEstado.addItem("En Preparacion");
+            CbEstado.addItem("En Viaje");
+            CbEstado.addItem("Entregado");
+            CbEstado.addItem("Cancelado");
+        }
+        //siempre establecer el estado actual del pedido
+        String estadoFormateado = "";
+        switch (estado) {
+            case EN_PREPARACION:
+                estadoFormateado = "En Preparacion";
+                break;
+            case EN_VIAJE:
+                estadoFormateado = "En Viaje";
+                break;
+            case ENTREGADO:
+                estadoFormateado = "Entregado";
+                break;
+            case CANCELADO:
+                estadoFormateado = "Cancelado";
+                break;
+            default:
+                estadoFormateado = "--Selecciona un estado--";
+                break;
+        }
+        CbEstado.setSelectedItem(estadoFormateado);
     }
     
     //traemos el objeto pedido desde GestorPedidoUI
@@ -122,31 +204,33 @@ public class ActualizarPedido extends javax.swing.JFrame {
     
     
     private void cargarDatosPedido() {
-    
-        //cargamos los datos del pedido seleccionado en los comboboxes
+        // Cargamos los datos del pedido seleccionado en los comboboxes
         CbNombreVendedor.setSelectedItem(vendedorServicios.getNombreVendedorPorId(pedidoSeleccionado.getIdVendedor()));
         CbNombreCliente.setSelectedItem(clienteServicios.getNombreClientePorId(pedidoSeleccionado.getIdCliente()));
-        CbEstado.setSelectedItem(pedidoSeleccionado.getEstado().toString());
-    
 
-        //configuramos el modelo de la tabla
+        Estado estado = pedidoSeleccionado.getEstado();
+
+        cargarEstado(estado);
+
+        // Configuramos el modelo de la tabla
         DefaultTableModel model = (DefaultTableModel) JtableCarrito.getModel();
         model.setColumnIdentifiers(new String[]{"Nombre", "Precio Unidad", "Cantidad", "Subtotal"});
-        model.setRowCount(0);//limpiamos la tabla
+        model.setRowCount(0); // Limpiamos la tabla
 
-        //cargamos los productos en la tabla
-            for (DetallePedido detalle : detallePedidos.obtenerDetallesPedido(pedidoSeleccionado.getIdentificador())) {
-                model.addRow(new Object[]{
-                    detalle.getProducto().getNombre(),
-                    detalle.getPrecioVenta(),
-                    detalle.getCantidad(),
-                    detalle.subTotal()
-                });
-            }
+        // Cargamos los productos en la tabla
+        for (DetallePedido detalle : detallePedidos.obtenerDetallesPedido(pedidoSeleccionado.getIdentificador())) {
+            model.addRow(new Object[]{
+                detalle.getProducto().getNombre(),
+                detalle.getPrecioVenta(),
+                detalle.getCantidad(),
+                detalle.subTotal()
+            });
+        }
 
-        //automaticamente actualiza el precio total
+        // Automáticamente actualiza el precio total
         actualizarPrecioTotal();
     }
+
 
     //funcion que se usa en añadirAlCarrito para traer los datos acá
     public void agregarProductoATabla(String producto, float precioUnidad, int cantidad, float subtotal) {
@@ -205,8 +289,6 @@ public class ActualizarPedido extends javax.swing.JFrame {
         model.setValueAt(subtotal, row, 3);
     }
     
-    
-
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

@@ -63,14 +63,14 @@ public class VendedorServicios {
         }
     }
 
-    public boolean eliminarVendedor(int id) {
+    public boolean deshabilitarVendedor(int id) {
         try {
-            //consulta SQL para eliminar un vendedor por su ID
-            String sql = "DELETE FROM vendedor WHERE id = ?";
+            //consulta SQL para deshabilitar al vendedor estableciendo activo = 0
+            String sql = "UPDATE vendedor SET activo = 0 WHERE id = ?";
             PreparedStatement ps = conexion.prepareStatement(sql);
             ps.setInt(1, id);
 
-            //ejeucta la consulta y retornar true si se elimina correctamente
+            //ejecuta la consulta y retorna true si se deshabilita correctamente
             return ps.executeUpdate() > 0;
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -82,7 +82,7 @@ public class VendedorServicios {
         ArrayList<Vendedor> vendedores = new ArrayList<>();
         try {
             //consulta SQL para obtener todos los vendedores
-            String sql = "SELECT id, nombre, cedula, correo_electronico, telefono, direccion, fecha_contratacion FROM vendedor";
+            String sql = "SELECT * FROM vendedor";
             PreparedStatement ps = conexion.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
 
@@ -95,8 +95,8 @@ public class VendedorServicios {
                 vendedor.setCorreo(rs.getString("correo_electronico"));
                 vendedor.setTelefono(rs.getString("telefono"));
                 vendedor.setDireccion(rs.getString("direccion"));
-                Timestamp fechaContratacion = rs.getTimestamp("fecha_contratacion");
-                vendedor.setFechaContratacion(new java.util.Date(fechaContratacion.getTime()));
+                vendedor.setFechaContratacion(rs.getDate("fecha_contratacion"));
+                vendedor.setActivo(rs.getBoolean("activo"));
                 vendedores.add(vendedor);
             }
         } catch (SQLException ex) {
@@ -212,4 +212,21 @@ public class VendedorServicios {
         }
         return nombres;
     }
+    
+    public List<String> obtenerNombresVendedoresActivos() {
+        List<String> nombres = new ArrayList<>();
+        try {
+            String sql = "SELECT nombre FROM vendedor WHERE Activo = 1";
+            PreparedStatement ps = conexion.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                nombres.add(rs.getString("nombre"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return nombres;
+    }
+
 }

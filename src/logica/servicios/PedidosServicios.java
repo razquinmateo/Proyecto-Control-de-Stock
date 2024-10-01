@@ -30,7 +30,13 @@ public class PedidosServicios {
                     + "v.Nombre as nombre_vendedor, v.Cedula as cedula_vendedor, v.Telefono as telefono_vendedor "
                     + "FROM pedido p "
                     + "JOIN cliente c ON p.ClienteID = c.ID "
-                    + "JOIN vendedor v ON p.VendedorID = v.ID";
+                    + "JOIN vendedor v ON p.VendedorID = v.ID "
+                    + "ORDER BY CASE p.Estado "
+                    + "WHEN 'EN_PREPARACION' THEN 1 "
+                    + "WHEN 'EN_VIAJE' THEN 2 "
+                    + "WHEN 'ENTREGADO' THEN 3 "
+                    + "WHEN 'CANCELADO' THEN 4 "
+                    + "END, p.Identificador";
 
             Statement statement = conexion.createStatement();
             ResultSet resultSet = statement.executeQuery(sql);

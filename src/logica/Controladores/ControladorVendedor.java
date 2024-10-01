@@ -41,8 +41,8 @@ public class ControladorVendedor implements IControladorVendedor  {
     }
 
     @Override
-    public boolean eliminarVendedor(int id) {
-        return vendedorServicios.eliminarVendedor(id);
+    public boolean deshabilitarVendedor(int id) {
+        return vendedorServicios.deshabilitarVendedor(id);
     }
 
     @Override
@@ -80,5 +80,10 @@ public class ControladorVendedor implements IControladorVendedor  {
     @Override
     public List<String> obtenerNombresVendedores() {
         return vendedorServicios.obtenerNombresVendedores();
+    }
+    
+    @Override
+    public List<String> obtenerNombresVendedoresActivos(){
+        return vendedorServicios.obtenerNombresVendedoresActivos();
     }
 }

@@ -30,7 +30,7 @@
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       <Component id="jLabel1" min="-2" pref="215" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="230" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="199" max="-2" attributes="0"/>
                       <Component id="btnActualizar" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -38,12 +38,12 @@
           </Group>
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="71" max="-2" attributes="0"/>
-              <Component id="btnAltaProducto" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="83" max="-2" attributes="0"/>
-              <Component id="btnModProducto" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="72" max="-2" attributes="0"/>
-              <Component id="btnElimProducto" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="71" max="32767" attributes="0"/>
+              <Component id="btnAltaProducto" min="-2" pref="186" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="60" max="-2" attributes="0"/>
+              <Component id="btnModProducto" min="-2" pref="185" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="52" max="-2" attributes="0"/>
+              <Component id="btnDeshProducto" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="50" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -61,7 +61,7 @@
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="btnAltaProducto" alignment="3" min="-2" pref="55" max="-2" attributes="0"/>
                   <Component id="btnModProducto" alignment="3" min="-2" pref="55" max="-2" attributes="0"/>
-                  <Component id="btnElimProducto" alignment="3" min="-2" pref="55" max="-2" attributes="0"/>
+                  <Component id="btnDeshProducto" alignment="3" min="-2" pref="55" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
           </Group>
@@ -87,7 +87,7 @@
         <Component class="javax.swing.JTable" name="tblListarProductos">
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-              <Table columnCount="7" rowCount="0">
+              <Table columnCount="8" rowCount="0">
                 <Column editable="true" title="ID" type="java.lang.Integer"/>
                 <Column editable="true" title="Nombre" type="java.lang.String"/>
                 <Column editable="true" title="Descripcion" type="java.lang.String"/>
@@ -95,6 +95,7 @@
                 <Column editable="true" title="Precio" type="java.lang.Float"/>
                 <Column editable="true" title="Stock" type="java.lang.String"/>
                 <Column editable="true" title="Categoria" type="java.lang.String"/>
+                <Column editable="true" title="Activo" type="java.lang.String"/>
               </Table>
             </Property>
             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -134,6 +135,11 @@
                   <Editor/>
                   <Renderer/>
                 </Column>
+                <Column maxWidth="-1" minWidth="50" prefWidth="30" resizable="true">
+                  <Title/>
+                  <Editor/>
+                  <Renderer/>
+                </Column>
               </TableColumnModel>
             </Property>
             <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
@@ -165,15 +171,15 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnModProductoActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="btnElimProducto">
+    <Component class="javax.swing.JButton" name="btnDeshProducto">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/Presentancion/Iconos/icons8-cancel-32.png"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Eliminar Producto"/>
+        <Property name="text" type="java.lang.String" value="Deshabilitar Producto"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnElimProductoActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDeshProductoActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnActualizar">

@@ -11,6 +11,7 @@ import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.text.SimpleDateFormat;
 import javax.swing.JOptionPane;
 
 /**
@@ -40,14 +41,14 @@ public class datosVendedores extends javax.swing.JFrame {
         
         //deshabilitamos los botones mod y elim
         btnModVendedor.setEnabled(false);
-        btnElimVendedor.setEnabled(false);
+        btnDeshVendedor.setEnabled(false);
         
         //agregamos un listener para la tabla que active los botones al seleccionar una fila
         tblListarVendedores.getSelectionModel().addListSelectionListener(e -> {
             //si hay una fila seleccionada, habilitar los botones
             boolean seleccionValida = tblListarVendedores.getSelectedRow() >= 0;
             btnModVendedor.setEnabled(seleccionValida);
-            btnElimVendedor.setEnabled(seleccionValida);
+            btnDeshVendedor.setEnabled(seleccionValida);
         });
     }
      
@@ -66,8 +67,15 @@ public class datosVendedores extends javax.swing.JFrame {
         //limpiamos la tabla antes de agregar los nuevos datos
         modelo.setRowCount(0);
 
+        SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
+        
         //agregamos filas a la tabla
         for (Vendedor vendedor : vendedores) {
+            String fechaContratacionFormateada = "";
+            if (vendedor.getFechaContratacion() != null) {
+                //formateamos la fecha a cadena
+                fechaContratacionFormateada = formatoFecha.format(vendedor.getFechaContratacion());
+            }
             modelo.addRow(new Object[]{
                 vendedor.getId(),
                 vendedor.getNombre(),
@@ -75,7 +83,8 @@ public class datosVendedores extends javax.swing.JFrame {
                 vendedor.getCorreo(),
                 vendedor.getTelefono(),
                 vendedor.getDireccion(),
-                vendedor.getFechaContratacion()
+                fechaContratacionFormateada,
+                vendedor.getActivo()  == true ? "Sí" : "No"
             });
         }
     }
@@ -94,7 +103,7 @@ public class datosVendedores extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         btnAltaVendedor1 = new javax.swing.JButton();
         btnModVendedor = new javax.swing.JButton();
-        btnElimVendedor = new javax.swing.JButton();
+        btnDeshVendedor = new javax.swing.JButton();
         btnActualizar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -104,11 +113,11 @@ public class datosVendedores extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Nombre", "Cedula", "Correo Electronico", "Telefono", "Dirección", "Fecha de Contratacion"
+                "ID", "Nombre", "Cedula", "Correo Electronico", "Telefono", "Dirección", "Fecha de Contratacion", "Activo"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -119,6 +128,8 @@ public class datosVendedores extends javax.swing.JFrame {
         if (tblListarVendedores.getColumnModel().getColumnCount() > 0) {
             tblListarVendedores.getColumnModel().getColumn(0).setMinWidth(50);
             tblListarVendedores.getColumnModel().getColumn(0).setMaxWidth(60);
+            tblListarVendedores.getColumnModel().getColumn(7).setMinWidth(30);
+            tblListarVendedores.getColumnModel().getColumn(7).setMaxWidth(50);
         }
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -140,11 +151,11 @@ public class datosVendedores extends javax.swing.JFrame {
             }
         });
 
-        btnElimVendedor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Presentancion/Iconos/icons8-cancel-32.png"))); // NOI18N
-        btnElimVendedor.setText("Eliminar Vendedor");
-        btnElimVendedor.addActionListener(new java.awt.event.ActionListener() {
+        btnDeshVendedor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Presentancion/Iconos/icons8-cancel-32.png"))); // NOI18N
+        btnDeshVendedor.setText("Deshabilitar Vendedor");
+        btnDeshVendedor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnElimVendedorActionPerformed(evt);
+                btnDeshVendedorActionPerformed(evt);
             }
         });
 
@@ -166,7 +177,7 @@ public class datosVendedores extends javax.swing.JFrame {
                         .addComponent(jScrollPane1)
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 89, Short.MAX_VALUE)
+                        .addGap(0, 81, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -174,12 +185,12 @@ public class datosVendedores extends javax.swing.JFrame {
                                 .addComponent(btnActualizar)
                                 .addContainerGap())
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(btnAltaVendedor1)
-                                .addGap(66, 66, 66)
-                                .addComponent(btnModVendedor)
-                                .addGap(57, 57, 57)
-                                .addComponent(btnElimVendedor)
-                                .addGap(73, 73, 73))))))
+                                .addComponent(btnAltaVendedor1, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(47, 47, 47)
+                                .addComponent(btnModVendedor, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(46, 46, 46)
+                                .addComponent(btnDeshVendedor)
+                                .addGap(52, 52, 52))))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -194,7 +205,7 @@ public class datosVendedores extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAltaVendedor1, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnModVendedor, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnElimVendedor, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnDeshVendedor, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(30, 30, 30))
         );
 
@@ -241,50 +252,42 @@ public class datosVendedores extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnModVendedorActionPerformed
 
-    private void btnElimVendedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnElimVendedorActionPerformed
+    private void btnDeshVendedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeshVendedorActionPerformed
         int selectedRow = tblListarVendedores.getSelectedRow();
-    
+
         if (selectedRow >= 0) {
             int id = (Integer) tblListarVendedores.getValueAt(selectedRow, 0);
-            
-            //verificamos si el vendedor está asociado a algún pedido
+
             VendedorServicios servicios = new VendedorServicios();
-            
-            if (servicios.vendedorEstaAsociadoAPedido(id)) {
-            JOptionPane.showMessageDialog(this, 
-                    "No se puede eliminar el vendedor porque está asociado a un pedido.", 
-                    "Advertencia", 
-                    JOptionPane.WARNING_MESSAGE);
-            return;
-            }
 
             int confirm = JOptionPane.showConfirmDialog(this, 
-                    "¿Está seguro de que desea eliminar este vendedor?", 
-                    "Confirmar Eliminación", 
+                    "¿Está seguro de que desea deshabilitar este vendedor?", 
+                    "Confirmar Deshabilitación", 
                     JOptionPane.YES_NO_OPTION);
 
             if (confirm == JOptionPane.YES_OPTION) {
-                boolean exito = servicios.eliminarVendedor(id);
+                boolean exito = servicios.deshabilitarVendedor(id);
 
                 if (exito) {
                     JOptionPane.showMessageDialog(this, 
-                            "Vendedor eliminado exitosamente.", 
+                            "Vendedor deshabilitado exitosamente.", 
                             "Éxito", 
                             JOptionPane.INFORMATION_MESSAGE);
+                    cargarDatos();
                 } else {
                     JOptionPane.showMessageDialog(this, 
-                            "Error al eliminar el vendedor.", 
+                            "Error al deshabilitar el vendedor.", 
                             "Error", 
                             JOptionPane.ERROR_MESSAGE);
                 }
             }
         } else {
             JOptionPane.showMessageDialog(this, 
-                    "Debe seleccionar un vendedor para eliminar.", 
+                    "Debe seleccionar un vendedor para deshabilitar.", 
                     "Advertencia", 
                     JOptionPane.WARNING_MESSAGE);
         }
-    }//GEN-LAST:event_btnElimVendedorActionPerformed
+    }//GEN-LAST:event_btnDeshVendedorActionPerformed
 
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
         cargarDatos();
@@ -328,7 +331,7 @@ public class datosVendedores extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnActualizar;
     private javax.swing.JButton btnAltaVendedor1;
-    private javax.swing.JButton btnElimVendedor;
+    private javax.swing.JButton btnDeshVendedor;
     private javax.swing.JButton btnModVendedor;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;

@@ -46,35 +46,37 @@ public class ControladorCliente implements IControladorCliente {
     return ClienteServicios.existeRut(rut);
 }
 
-    public boolean eliminarCliente(int rut) {
+    public boolean deshabilitarCliente(int rut) {
         // Verifica si el cliente con el RUT dado existe
         if (!ClienteServicios.existeRut(rut)) {
             return false; // Cliente no encontrado
         }
         // Realiza la eliminación del cliente
-        return ClienteServicios.eliminarCliente(rut);
+        return ClienteServicios.deshabilitarCliente(rut);
     }
     
     public DefaultTableModel cargarDatosEnTabla() {
-        DefaultTableModel modeloTabla = new DefaultTableModel();
-        modeloTabla.addColumn("RUT");
-        modeloTabla.addColumn("Nombre");
-        modeloTabla.addColumn("Teléfono");
-        modeloTabla.addColumn("Correo");
+    DefaultTableModel modeloTabla = new DefaultTableModel();
+    modeloTabla.addColumn("RUT");
+    modeloTabla.addColumn("Nombre");
+    modeloTabla.addColumn("Teléfono");
+    modeloTabla.addColumn("Correo");
+    modeloTabla.addColumn("Activo");
 
-        ArrayList<Cliente> clientes = listarClientes();
+    ArrayList<Cliente> clientes = listarClientes();
 
-        for (Cliente cliente : clientes) {
-            Object[] fila = {
-                cliente.getNum_rut(),
-                cliente.getNom_empresa(),
-                cliente.getTelefono(),
-                cliente.getCorreo_electronico()
-            };
-            modeloTabla.addRow(fila);
-        }
-        return modeloTabla;
+    for (Cliente cliente : clientes) {
+        Object[] fila = {
+            cliente.getNum_rut(),
+            cliente.getNom_empresa(),
+            cliente.getTelefono(),
+            cliente.getCorreo_electronico(),
+            (cliente.getActivo() != null && cliente.getActivo()) ? "Sí" : "No"
+        };
+        modeloTabla.addRow(fila);
     }
+    return modeloTabla;
+}
     
     // Método para obtener un cliente por su RUT
     public Cliente obtenerClientePorRut(int rut) {
@@ -104,5 +106,10 @@ public class ControladorCliente implements IControladorCliente {
     @Override
     public List<String> obtenerNombresClientes() {
         return ClienteServicios.obtenerNombresClientes();
+    }
+    
+    @Override
+    public List<String> obtenerNombresClientesActivos(){
+        return ClienteServicios.obtenerNombresClientesActivos();
     }
 }

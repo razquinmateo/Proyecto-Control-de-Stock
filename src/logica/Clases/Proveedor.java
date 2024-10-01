@@ -14,16 +14,18 @@ public class Proveedor {
     private String telefono;
     private String direccion;
     private String correoElectronico;
+    private Boolean activo;
     
      public Proveedor() {
     }
     // Constructor
-    public Proveedor(int id, String nombre, String telefono, String direccion, String correoElectronico) {
+    public Proveedor(int id, String nombre, String telefono, String direccion, String correoElectronico, Boolean activo) {
         this.id = id;
         this.nombre = nombre;
         this.telefono = telefono;
         this.direccion = direccion;
         this.correoElectronico = correoElectronico;
+        this.activo = activo;
     }
 
     // Getters y Setters
@@ -65,5 +67,13 @@ public class Proveedor {
 
     public void setCorreoElectronico(String correoElectronico) {
         this.correoElectronico = correoElectronico;
+    }
+
+    public Boolean getActivo() {
+        return activo;
+    }
+
+    public void setActivo(Boolean activo) {
+        this.activo = activo;
     }
 }

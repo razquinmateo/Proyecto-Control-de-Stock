@@ -39,14 +39,14 @@ public class datosCategorias extends javax.swing.JFrame {
         
         //deshabilitamos los botones mod y elim
         btnModCategoria.setEnabled(false);
-        btnElimCategoria.setEnabled(false);
+        btnDeshCategoria.setEnabled(false);
         
         //agregamos un listener para la tabla que active los botones al seleccionar una fila
         tblListarCategorias.getSelectionModel().addListSelectionListener(e -> {
             //si hay una fila seleccionada, habilitar los botones
             boolean seleccionValida = tblListarCategorias.getSelectedRow() >= 0;
             btnModCategoria.setEnabled(seleccionValida);
-            btnElimCategoria.setEnabled(seleccionValida);
+            btnDeshCategoria.setEnabled(seleccionValida);
         });
     }
     
@@ -70,7 +70,8 @@ public class datosCategorias extends javax.swing.JFrame {
             modelo.addRow(new Object[]{
                 categoria.getId(),
                 categoria.getNombre(),
-                categoria.getDescripcion()
+                categoria.getDescripcion(),
+                categoria.getActivo() == true ? "Sí" : "No"
             });
         }
     }
@@ -89,7 +90,7 @@ public class datosCategorias extends javax.swing.JFrame {
         tblListarCategorias = new javax.swing.JTable();
         btnAltaCategoria = new javax.swing.JButton();
         btnModCategoria = new javax.swing.JButton();
-        btnElimCategoria = new javax.swing.JButton();
+        btnDeshCategoria = new javax.swing.JButton();
         btnActualizar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -102,11 +103,11 @@ public class datosCategorias extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Nombre", "Descripcion"
+                "ID", "Nombre", "Descripcion", "Activo"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -119,6 +120,8 @@ public class datosCategorias extends javax.swing.JFrame {
             tblListarCategorias.getColumnModel().getColumn(0).setMaxWidth(60);
             tblListarCategorias.getColumnModel().getColumn(1).setMinWidth(200);
             tblListarCategorias.getColumnModel().getColumn(1).setMaxWidth(250);
+            tblListarCategorias.getColumnModel().getColumn(3).setMinWidth(30);
+            tblListarCategorias.getColumnModel().getColumn(3).setMaxWidth(50);
         }
 
         btnAltaCategoria.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Presentancion/Iconos/icons8-plus-32.png"))); // NOI18N
@@ -137,11 +140,11 @@ public class datosCategorias extends javax.swing.JFrame {
             }
         });
 
-        btnElimCategoria.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Presentancion/Iconos/icons8-cancel-32.png"))); // NOI18N
-        btnElimCategoria.setText("Eliminar Categoria");
-        btnElimCategoria.addActionListener(new java.awt.event.ActionListener() {
+        btnDeshCategoria.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Presentancion/Iconos/icons8-cancel-32.png"))); // NOI18N
+        btnDeshCategoria.setText("Deshabilitar Categoria");
+        btnDeshCategoria.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnElimCategoriaActionPerformed(evt);
+                btnDeshCategoriaActionPerformed(evt);
             }
         });
 
@@ -163,17 +166,17 @@ public class datosCategorias extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(163, 163, 163)
+                        .addGap(145, 145, 145)
                         .addComponent(btnActualizar)))
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(40, 40, 40)
-                .addComponent(btnAltaCategoria)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnModCategoria)
-                .addGap(37, 37, 37)
-                .addComponent(btnElimCategoria)
-                .addGap(34, 34, 34))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(33, 33, 33)
+                .addComponent(btnAltaCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnModCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnDeshCategoria)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -188,7 +191,7 @@ public class datosCategorias extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAltaCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnModCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnElimCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnDeshCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(38, 38, 38))
         );
 
@@ -210,72 +213,77 @@ public class datosCategorias extends javax.swing.JFrame {
             int id = (Integer) tblListarCategorias.getValueAt(filaSeleccionada, 0);
             String nombre = (String) tblListarCategorias.getValueAt(filaSeleccionada, 1);
             String descripcion = (String) tblListarCategorias.getValueAt(filaSeleccionada, 2);
+            String activoStr = (String) tblListarCategorias.getValueAt(filaSeleccionada, 3);
 
-        int confirmacion = JOptionPane.showConfirmDialog(this, 
-                "¿Está seguro de que desea modificar esta categoria?", 
-                "Confirmar Modificación", 
-                JOptionPane.YES_NO_OPTION);
-        
-        if (confirmacion == JOptionPane.YES_OPTION) {
-            modificarCategoria ventanaModificacion = new modificarCategoria();
-            ventanaModificacion.setId(id);
-            ventanaModificacion.setNombre(nombre);
-            ventanaModificacion.setDescripcion(descripcion);
-            ventanaModificacion.setVisible(true);
-        }
+            //comparamos con equals() y convertimos a boolean
+            Boolean activo = activoStr.equals("Sí");
+
+            int confirmacion = JOptionPane.showConfirmDialog(this, 
+                    "¿Está seguro de que desea modificar esta categoría?", 
+                    "Confirmar Modificación", 
+                    JOptionPane.YES_NO_OPTION);
+
+            if (confirmacion == JOptionPane.YES_OPTION) {
+                modificarCategoria ventanaModificacion = new modificarCategoria();
+                ventanaModificacion.setId(id);
+                ventanaModificacion.setNombre(nombre);
+                ventanaModificacion.setDescripcion(descripcion);
+                ventanaModificacion.setActivo(activo);
+                ventanaModificacion.setVisible(true);
+            }
         } else {
-            javax.swing.JOptionPane.showMessageDialog(this, "Debe seleccionar una categoria para modificar.");
+            javax.swing.JOptionPane.showMessageDialog(this, "Debe seleccionar una categoría para modificar.");
         }
     }//GEN-LAST:event_btnModCategoriaActionPerformed
 
-    private void btnElimCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnElimCategoriaActionPerformed
+    private void btnDeshCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeshCategoriaActionPerformed
         int selectedRow = tblListarCategorias.getSelectedRow();
-    
+
         if (selectedRow >= 0) {
             int id = (Integer) tblListarCategorias.getValueAt(selectedRow, 0);
-            
+
             CategoriaServicios servicios = new CategoriaServicios();
-            
+
             //verificamos si hay productos asociados con esta categoría
             boolean tieneProductos = servicios.categoriaTieneProductos(id);
-            
+
             if (tieneProductos) {
                 JOptionPane.showMessageDialog(this, 
-                        "No puede eliminar esta categoría. Hay productos asociados a ella.\n" + 
-                        "Primero elimine o reasigne esos productos.", 
-                        "Error", 
-                        JOptionPane.ERROR_MESSAGE);
+                        "Esta categoría tiene productos asociados.\n" +
+                        "Asegúrese de reasignar estos productos a otra categoría activa antes de continuar.",
+                        "Advertencia de Productos Asociados",
+                        JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
-            //confirmarmos la eliminación si no hay productos asociados
+            //confirmamos la deshabilitación
             int confirmar = JOptionPane.showConfirmDialog(this, 
-                    "¿Está seguro de que desea eliminar esta categoría?", 
-                    "Confirmar Eliminación", 
+                    "¿Está seguro de que desea deshabilitar esta categoría? Esta acción la hará inactiva.", 
+                    "Confirmar Deshabilitación", 
                     JOptionPane.YES_NO_OPTION);
 
             if (confirmar == JOptionPane.YES_OPTION) {
-                boolean exito = servicios.eliminarCategoria(id);
+                boolean exito = servicios.deshabilitarCategoria(id);
 
                 if (exito) {
                     JOptionPane.showMessageDialog(this, 
-                            "Categoria eliminada exitosamente.", 
+                            "Categoría deshabilitada exitosamente.", 
                             "Éxito", 
                             JOptionPane.INFORMATION_MESSAGE);
                 } else {
                     JOptionPane.showMessageDialog(this, 
-                            "Error al eliminar la categoria.", 
+                            "Error al deshabilitar la categoría. Por favor, inténtelo de nuevo.", 
                             "Error", 
                             JOptionPane.ERROR_MESSAGE);
                 }
             }
         } else {
             JOptionPane.showMessageDialog(this, 
-                    "Debe seleccionar una categoria para eliminar.", 
+                    "Debe seleccionar una categoría para deshabilitar.", 
                     "Advertencia", 
                     JOptionPane.WARNING_MESSAGE);
         }
-    }//GEN-LAST:event_btnElimCategoriaActionPerformed
+    }//GEN-LAST:event_btnDeshCategoriaActionPerformed
 
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
         cargarDatos();
@@ -319,7 +327,7 @@ public class datosCategorias extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnActualizar;
     private javax.swing.JButton btnAltaCategoria;
-    private javax.swing.JButton btnElimCategoria;
+    private javax.swing.JButton btnDeshCategoria;
     private javax.swing.JButton btnModCategoria;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;

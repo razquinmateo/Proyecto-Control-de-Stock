@@ -7,6 +7,7 @@ package logica.servicios;
 import Persistencia.ConexionDB;
 import logica.Clases.Producto;
 import logica.Clases.Categoria;
+import logica.servicios.CategoriaServicios;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.List;
  */
 public class ProductoServicios {
     private Connection conexion = new ConexionDB().getConexion();
+    CategoriaServicios categoriaServicios = new CategoriaServicios();
 
     public boolean altaProducto(Producto producto) {
         try {
@@ -55,9 +57,9 @@ public class ProductoServicios {
         }
     }
 
-    public boolean eliminarProducto(int id) {
+    public boolean deshabilitarProducto(int id) {
         try {
-            String sql = "DELETE FROM producto WHERE id = ?";
+            String sql = "UPDATE producto SET activo = 0 WHERE id = ?";
             PreparedStatement ps = conexion.prepareStatement(sql);
             ps.setInt(1, id);
 
@@ -84,6 +86,7 @@ public class ProductoServicios {
                 producto.setStock(rs.getInt("stock"));
                 producto.setPrecioVenta(rs.getFloat("precioVenta"));
                 producto.setCategoria(buscarCategoriaPorId(rs.getInt("CategoriaID")));
+                producto.setActivo(rs.getBoolean("Activo"));
                 productos.add(producto);
             }
         } catch (SQLException ex) {
@@ -91,6 +94,65 @@ public class ProductoServicios {
         }
         return productos;
     }
+    
+    public ArrayList<Producto> listarProductosActivos() {
+        ArrayList<Producto> productos = new ArrayList<>();
+        try {
+            String sql = "SELECT * FROM producto  WHERE Activo = 1";
+            PreparedStatement ps = conexion.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Producto producto = new Producto();
+                producto.setId(rs.getInt("id"));
+                producto.setNombre(rs.getString("nombre"));
+                producto.setDescripcion(rs.getString("descripcion"));
+                producto.setSKU(rs.getString("SKU"));
+                producto.setStock(rs.getInt("stock"));
+                producto.setPrecioVenta(rs.getFloat("precioVenta"));
+                producto.setCategoria(buscarCategoriaPorId(rs.getInt("CategoriaID")));
+                producto.setActivo(rs.getBoolean("Activo"));
+                productos.add(producto);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return productos;
+    }
+    
+    public ArrayList<Producto> listarProductosPorCategoria(String nombreCategoria) {
+        ArrayList<Producto> productos = new ArrayList<>();
+        try {
+            Categoria categoria = categoriaServicios.buscarCategoriaPorNombre(nombreCategoria);
+
+            if (categoria != null) {
+                String sql = "SELECT * FROM producto WHERE CategoriaID = ? AND Activo = 1";
+                PreparedStatement ps = conexion.prepareStatement(sql);
+                ps.setInt(1, categoria.getId());
+                ResultSet rs = ps.executeQuery();
+
+                while (rs.next()) {
+                    Producto producto = new Producto();
+                    producto.setId(rs.getInt("id"));
+                    producto.setNombre(rs.getString("nombre"));
+                    producto.setDescripcion(rs.getString("descripcion"));
+                    producto.setSKU(rs.getString("SKU"));
+                    producto.setStock(rs.getInt("stock"));
+                    producto.setPrecioVenta(rs.getFloat("precioVenta"));
+                    producto.setCategoria(categoria); // Usamos la categoría obtenida
+                    producto.setActivo(rs.getBoolean("Activo"));
+                    productos.add(producto);
+                }
+            } else {
+                System.out.println("Categoría no encontrada.");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return productos;
+    }
+
+
     
     public Producto buscarProducto(int id) {
         Producto producto = null;

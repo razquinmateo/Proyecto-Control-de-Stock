@@ -31,7 +31,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace min="0" pref="89" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="81" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="1" attributes="0">
                               <Component id="jLabel1" min="-2" pref="215" max="-2" attributes="0"/>
@@ -40,12 +40,12 @@
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
-                              <Component id="btnAltaVendedor1" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="66" max="-2" attributes="0"/>
-                              <Component id="btnModVendedor" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="57" max="-2" attributes="0"/>
-                              <Component id="btnElimVendedor" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="73" max="-2" attributes="0"/>
+                              <Component id="btnAltaVendedor1" min="-2" pref="187" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="47" max="-2" attributes="0"/>
+                              <Component id="btnModVendedor" min="-2" pref="187" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
+                              <Component id="btnDeshVendedor" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="52" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -67,7 +67,7 @@
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="btnAltaVendedor1" alignment="3" min="-2" pref="55" max="-2" attributes="0"/>
                   <Component id="btnModVendedor" alignment="3" min="-2" pref="55" max="-2" attributes="0"/>
-                  <Component id="btnElimVendedor" alignment="3" min="-2" pref="55" max="-2" attributes="0"/>
+                  <Component id="btnDeshVendedor" alignment="3" min="-2" pref="55" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
           </Group>
@@ -85,7 +85,7 @@
         <Component class="javax.swing.JTable" name="tblListarVendedores">
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-              <Table columnCount="7" rowCount="0">
+              <Table columnCount="8" rowCount="0">
                 <Column editable="true" title="ID" type="java.lang.Integer"/>
                 <Column editable="true" title="Nombre" type="java.lang.String"/>
                 <Column editable="true" title="Cedula" type="java.lang.Integer"/>
@@ -93,6 +93,7 @@
                 <Column editable="true" title="Telefono" type="java.lang.String"/>
                 <Column editable="true" title="Direcci&#xf3;n" type="java.lang.String"/>
                 <Column editable="true" title="Fecha de Contratacion" type="java.lang.String"/>
+                <Column editable="true" title="Activo" type="java.lang.String"/>
               </Table>
             </Property>
             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -128,6 +129,11 @@
                   <Renderer/>
                 </Column>
                 <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                  <Title/>
+                  <Editor/>
+                  <Renderer/>
+                </Column>
+                <Column maxWidth="50" minWidth="30" prefWidth="-1" resizable="true">
                   <Title/>
                   <Editor/>
                   <Renderer/>
@@ -171,15 +177,15 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnModVendedorActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="btnElimVendedor">
+    <Component class="javax.swing.JButton" name="btnDeshVendedor">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/Presentancion/Iconos/icons8-cancel-32.png"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Eliminar Vendedor"/>
+        <Property name="text" type="java.lang.String" value="Deshabilitar Vendedor"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnElimVendedorActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDeshVendedorActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnActualizar">

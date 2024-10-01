@@ -16,6 +16,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
+import logica.Clases.Categoria;
+import logica.servicios.CategoriaServicios;
 
 /**
  *
@@ -31,7 +33,7 @@ public class añadirAlCarrito extends javax.swing.JFrame {
      */
     public añadirAlCarrito() {
         initComponents();
-        cargarProductos();
+        cargarCategorias();
         configurarListeners();
         this.setLocationRelativeTo(null);
 
@@ -52,14 +54,38 @@ public class añadirAlCarrito extends javax.swing.JFrame {
            this.dispose();
         }
     
-    private void cargarProductos() {
+    private void cargarCategorias() {
+        CbNombreCategorias.addItem("--Selecciona una categoria--");
+        CategoriaServicios categoriaServicios = new CategoriaServicios();
+        List<Categoria> categorias = categoriaServicios.listarCategoriasActivas();
+
+        for (Categoria categoria : categorias) {
+            CbNombreCategorias.addItem(categoria.getNombre());
+        }
+
+        //agregamos un ActionListener para actualizar productos cuando se seleccione una categoría
+        CbNombreCategorias.addActionListener(e -> {
+            actualizarProductosPorCategoria();
+        });
+    }
+
+    private void actualizarProductosPorCategoria() {
+        CbNombreProductos.removeAllItems();
         CbNombreProductos.addItem("--Selecciona un producto--");
-        ProductoServicios productoServicios = new ProductoServicios();
-        List<Producto> productos = productoServicios.listarProductos();
-        for (Producto producto : productos) {
-            CbNombreProductos.addItem(producto.getNombre());
+
+        //obtenemos la categoría seleccionada
+        String categoriaSeleccionada = (String) CbNombreCategorias.getSelectedItem();
+        if (!categoriaSeleccionada.equals("--Selecciona una categoria--")) {
+            //obtenemos los productos de la categoría seleccionada
+            ProductoServicios productoServicios = new ProductoServicios();
+            List<Producto> productos = productoServicios.listarProductosPorCategoria(categoriaSeleccionada);
+
+            for (Producto producto : productos) {
+                CbNombreProductos.addItem(producto.getNombre());
+            }
         }
     }
+
     
     private void configurarListeners() {
         CbNombreProductos.addActionListener(new ActionListener() {
@@ -142,6 +168,8 @@ public class añadirAlCarrito extends javax.swing.JFrame {
         btnCancelar = new javax.swing.JButton();
         SPanelDescripcion = new javax.swing.JScrollPane();
         txtAreaDescripcion = new javax.swing.JTextArea();
+        CbNombreCategorias = new javax.swing.JComboBox<>();
+        jLabel9 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -198,6 +226,15 @@ public class añadirAlCarrito extends javax.swing.JFrame {
         txtAreaDescripcion.setRows(5);
         SPanelDescripcion.setViewportView(txtAreaDescripcion);
 
+        CbNombreCategorias.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CbNombreCategoriasActionPerformed(evt);
+            }
+        });
+
+        jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel9.setText("Categoria:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -223,11 +260,13 @@ public class añadirAlCarrito extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel7)
-                                    .addComponent(jLabel8))
+                                    .addComponent(jLabel8)
+                                    .addComponent(jLabel9))
                                 .addGap(37, 37, 37)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(CbNombreProductos, 0, 210, Short.MAX_VALUE)
-                                    .addComponent(SPanelDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))))
+                                    .addComponent(SPanelDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                    .addComponent(CbNombreCategorias, javax.swing.GroupLayout.Alignment.TRAILING, 0, 210, Short.MAX_VALUE))))
                         .addGap(24, 24, 24))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel1)
@@ -236,8 +275,12 @@ public class añadirAlCarrito extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(17, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(22, 22, 22)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(CbNombreCategorias, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(CbNombreProductos, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -340,6 +383,10 @@ public class añadirAlCarrito extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_CbNombreProductosActionPerformed
 
+    private void CbNombreCategoriasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CbNombreCategoriasActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_CbNombreCategoriasActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -377,6 +424,7 @@ public class añadirAlCarrito extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> CbNombreCategorias;
     private javax.swing.JComboBox<String> CbNombreProductos;
     private javax.swing.JScrollPane SPanelDescripcion;
     private javax.swing.JButton btnCancelar;
@@ -386,6 +434,7 @@ public class añadirAlCarrito extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JTextArea txtAreaDescripcion;
     private javax.swing.JTextField txtCantidad;
     private javax.swing.JTextField txtSubtotal;

@@ -35,6 +35,7 @@ public class ProveedorServicios {
                 proveedor.setTelefono(rs.getString("telefono"));
                 proveedor.setCorreoElectronico(rs.getString("correo_electronico"));
                 proveedor.setDireccion(rs.getString("direccion"));
+                proveedor.setActivo(rs.getBoolean("activo"));
             }
             rs.close();
         } catch (SQLException ex) {
@@ -46,7 +47,7 @@ public class ProveedorServicios {
     // Método para listar todos los proveedores
     public ArrayList<Proveedor> listarProveedores() {
         ArrayList<Proveedor> proveedores = new ArrayList<>();
-        String sql = "SELECT id, nombre, telefono, correo_electronico, direccion FROM proveedor";
+        String sql = "SELECT * FROM proveedor";
         try (PreparedStatement ps = conexion.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 Proveedor proveedor = new Proveedor();
@@ -55,6 +56,7 @@ public class ProveedorServicios {
                 proveedor.setTelefono(rs.getString("telefono"));
                 proveedor.setCorreoElectronico(rs.getString("correo_electronico"));
                 proveedor.setDireccion(rs.getString("direccion"));
+                proveedor.setActivo(rs.getBoolean("activo"));
                 proveedores.add(proveedor);
             }
         } catch (SQLException ex) {
@@ -110,13 +112,9 @@ public class ProveedorServicios {
     }
     }
 
-    // Método para eliminar un proveedor por su ID
-    public boolean eliminarProveedor(int id) {
-        if (tieneProductosAsociados(id)) {
-            return false;
-        }
-
-        String sql = "DELETE FROM proveedor WHERE id = ?";
+    //método para deshabilitar un proveedor por su ID
+    public boolean deshabilitarProveedor(int id) {
+        String sql = "UPDATE proveedor SET activo = 0 WHERE id = ?";
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
             ps.setInt(1, id);
             return ps.executeUpdate() > 0;

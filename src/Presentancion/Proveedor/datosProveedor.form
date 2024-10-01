@@ -25,11 +25,11 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
               <EmptySpace min="-2" pref="43" max="-2" attributes="0"/>
-              <Component id="btnAProvedor" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="84" max="-2" attributes="0"/>
-              <Component id="btnMProveedor" min="-2" max="-2" attributes="0"/>
+              <Component id="btnAProvedor" min="-2" pref="187" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="51" max="-2" attributes="0"/>
+              <Component id="btnMProveedor" min="-2" pref="188" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
-              <Component id="btnEProveedor" min="-2" max="-2" attributes="0"/>
+              <Component id="btnDesProveedor" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
           </Group>
           <Group type="102" alignment="1" attributes="0">
@@ -58,7 +58,7 @@
               <Component id="jScrollPane1" min="-2" pref="234" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="btnEProveedor" alignment="3" min="-2" pref="44" max="-2" attributes="0"/>
+                  <Component id="btnDesProveedor" alignment="3" min="-2" pref="44" max="-2" attributes="0"/>
                   <Component id="btnMProveedor" alignment="3" min="-2" pref="44" max="-2" attributes="0"/>
                   <Component id="btnAProvedor" alignment="3" min="-2" pref="44" max="-2" attributes="0"/>
               </Group>
@@ -78,12 +78,13 @@
         <Component class="javax.swing.JTable" name="tablaProveedor">
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-              <Table columnCount="5" rowCount="0">
+              <Table columnCount="6" rowCount="0">
                 <Column editable="true" title="ID" type="java.lang.Integer"/>
                 <Column editable="true" title="Nombre" type="java.lang.String"/>
                 <Column editable="true" title="Tel&#xe9;fono" type="java.lang.String"/>
                 <Column editable="true" title="Direcci&#xf3;n" type="java.lang.String"/>
                 <Column editable="true" title="Correo_Electronico" type="java.lang.String"/>
+                <Column editable="true" title="Activo" type="java.lang.String"/>
               </Table>
             </Property>
             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -98,7 +99,7 @@
                   <Editor/>
                   <Renderer/>
                 </Column>
-                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                <Column maxWidth="110" minWidth="100" prefWidth="-1" resizable="true">
                   <Title/>
                   <Editor/>
                   <Renderer/>
@@ -109,6 +110,11 @@
                   <Renderer/>
                 </Column>
                 <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                  <Title/>
+                  <Editor/>
+                  <Renderer/>
+                </Column>
+                <Column maxWidth="50" minWidth="30" prefWidth="-1" resizable="true">
                   <Title/>
                   <Editor/>
                   <Renderer/>
@@ -144,15 +150,15 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnMProveedorActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="btnEProveedor">
+    <Component class="javax.swing.JButton" name="btnDesProveedor">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/Presentancion/Iconos/icons8-cancel-32.png"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Eliminar Proveedor"/>
+        <Property name="text" type="java.lang.String" value="Deshabilitar Proveedor"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEProveedorActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDesProveedorActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel1">
