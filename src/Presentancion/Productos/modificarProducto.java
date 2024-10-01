@@ -11,6 +11,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import logica.Clases.Categoria;
 import logica.Clases.Producto;
+import logica.Clases.Proveedor;
 import logica.servicios.CategoriaServicios;
 import logica.servicios.ProductoServicios;
 import logica.servicios.ProveedorServicios;
@@ -110,13 +111,15 @@ public class modificarProducto extends javax.swing.JFrame {
     }
     
     private void cargarProveedores() {
-        List<String> nombresProveedores = proveedorServicios.obtenerNombresProveedores();
+        List<Proveedor> proveedoresActivos = proveedorServicios.listarProveedoresActivos();
         CbProveedor.removeAllItems();
         CbProveedor.addItem("--Selecciona un proveedor--");
-        for (String nombre : nombresProveedores) {
-            CbProveedor.addItem(nombre);
+
+        for (Proveedor proveedor : proveedoresActivos) {
+            CbProveedor.addItem(proveedor.getNombre());
         }
     }
+
     
     private void cargarProveedoresAsociados() {
         //obtenemos los IDs de los proveedores asociados al producto

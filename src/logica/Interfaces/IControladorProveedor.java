@@ -22,6 +22,7 @@ public interface IControladorProveedor {
     
     // Método para listar proveedores
     public abstract ArrayList<Proveedor> listarProveedores();
+    public abstract ArrayList<Proveedor> listarProveedoresActivos();
     
     public abstract boolean tieneProductosAsociados(int proveedorId);
     public abstract boolean nombreProveedorEnUso(String nombre);

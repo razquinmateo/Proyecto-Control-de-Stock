@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
 import javax.swing.ListModel;
 import logica.Clases.Categoria;
 import logica.Clases.Producto;
+import logica.Clases.Proveedor;
 import logica.servicios.CategoriaServicios;
 import logica.servicios.ProductoServicios;
 import logica.servicios.ProveedorServicios;
@@ -56,20 +57,22 @@ public class aniadirProducto extends javax.swing.JFrame {
     }
     
     private void cargarCategorias() {
-        List<String> nombresCategorias = categoriaServicios.obtenerNombresCategorias();
+        List<Categoria> categorias = categoriaServicios.listarCategoriasActivas();
         CbCategoria.removeAllItems();
         CbCategoria.addItem("--Selecciona una categoria--");
-        for (String nombre : nombresCategorias) {
-            CbCategoria.addItem(nombre);
+
+        for (Categoria categoria : categorias) {
+            CbCategoria.addItem(categoria.getNombre());
         }
     }
     
     private void cargarProveedores() {
-        List<String> nombresProveedores = proveedorServicios.obtenerNombresProveedores();
+        List<Proveedor> proveedores = proveedorServicios.listarProveedoresActivos();
         CbProveedor.removeAllItems();
         CbProveedor.addItem("--Selecciona un proveedor--");
-        for (String nombre : nombresProveedores) {
-            CbProveedor.addItem(nombre);
+
+        for (Proveedor proveedor : proveedores) {
+            CbProveedor.addItem(proveedor.getNombre());
         }
     }
 

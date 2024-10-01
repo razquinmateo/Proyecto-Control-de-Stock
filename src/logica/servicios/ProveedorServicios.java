@@ -64,6 +64,30 @@ public class ProveedorServicios {
         }
         return proveedores;
     }
+    
+    public ArrayList<Proveedor> listarProveedoresActivos() {
+        ArrayList<Proveedor> proveedores = new ArrayList<>();
+        try {
+            String sql = "SELECT * FROM proveedor WHERE activo = 1";
+            PreparedStatement ps = conexion.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Proveedor proveedor = new Proveedor();
+                proveedor.setId(rs.getInt("id"));
+                proveedor.setNombre(rs.getString("nombre"));
+                proveedor.setTelefono(rs.getString("telefono"));
+                proveedor.setCorreoElectronico(rs.getString("correo_electronico"));
+                proveedor.setDireccion(rs.getString("direccion"));
+                proveedor.setActivo(rs.getBoolean("activo"));
+                proveedores.add(proveedor);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return proveedores;
+    }
+
 
     // Método para validar existencia de proveedor por ID
     public boolean existeProveedor(int id) {

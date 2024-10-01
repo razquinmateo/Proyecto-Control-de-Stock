@@ -55,6 +55,11 @@ public class ControladorProveedor implements IControladorProveedor {
     }
    
    @Override
+   public ArrayList<Proveedor> listarProveedoresActivos(){
+       return proveedorServicios.listarProveedoresActivos();
+   }
+   
+   @Override
    public boolean tieneProductosAsociados(int proveedorId){
        return proveedorServicios.tieneProductosAsociados(proveedorId);
    }
