@@ -86,4 +86,9 @@ public class ControladorVendedor implements IControladorVendedor  {
     public List<String> obtenerNombresVendedoresActivos(){
         return vendedorServicios.obtenerNombresVendedoresActivos();
     }
+    
+    @Override
+    public boolean validarCredenciales(String nombreUsuario, String contrasenia){
+        return vendedorServicios.validarCredenciales(nombreUsuario, contrasenia);
+    }
 }

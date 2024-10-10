@@ -228,5 +228,22 @@ public class VendedorServicios {
         }
         return nombres;
     }
+    
+    public boolean validarCredenciales(String nombreUsuario, String contrasenia) {
+        boolean esValido = false;
+        String sql = "SELECT COUNT(*) FROM vendedor WHERE Nombre_Usuario = ? AND Contrasenia = ?";
 
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setString(1, nombreUsuario);
+            ps.setString(2, contrasenia);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    esValido = rs.getInt(1) > 0; // si hay al menos un registro, las credenciales son válidas
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return esValido;
+    }
 }
