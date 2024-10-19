@@ -5,12 +5,18 @@
 package logica.servicios;
 
 import Persistencia.ConexionDB;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import logica.Clases.Producto;
 import logica.Clases.Categoria;
-import logica.servicios.CategoriaServicios;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -21,9 +27,8 @@ public class ProductoServicios {
     CategoriaServicios categoriaServicios = new CategoriaServicios();
 
     public boolean altaProducto(Producto producto) {
-        try {
-            String sql = "INSERT INTO producto (nombre, descripcion, SKU, stock, precioVenta, CategoriaID) VALUES (?, ?, ?, ?, ?, ?)";
-            PreparedStatement ps = conexion.prepareStatement(sql);
+        String sql = "INSERT INTO producto (nombre, descripcion, SKU, stock, precioVenta, CategoriaID, imagen) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
             ps.setString(1, producto.getNombre());
             ps.setString(2, producto.getDescripcion());
             ps.setString(3, producto.getSKU());
@@ -31,16 +36,24 @@ public class ProductoServicios {
             ps.setFloat(5, producto.getPrecioVenta());
             ps.setInt(6, producto.getCategoria().getId());
 
+            // Manejo de la imagen
+            if (producto.getImagen() != null) {
+                ps.setBytes(7, producto.getImagen());
+            } else {
+                ps.setNull(7, java.sql.Types.BLOB);
+            }
+
             return ps.executeUpdate() > 0;
         } catch (SQLException ex) {
             ex.printStackTrace();
             return false;
         }
     }
+
 
     public boolean modificarProducto(int id, Producto producto) {
         try {
-            String sql = "UPDATE producto SET nombre = ?, descripcion = ?, SKU = ?, stock = ?, precioVenta = ?, CategoriaID = ? WHERE id = ?";
+            String sql = "UPDATE producto SET nombre = ?, descripcion = ?, SKU = ?, stock = ?, precioVenta = ?, CategoriaID = ?, Imagen = ? WHERE id = ?";
             PreparedStatement ps = conexion.prepareStatement(sql);
             ps.setString(1, producto.getNombre());
             ps.setString(2, producto.getDescripcion());
@@ -48,14 +61,23 @@ public class ProductoServicios {
             ps.setInt(4, producto.getStock());
             ps.setFloat(5, producto.getPrecioVenta());
             ps.setInt(6, producto.getCategoria().getId());
-            ps.setInt(7, id);
 
+            // Establecer la imagen como un Blob
+            byte[] imagenBytes = producto.getImagen();
+            if (imagenBytes != null && imagenBytes.length > 0) {
+                ps.setBlob(7, new ByteArrayInputStream(imagenBytes));
+            } else {
+                ps.setNull(7, java.sql.Types.BLOB);
+            }
+
+            ps.setInt(8, id);
             return ps.executeUpdate() > 0;
         } catch (SQLException ex) {
             ex.printStackTrace();
             return false;
         }
     }
+
 
     public boolean deshabilitarProducto(int id) {
         try {
@@ -171,6 +193,12 @@ public class ProductoServicios {
                 producto.setStock(rs.getInt("stock"));
                 producto.setPrecioVenta(rs.getFloat("precioVenta"));
                 producto.setCategoria(buscarCategoriaPorId(rs.getInt("CategoriaID")));
+
+                Blob blob = rs.getBlob("Imagen");
+                if (blob != null) {
+                    byte[] imagenBytes = blob.getBytes(1, (int) blob.length());
+                    producto.setImagen(imagenBytes);
+                }
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
