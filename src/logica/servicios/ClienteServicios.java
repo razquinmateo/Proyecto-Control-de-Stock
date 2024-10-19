@@ -29,7 +29,7 @@ public class ClienteServicios {
                 // Leer los datos del ResultSet y crear un objeto Cliente
                 String nombre = rs.getString("nom_empresa");
                 String email = rs.getString("correo_electronico");
-                int rut = rs.getInt("num_rut");
+                String rut = rs.getString("num_rut");
                 String telefono = rs.getString("telefono");
                 Date fechaRegistro = rs.getDate("fecha_registro"); // Asumiendo que el campo en la DB es 'fecha_registro'
                 Boolean activo = rs.getBoolean("Activo");
@@ -49,7 +49,7 @@ public class ClienteServicios {
             PreparedStatement stmt = conexion.prepareStatement(sql);
             stmt.setString(1, cliente.getNom_empresa());
             stmt.setString(2, cliente.getCorreo_electronico());
-            stmt.setInt(3, cliente.getNum_rut());
+            stmt.setString(3, cliente.getNum_rut());
             stmt.setString(4, cliente.getTelefono());
             stmt.setTimestamp(5, new java.sql.Timestamp(cliente.getFecha_registro().getTime()));
 
@@ -61,11 +61,11 @@ public class ClienteServicios {
         }
     }
         
-    public boolean existeRut(int rut) {
+    public boolean existeRut(String rut) {
     String sql = "SELECT COUNT(*) FROM cliente WHERE num_rut = ?";
         try {
             PreparedStatement stmt = conexion.prepareStatement(sql);
-            stmt.setInt(1, rut);
+            stmt.setString(1, rut);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 return rs.getInt(1) > 0;
@@ -76,12 +76,12 @@ public class ClienteServicios {
         return false;
     }
     
-    public boolean deshabilitarCliente(int rut) {
+    public boolean deshabilitarCliente(String rut) {
     String sql = "UPDATE cliente SET activo = 0 WHERE num_rut = ?";
 
     try {
         PreparedStatement stmt = conexion.prepareStatement(sql);
-        stmt.setInt(1, rut);
+        stmt.setString(1, rut);
 
         int filasAfectadas = stmt.executeUpdate();
         return filasAfectadas > 0;
@@ -92,12 +92,12 @@ public class ClienteServicios {
 }
 
 // Método para obtener un cliente por su RUT
-    public Cliente getClientePorRut(int rut) {
+    public Cliente getClientePorRut(String rut) {
         Cliente cliente = null;
         String sql = "SELECT * FROM cliente WHERE num_rut = ?";
         try {
             PreparedStatement stmt = conexion.prepareStatement(sql);
-            stmt.setInt(1, rut);
+            stmt.setString(1, rut);
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
@@ -123,7 +123,7 @@ public class ClienteServicios {
             stmt.setString(1, cliente.getNom_empresa());
             stmt.setString(2, cliente.getCorreo_electronico());
             stmt.setString(3, cliente.getTelefono());
-            stmt.setInt(4, cliente.getNum_rut());
+            stmt.setString(4, cliente.getNum_rut());
 
             int filasActualizadas = stmt.executeUpdate();
             return filasActualizadas > 0;  // Devuelve true si se actualizaron filas

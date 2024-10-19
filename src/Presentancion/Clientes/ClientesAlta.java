@@ -170,9 +170,9 @@ public class ClientesAlta extends javax.swing.JFrame {
     String email = txtCorreo.getText().trim();
     String telefono = txtTelefono.getText().trim();
     
-    int rut;
+    String rut;
         try {
-            rut = Integer.parseInt(txtRut.getText().trim());
+            rut = txtRut.getText().trim();
             //verificar si el RUT ya existe
             ControladorCliente controlador = ControladorCliente.getInstance();
             if (controlador.existeRut(rut)) {

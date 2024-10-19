@@ -17,7 +17,7 @@ import logica.servicios.ClienteServicios;
  * @author Jairo
  */
 public class ClientesModificar extends javax.swing.JFrame {
-public static int rutCliente;
+public static String rutCliente;
     /**
      * Creates new form ClientesModificar
      */
@@ -219,7 +219,7 @@ public static int rutCliente;
             //obtenemos los datos actualizados desde los campos de texto
             String nombre = txtNombre1.getText();
             String email = txtCorreo.getText();
-            int rut = Integer.parseInt(txtRut.getText());
+            String rut = txtRut.getText();
             String telefono = txtTelefono.getText();
 
             //verificamos si el nombre ya está en uso

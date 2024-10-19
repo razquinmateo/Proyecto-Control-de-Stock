@@ -13,13 +13,13 @@ import java.util.Date;
 public class Cliente {
     private String nom_empresa;
     private String correo_electronico;
-    private int num_rut;
+    private String num_rut;
     private String telefono;
     private Date fecha_registro;
     private Boolean activo;
 
 
-    public Cliente(String nombre, String email, int rut, String telefono, Date fechaRegistro, Boolean activo) {
+    public Cliente(String nombre, String email, String rut, String telefono, Date fechaRegistro, Boolean activo) {
         this.nom_empresa = nombre;
         this.correo_electronico = email;
         this.num_rut = rut;
@@ -28,7 +28,7 @@ public class Cliente {
         this.activo = activo;
     }
     
-    public Cliente(String nombre, String email, int rut, String telefono, Date fechaRegistro) {
+    public Cliente(String nombre, String email, String rut, String telefono, Date fechaRegistro) {
         this.nom_empresa = nombre;
         this.correo_electronico = email;
         this.num_rut = rut;
@@ -47,7 +47,7 @@ public class Cliente {
         return correo_electronico;
     }
 
-    public int getNum_rut() {
+    public String getNum_rut() {
         return num_rut;
     }
 
@@ -67,7 +67,7 @@ public class Cliente {
         this.correo_electronico = correo_electronico;
     }
 
-    public void setNum_rut(int num_rut) {
+    public void setNum_rut(String num_rut) {
         this.num_rut = num_rut;
     }
 

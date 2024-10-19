@@ -37,16 +37,16 @@ public class ControladorCliente implements IControladorCliente {
         return clientes;
     }
     
-    public boolean agregarCliente(String nombre, String email, int rut, String telefono, Date fechaRegistro) {
+    public boolean agregarCliente(String nombre, String email, String rut, String telefono, Date fechaRegistro) {
         Cliente cliente = new Cliente(nombre, email, rut, telefono, fechaRegistro);
         return ClienteServicios.agregarCliente(cliente);
     }
     
-    public boolean existeRut(int rut) {
+    public boolean existeRut(String rut) {
     return ClienteServicios.existeRut(rut);
 }
 
-    public boolean deshabilitarCliente(int rut) {
+    public boolean deshabilitarCliente(String rut) {
         // Verifica si el cliente con el RUT dado existe
         if (!ClienteServicios.existeRut(rut)) {
             return false; // Cliente no encontrado
@@ -79,7 +79,7 @@ public class ControladorCliente implements IControladorCliente {
 }
     
     // Método para obtener un cliente por su RUT
-    public Cliente obtenerClientePorRut(int rut) {
+    public Cliente obtenerClientePorRut(String rut) {
         return ClienteServicios.getClientePorRut(rut);
     }
     
