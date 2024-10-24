@@ -256,4 +256,21 @@ public class VendedorServicios {
         }
         return esValido;
     }
+    
+    public int obtenerIdPorUsuario(String nombreUsuario) {
+        String sql = "SELECT id FROM vendedor WHERE Nombre_Usuario = ?";
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setString(1, nombreUsuario);
+            try (ResultSet resultSet = ps.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getInt("id");
+                } else {
+                    return -1;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
 }

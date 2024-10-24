@@ -160,6 +160,31 @@ public class PedidosServicios {
         }
     }
 
-    
+    public ArrayList<Pedido> getPedidosPorVendedor(int idVendedor) {
+        ArrayList<Pedido> pedidos = new ArrayList<>();
+
+        try {
+            String sql = "SELECT Identificador, FechaPedido, Estado, Total, VendedorID, ClienteID "
+                       + "FROM pedido WHERE VendedorID = ? ORDER BY FechaPedido DESC";
+            PreparedStatement statement = conexion.prepareStatement(sql);
+            statement.setInt(1, idVendedor);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                int identificador = resultSet.getInt("Identificador");
+                Date fechaPedido = resultSet.getDate("FechaPedido");
+                String estadoStr = resultSet.getString("Estado");
+                Pedido.Estado estado = Pedido.Estado.valueOf(estadoStr);
+                float total = resultSet.getFloat("Total");
+                int idCliente = resultSet.getInt("ClienteID");
+
+                Pedido pedido = new Pedido(identificador, fechaPedido, estado, total, idVendedor, idCliente);
+                pedidos.add(pedido);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return pedidos;
+    }
 
 }

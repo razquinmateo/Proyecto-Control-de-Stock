@@ -64,4 +64,8 @@ public class ControladorPedido implements IControladorPedido {
         return servicioPedidos.actualizarEstadoPedido(idPedido, nuevoEstado);
     }
 
+    @Override
+    public ArrayList<Pedido> getPedidosPorVendedor(int idVendedor){
+        return servicioPedidos.getPedidosPorVendedor(idVendedor);
+    }
 }
