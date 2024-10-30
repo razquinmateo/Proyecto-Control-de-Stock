@@ -34,7 +34,7 @@ public class Pedido {
         this.idCliente = idCliente;
         this.detallesPedidos = new ArrayList<>();
     }
-
+    
     public int getIdentificador() {
         return identificador;
     }

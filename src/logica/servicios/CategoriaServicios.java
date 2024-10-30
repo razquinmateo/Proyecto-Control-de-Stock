@@ -179,4 +179,22 @@ public class CategoriaServicios {
 
             return cantidadProductos > 0;
     }
+    
+    public int obtenerIdPorNombre(String nombreCategoria) {
+        String sql = "SELECT id FROM categoria WHERE nombre = ?";
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setString(1, nombreCategoria);
+            ResultSet resultSet = ps.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getInt("id");
+            } else {
+                throw new SQLException("No se encontró una categoría con el nombre: " + nombreCategoria);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1; // Retorna -1 en caso de error
+        }
+    }
+
 }

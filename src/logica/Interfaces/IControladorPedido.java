@@ -21,4 +21,7 @@ public interface IControladorPedido {
     public abstract boolean agregarPedido(Pedido pedido);
     public abstract boolean actualizarEstadoPedido(int idPedido, String nuevoEstado);
     public abstract ArrayList<Pedido> getPedidosPorVendedor(int idVendedor);
+    public abstract ArrayList<Pedido> getPedidosPorVendedorYFecha(int idVendedor, int mes, int año);
+    public ArrayList<Pedido> getPedidosPorVendedorClienteYFecha(int idVendedor, int clienteId, int mes, int año);
+    public abstract boolean cancelarPedido(int idPedido);
 }

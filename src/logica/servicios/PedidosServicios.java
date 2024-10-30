@@ -8,6 +8,7 @@ import Persistencia.ConexionDB;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import logica.Clases.DetallePedido;
 import logica.Clases.Pedido;
 import logica.Clases.Pedido.Estado;
 
@@ -185,6 +186,211 @@ public class PedidosServicios {
             e.printStackTrace();
         }
         return pedidos;
+    }
+    
+    public ArrayList<Pedido> getPedidosPorVendedorYFecha(int idVendedor, int mes, int año) {
+        ArrayList<Pedido> pedidos = new ArrayList<>();
+
+        try {
+            String sql = "SELECT Identificador, FechaPedido, Estado, Total, VendedorID, ClienteID " +
+                         "FROM pedido " +
+                         "WHERE VendedorID = ? AND MONTH(FechaPedido) = ? AND YEAR(FechaPedido) = ? " +
+                         "ORDER BY FechaPedido DESC";
+            PreparedStatement statement = conexion.prepareStatement(sql);
+            statement.setInt(1, idVendedor);
+            statement.setInt(2, mes);
+            statement.setInt(3, año);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                int identificador = resultSet.getInt("Identificador");
+                Date fechaPedido = resultSet.getDate("FechaPedido");
+                String estadoStr = resultSet.getString("Estado");
+                Pedido.Estado estado = Pedido.Estado.valueOf(estadoStr);
+                float total = resultSet.getFloat("Total");
+                int idCliente = resultSet.getInt("ClienteID");
+
+                Pedido pedido = new Pedido(identificador, fechaPedido, estado, total, idVendedor, idCliente);
+                pedidos.add(pedido);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return pedidos;
+    }
+
+    public ArrayList<Pedido> getPedidosPorVendedorCategoriaYFecha(int idVendedor, int mes, int año, Integer idCategoria) {
+        ArrayList<Pedido> pedidos = new ArrayList<>();
+
+        try {
+            // Construir la consulta SQL
+            StringBuilder sql = new StringBuilder();
+            sql.append("SELECT p.Identificador, p.FechaPedido, p.Estado, p.Total, p.VendedorID, p.ClienteID ")
+               .append("FROM pedido p ")
+               .append("JOIN pedido_producto d ON p.Identificador = d.PedidoID ") // Asegúrate que sea correcto
+               .append("JOIN producto pr ON d.ProductoID = pr.ID ") // Cambiado a pr.ID
+               .append("WHERE p.VendedorID = ? AND MONTH(p.FechaPedido) = ? AND YEAR(p.FechaPedido) = ? ");
+
+            // Agregar condición para categoría, si se proporciona
+            if (idCategoria != null) {
+                sql.append("AND pr.CategoriaID = ? "); // Asegúrate de que esta columna existe en producto
+            }
+
+            sql.append("ORDER BY p.FechaPedido DESC");
+
+            // Preparar el statement
+            PreparedStatement statement = conexion.prepareStatement(sql.toString());
+            statement.setInt(1, idVendedor);
+            statement.setInt(2, mes);
+            statement.setInt(3, año);
+
+            int index = 4; // El índice comienza en 4 después de los parámetros obligatorios
+            if (idCategoria != null) {
+                statement.setInt(index++, idCategoria); // Asignar idCategoria si está presente
+            }
+
+            // Ejecutar la consulta
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                int identificador = resultSet.getInt("Identificador");
+                Date fechaPedido = resultSet.getDate("FechaPedido");
+                String estadoStr = resultSet.getString("Estado");
+                Pedido.Estado estado = Pedido.Estado.valueOf(estadoStr);
+                float total = resultSet.getFloat("Total");
+                int idCliente = resultSet.getInt("ClienteID");
+
+                // Crear un nuevo objeto Pedido y añadirlo a la lista
+                Pedido pedido = new Pedido(identificador, fechaPedido, estado, total, idVendedor, idCliente);
+                pedidos.add(pedido);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return pedidos;
+    }
+
+
+
+    
+    public ArrayList<Pedido> getPedidosPorVendedorClienteYFecha(int idVendedor, int mes, int año, Integer idCliente) {
+        ArrayList<Pedido> pedidos = new ArrayList<>();
+
+        try {
+            // Construir la consulta SQL
+            StringBuilder sql = new StringBuilder();
+            sql.append("SELECT p.Identificador, p.FechaPedido, p.Estado, p.Total, p.VendedorID, p.ClienteID ")
+               .append("FROM pedido p ")
+               .append("WHERE p.VendedorID = ? AND MONTH(p.FechaPedido) = ? AND YEAR(p.FechaPedido) = ? ");
+
+            // Agregar condición para cliente, si se proporciona
+            if (idCliente != null) {
+                sql.append("AND p.ClienteID = ? ");
+            }
+
+            sql.append("ORDER BY p.FechaPedido DESC");
+
+            // Preparar el statement
+            PreparedStatement statement = conexion.prepareStatement(sql.toString());
+            statement.setInt(1, idVendedor);
+            statement.setInt(2, mes);
+            statement.setInt(3, año);
+
+            int index = 4; // El índice comienza en 4 después de los parámetros obligatorios
+            if (idCliente != null) {
+                statement.setInt(index++, idCliente); // Asignar idCliente si está presente
+            }
+
+            // Ejecutar la consulta
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                int identificador = resultSet.getInt("Identificador");
+                Date fechaPedido = resultSet.getDate("FechaPedido");
+                String estadoStr = resultSet.getString("Estado");
+                Pedido.Estado estado = Pedido.Estado.valueOf(estadoStr);
+                float total = resultSet.getFloat("Total");
+                int idClienteResult = resultSet.getInt("ClienteID");
+
+                // Crear un nuevo objeto Pedido y añadirlo a la lista
+                Pedido pedido = new Pedido(identificador, fechaPedido, estado, total, idVendedor, idClienteResult);
+                pedidos.add(pedido);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return pedidos;
+    }
+    
+    public ArrayList<Pedido> getPedidosPorVendedorTodos(int idVendedor, int mes, int año, Integer idCategoria, Integer idCliente) {
+        ArrayList<Pedido> pedidos = new ArrayList<>();
+
+        try {
+            // Construir la consulta SQL
+            StringBuilder sql = new StringBuilder();
+            sql.append("SELECT p.Identificador, p.FechaPedido, p.Estado, p.Total, p.VendedorID, p.ClienteID ")
+               .append("FROM pedido p ")
+               .append("JOIN pedido_producto pp ON p.Identificador = pp.PedidoID ") // Cambiado a pedido_producto
+               .append("WHERE p.VendedorID = ? AND MONTH(p.FechaPedido) = ? AND YEAR(p.FechaPedido) = ? ");
+
+            // Agregar condición para idCliente, si se proporciona
+            if (idCliente != null) {
+                sql.append("AND p.ClienteID = ? ");
+            }
+
+            // Agregar condición para idCategoria, si se proporciona
+            if (idCategoria != null) {
+                sql.append("AND pp.ProductoID IN (SELECT ID FROM producto WHERE CategoriaID = ?) "); // Filtrar por idCategoria
+            }
+
+            sql.append("ORDER BY p.FechaPedido DESC");
+
+            // Preparar el statement
+            PreparedStatement statement = conexion.prepareStatement(sql.toString());
+            statement.setInt(1, idVendedor);
+            statement.setInt(2, mes);
+            statement.setInt(3, año);
+
+            int index = 4; // El índice comienza en 4 después de los parámetros obligatorios
+            if (idCliente != null) {
+                statement.setInt(index++, idCliente); // Asignar idCliente si está presente
+            }
+
+            if (idCategoria != null) {
+                statement.setInt(index++, idCategoria); // Asignar idCategoria si está presente
+            }
+
+            // Ejecutar la consulta
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                int identificador = resultSet.getInt("Identificador");
+                Date fechaPedido = resultSet.getDate("FechaPedido");
+                String estadoStr = resultSet.getString("Estado");
+                Pedido.Estado estado = Pedido.Estado.valueOf(estadoStr);
+                float total = resultSet.getFloat("Total");
+                int idClienteResult = resultSet.getInt("ClienteID");
+
+                // Crear un nuevo objeto Pedido y añadirlo a la lista
+                Pedido pedido = new Pedido(identificador, fechaPedido, estado, total, idVendedor, idClienteResult);
+                pedidos.add(pedido);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return pedidos;
+    }
+
+    public boolean cancelarPedido(int idPedido) {
+        // Verificamos si el pedido existe y si está en un estado que pueda ser cancelado
+        Pedido pedido = obtenerPedidoPorId(idPedido);
+
+        if (pedido != null && pedido.getEstado() != Estado.CANCELADO) {
+            return actualizarEstadoPedido(idPedido, "CANCELADO");
+        } else {
+            System.out.println("El pedido no existe o ya está cancelado.");
+            return false;
+        }
     }
 
 }
