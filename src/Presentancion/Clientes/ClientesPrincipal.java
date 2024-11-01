@@ -156,9 +156,10 @@ public class ClientesPrincipal extends javax.swing.JFrame {
         //agregamos filas a la tabla
         for (Cliente cliente : clientes) {
             modelo.addRow(new Object[]{
-                cliente.getNum_rut(),
+                cliente.getIdentificador(),
                 cliente.getNom_empresa(),
                 cliente.getTelefono(),
+                cliente.getDireccion(),
                 cliente.getCorreo_electronico(),
                 (cliente.getActivo() != null && cliente.getActivo()) ? "Sí" : "No"
             });
@@ -221,11 +222,11 @@ public class ClientesPrincipal extends javax.swing.JFrame {
 
             },
             new String [] {
-                "RUT", "Nombre", "Telefono", "Correo", "Activo"
+                "Identificador", "Nombre", "Telefono", "Direccion", "Correo", "Activo"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -248,8 +249,8 @@ public class ClientesPrincipal extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(tablaClientes2);
         if (tablaClientes2.getColumnModel().getColumnCount() > 0) {
-            tablaClientes2.getColumnModel().getColumn(4).setMinWidth(30);
-            tablaClientes2.getColumnModel().getColumn(4).setMaxWidth(50);
+            tablaClientes2.getColumnModel().getColumn(5).setMinWidth(30);
+            tablaClientes2.getColumnModel().getColumn(5).setMaxWidth(50);
         }
 
         jLabel3.setText("Buscar:");
@@ -274,19 +275,6 @@ public class ClientesPrincipal extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(22, 22, 22)
-                        .addComponent(btnAltaCliente2, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnModificarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(12, 12, 12)
-                        .addComponent(btnDeshabcliente, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(30, 30, 30)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 541, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(32, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -297,6 +285,19 @@ public class ClientesPrincipal extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(61, 61, 61))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(22, 22, 22)
+                        .addComponent(btnAltaCliente2, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnModificarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(12, 12, 12)
+                        .addComponent(btnDeshabcliente, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 584, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -325,14 +326,14 @@ public class ClientesPrincipal extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(231, Short.MAX_VALUE)
+                .addContainerGap(276, Short.MAX_VALUE)
                 .addComponent(jLabel2)
-                .addGap(224, 224, 224))
+                .addGap(250, 250, 250))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addContainerGap(20, Short.MAX_VALUE)
+                    .addContainerGap(55, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 611, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(14, Short.MAX_VALUE)))
+                    .addContainerGap(50, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -350,14 +351,6 @@ public class ClientesPrincipal extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void tablaClientes2PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_tablaClientes2PropertyChange
-
-    }//GEN-LAST:event_tablaClientes2PropertyChange
-
-    private void tablaClientes2AncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_tablaClientes2AncestorAdded
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tablaClientes2AncestorAdded
-
     private void btnAltaCliente2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAltaCliente2ActionPerformed
         //crea una nueva instancia de la ventana ClientesAlta
         ClientesAlta ventanaAltaCliente = new ClientesAlta();
@@ -370,8 +363,8 @@ public class ClientesPrincipal extends javax.swing.JFrame {
         int selectedRow = tablaClientes2.getSelectedRow();
 
         if (selectedRow != -1) {
-            //obtenemos el RUT del cliente seleccionado
-            String rutCliente = (String) tablaClientes2.getValueAt(selectedRow, 0);
+            //obtenemos el Identificador del cliente seleccionado
+            String identificadorCliente = (String) tablaClientes2.getValueAt(selectedRow, 0);
 
             //mostramos un cuadro de confirmación
             int confirmacion = JOptionPane.showConfirmDialog(this, 
@@ -382,7 +375,7 @@ public class ClientesPrincipal extends javax.swing.JFrame {
             if (confirmacion == JOptionPane.YES_OPTION) {
                 //llamamos al método para deshabilitar al cliente
                 ClienteServicios servicio = new ClienteServicios();
-                if (servicio.deshabilitarCliente(rutCliente)) {
+                if (servicio.deshabilitarCliente(identificadorCliente)) {
                     JOptionPane.showMessageDialog(this, 
                             "Cliente deshabilitado exitosamente.", 
                             "Éxito", 
@@ -410,10 +403,10 @@ public class ClientesPrincipal extends javax.swing.JFrame {
             return;
         }
 
-        // Obtener el RUT de la columna correspondiente ( columna 0)
-        String rut = (String) tablaClientes2.getValueAt(filaSeleccionada, 0);
-        // Asignar el RUT a la variable estática
-        ClientesModificar.rutCliente = rut;
+        // Obtener el Identificador de la columna correspondiente ( columna 0)
+        String identificador = (String) tablaClientes2.getValueAt(filaSeleccionada, 0);
+        // Asignar el Identificador a la variable estática
+        ClientesModificar.identificadorCliente = identificador;
 
         try {
             ClientesModificar frameClientesModificar = new ClientesModificar();
@@ -432,6 +425,14 @@ public class ClientesPrincipal extends javax.swing.JFrame {
     private void cbFiltrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbFiltrosActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cbFiltrosActionPerformed
+
+    private void tablaClientes2PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_tablaClientes2PropertyChange
+
+    }//GEN-LAST:event_tablaClientes2PropertyChange
+
+    private void tablaClientes2AncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_tablaClientes2AncestorAdded
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tablaClientes2AncestorAdded
 
     /**
      * @param args the command line arguments

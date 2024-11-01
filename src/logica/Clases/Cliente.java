@@ -13,26 +13,29 @@ import java.util.Date;
 public class Cliente {
     private String nom_empresa;
     private String correo_electronico;
-    private String num_rut;
+    private String identificador;
     private String telefono;
+    private String direccion;
     private Date fecha_registro;
     private Boolean activo;
 
 
-    public Cliente(String nombre, String email, String rut, String telefono, Date fechaRegistro, Boolean activo) {
+    public Cliente(String nombre, String email, String rut, String telefono, String direccion, Date fechaRegistro, Boolean activo) {
         this.nom_empresa = nombre;
         this.correo_electronico = email;
-        this.num_rut = rut;
+        this.identificador = rut;
         this.telefono = telefono;
+        this.direccion = direccion;
         this.fecha_registro = fechaRegistro;
         this.activo = activo;
     }
     
-    public Cliente(String nombre, String email, String rut, String telefono, Date fechaRegistro) {
+    public Cliente(String nombre, String email, String rut, String telefono, String direccion, Date fechaRegistro) {
         this.nom_empresa = nombre;
         this.correo_electronico = email;
-        this.num_rut = rut;
+        this.identificador = rut;
         this.telefono = telefono;
+        this.direccion = direccion;
         this.fecha_registro = fechaRegistro;
     }
 
@@ -47,12 +50,20 @@ public class Cliente {
         return correo_electronico;
     }
 
-    public String getNum_rut() {
-        return num_rut;
+    public String getIdentificador() {
+        return identificador;
     }
 
     public String getTelefono() {
         return telefono;
+    }
+    
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
     }
 
     public Date getFecha_registro() {
@@ -67,8 +78,8 @@ public class Cliente {
         this.correo_electronico = correo_electronico;
     }
 
-    public void setNum_rut(String num_rut) {
-        this.num_rut = num_rut;
+    public void setIdentificador(String identificador) {
+        this.identificador = identificador;
     }
 
     public void setTelefono(String telefono) {

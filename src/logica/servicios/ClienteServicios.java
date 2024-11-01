@@ -29,12 +29,13 @@ public class ClienteServicios {
                 // Leer los datos del ResultSet y crear un objeto Cliente
                 String nombre = rs.getString("nom_empresa");
                 String email = rs.getString("correo_electronico");
-                String rut = rs.getString("num_rut");
+                String identificador = rs.getString("identificador");
                 String telefono = rs.getString("telefono");
+                String direccion = rs.getString("direccion");
                 Date fechaRegistro = rs.getDate("fecha_registro");
                 Boolean activo = rs.getBoolean("Activo");
                 
-                Cliente cliente = new Cliente(nombre, email, rut, telefono, fechaRegistro, activo);
+                Cliente cliente = new Cliente(nombre, email, identificador, telefono, direccion, fechaRegistro, activo);
                 resultado.add(cliente);
             }
         } catch (SQLException ex) {
@@ -44,14 +45,15 @@ public class ClienteServicios {
     }
         
         public boolean agregarCliente(Cliente cliente) {
-        String sql = "INSERT INTO cliente (nom_empresa, correo_electronico, num_rut, telefono, fecha_registro) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO cliente (nom_empresa, correo_electronico, identificador, telefono, direccion, fecha_registro) VALUES (?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement stmt = conexion.prepareStatement(sql);
             stmt.setString(1, cliente.getNom_empresa());
             stmt.setString(2, cliente.getCorreo_electronico());
-            stmt.setString(3, cliente.getNum_rut());
+            stmt.setString(3, cliente.getIdentificador());
             stmt.setString(4, cliente.getTelefono());
-            stmt.setTimestamp(5, new java.sql.Timestamp(cliente.getFecha_registro().getTime()));
+            stmt.setString(5, cliente.getDireccion());
+            stmt.setTimestamp(6, new java.sql.Timestamp(cliente.getFecha_registro().getTime()));
 
             int filasAfectadas = stmt.executeUpdate();
             return filasAfectadas > 0;
@@ -61,11 +63,11 @@ public class ClienteServicios {
         }
     }
         
-    public boolean existeRut(String rut) {
-    String sql = "SELECT COUNT(*) FROM cliente WHERE num_rut = ?";
+    public boolean existeIdentificador(String identificador) {
+    String sql = "SELECT COUNT(*) FROM cliente WHERE identificador = ?";
         try {
             PreparedStatement stmt = conexion.prepareStatement(sql);
-            stmt.setString(1, rut);
+            stmt.setString(1, identificador);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 return rs.getInt(1) > 0;
@@ -76,12 +78,12 @@ public class ClienteServicios {
         return false;
     }
     
-    public boolean deshabilitarCliente(String rut) {
-    String sql = "UPDATE cliente SET activo = 0 WHERE num_rut = ?";
+    public boolean deshabilitarCliente(String identificador) {
+    String sql = "UPDATE cliente SET activo = 0 WHERE identificador = ?";
 
     try {
         PreparedStatement stmt = conexion.prepareStatement(sql);
-        stmt.setString(1, rut);
+        stmt.setString(1, identificador);
 
         int filasAfectadas = stmt.executeUpdate();
         return filasAfectadas > 0;
@@ -91,23 +93,24 @@ public class ClienteServicios {
     }
 }
 
-// Método para obtener un cliente por su RUT
-    public Cliente getClientePorRut(String rut) {
+// Método para obtener un cliente por su identificador
+    public Cliente getClientePorIdentificador(String identificador) {
         Cliente cliente = null;
-        String sql = "SELECT * FROM cliente WHERE num_rut = ?";
+        String sql = "SELECT * FROM cliente WHERE identificador = ?";
         try {
             PreparedStatement stmt = conexion.prepareStatement(sql);
-            stmt.setString(1, rut);
+            stmt.setString(1, identificador);
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
                 String nombre = rs.getString("nom_empresa");
                 String email = rs.getString("correo_electronico");
                 String telefono = rs.getString("telefono");
+                String direccion = rs.getString("direccion");
                 Date fechaRegistro = rs.getDate("fecha_registro");
 
                 // Crear el objeto Cliente con los datos obtenidos
-                cliente = new Cliente(nombre, email, rut, telefono, fechaRegistro);
+                cliente = new Cliente(nombre, email, identificador, telefono, direccion, fechaRegistro);
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -117,13 +120,14 @@ public class ClienteServicios {
     
     // Método para actualizar los datos de un cliente
     public boolean actualizarCliente(Cliente cliente) {
-        String sql = "UPDATE cliente SET nom_empresa = ?, correo_electronico = ?, telefono = ? WHERE num_rut = ?";
+        String sql = "UPDATE cliente SET nom_empresa = ?, correo_electronico = ?, telefono = ?, direccion = ? WHERE identificador = ?";
         try {
             PreparedStatement stmt = conexion.prepareStatement(sql);
             stmt.setString(1, cliente.getNom_empresa());
             stmt.setString(2, cliente.getCorreo_electronico());
             stmt.setString(3, cliente.getTelefono());
-            stmt.setString(4, cliente.getNum_rut());
+            stmt.setString(4, cliente.getDireccion());
+            stmt.setString(5, cliente.getIdentificador());
 
             int filasActualizadas = stmt.executeUpdate();
             return filasActualizadas > 0;  // Devuelve true si se actualizaron filas
@@ -225,12 +229,13 @@ public class ClienteServicios {
                 // Leer los datos del ResultSet y crear un objeto Cliente
                 String nombre = rs.getString("nom_empresa");
                 String email = rs.getString("correo_electronico");
-                String rut = rs.getString("num_rut");
+                String identificador = rs.getString("identificador");
                 String telefono = rs.getString("telefono");
+                String direccion = rs.getString("direccion");
                 Date fechaRegistro = rs.getDate("fecha_registro");
                 Boolean activo = rs.getBoolean("Activo");
                 
-                Cliente cliente = new Cliente(nombre, email, rut, telefono, fechaRegistro, activo);
+                Cliente cliente = new Cliente(nombre, email, identificador, telefono, direccion, fechaRegistro, activo);
                 resultado.add(cliente);
             }
         } catch (SQLException ex) {

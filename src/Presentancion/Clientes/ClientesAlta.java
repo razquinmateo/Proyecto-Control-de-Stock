@@ -51,7 +51,7 @@ public class ClientesAlta extends javax.swing.JFrame {
 
         jLabel7 = new javax.swing.JLabel();
         JLabel11 = new javax.swing.JLabel();
-        txtRut = new javax.swing.JTextField();
+        txtIdentificador = new javax.swing.JTextField();
         JLabel12 = new javax.swing.JLabel();
         txtNombre1 = new javax.swing.JTextField();
         txtTelefono = new javax.swing.JTextField();
@@ -60,6 +60,8 @@ public class ClientesAlta extends javax.swing.JFrame {
         txtCorreo = new javax.swing.JTextField();
         btnCancelar1 = new javax.swing.JButton();
         btnAgregar1 = new javax.swing.JButton();
+        txtDireccion = new javax.swing.JTextField();
+        JLabel15 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -68,7 +70,7 @@ public class ClientesAlta extends javax.swing.JFrame {
         jLabel7.setText("AÑADIR CLIENTE");
 
         JLabel11.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        JLabel11.setText("RUT:");
+        JLabel11.setText("Identificador:");
 
         JLabel12.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         JLabel12.setText("Nombre:");
@@ -96,66 +98,77 @@ public class ClientesAlta extends javax.swing.JFrame {
             }
         });
 
+        JLabel15.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        JLabel15.setText("Direccion:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(95, Short.MAX_VALUE)
+                .addContainerGap(85, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(JLabel12)
-                                .addGap(18, 18, 18)
-                                .addComponent(txtNombre1, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(JLabel11)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtRut, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(119, 119, 119))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
+                                .addComponent(JLabel15)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(txtDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(JLabel12)
+                                    .addComponent(JLabel11)
+                                    .addComponent(JLabel13))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(txtNombre1, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(txtIdentificador, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(btnAgregar1, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnCancelar1, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(JLabel14)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(JLabel13)
-                                .addGap(18, 18, 18)
-                                .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnAgregar1, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnCancelar1, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(68, 68, 68))
+                                .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(68, 68, 68))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
+                .addGap(21, 21, 21)
                 .addComponent(jLabel7)
-                .addGap(26, 26, 26)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtRut, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(JLabel11))
+                .addGap(29, 29, 29)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(JLabel11)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(txtIdentificador, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtNombre1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(JLabel12))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(JLabel13))))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtNombre1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(JLabel12))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(JLabel13))
+                    .addComponent(txtDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(JLabel15))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(JLabel14))
-                .addGap(36, 36, 36)
+                .addGap(32, 32, 32)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCancelar1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnAgregar1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(46, Short.MAX_VALUE))
+                .addContainerGap(31, Short.MAX_VALUE))
         );
 
         pack();
@@ -169,20 +182,21 @@ public class ClientesAlta extends javax.swing.JFrame {
     String nombre = txtNombre1.getText().trim();
     String email = txtCorreo.getText().trim();
     String telefono = txtTelefono.getText().trim();
+    String direccion = txtDireccion.getText().trim();
     
-    String rut;
+    String identificador;
         try {
-            rut = txtRut.getText().trim();
-            //verificar si el RUT ya existe
+            identificador = txtIdentificador.getText().trim();
+            //verificar si el Identificador ya existe
             ControladorCliente controlador = ControladorCliente.getInstance();
-            if (controlador.existeRut(rut)) {
-                JOptionPane.showMessageDialog(this, "El RUT ya está registrado","Error", JOptionPane.ERROR_MESSAGE);
-                txtRut.requestFocus();
+            if (controlador.existeIdentificador(identificador)) {
+                JOptionPane.showMessageDialog(this, "El Identificador ya está registrado","Error", JOptionPane.ERROR_MESSAGE);
+                txtIdentificador.requestFocus();
                 return;
             }
         } catch (NumberFormatException e) {
-            //manejar el caso en que el RUT no sea un número válido
-            JOptionPane.showMessageDialog(this, "RUT inválido. Debe ser un número.", "Error", JOptionPane.ERROR_MESSAGE);
+            //manejar el caso en que el Identificador no sea un número válido
+            JOptionPane.showMessageDialog(this, "Identificador inválido. Debe ser un número.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
         //obtenemos la fecha actual en el formato yyyy-MM-dd
@@ -206,11 +220,17 @@ public class ClientesAlta extends javax.swing.JFrame {
             txtTelefono.requestFocus();
             return;
         }
+        
+        if (direccion.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El campo 'Dirección' está vacío", "Error", JOptionPane.ERROR_MESSAGE);
+            txtDireccion.requestFocus();
+            return;
+        }
 
-        String rutText = txtRut.getText().trim(); //convertimos a String
-        if(rutText.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "El campo 'RUT' está vacío", "Error", JOptionPane.ERROR_MESSAGE);
-            txtRut.requestFocus();
+        String identificadorText = txtIdentificador.getText().trim(); //convertimos a String
+        if(identificadorText.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El campo 'Identificador' está vacío", "Error", JOptionPane.ERROR_MESSAGE);
+            txtIdentificador.requestFocus();
             return;
         }
 
@@ -218,7 +238,7 @@ public class ClientesAlta extends javax.swing.JFrame {
         ControladorCliente controlador = ControladorCliente.getInstance();
 
         //llamamos al método para agregar cliente
-        boolean exito = controlador.agregarCliente(nombre, email, rut, telefono, fechaRegistro);
+        boolean exito = controlador.agregarCliente(nombre, email, identificador, telefono, direccion, fechaRegistro);
 
         //mostramos mensaje según el resultado
         if (exito) {
@@ -226,8 +246,9 @@ public class ClientesAlta extends javax.swing.JFrame {
             //limpiamos los campos si es necesario
             txtNombre1.setText("");
             txtCorreo.setText("");
-            txtRut.setText("");
+            txtIdentificador.setText("");
             txtTelefono.setText("");
+            txtDireccion.setText("");
             txtNombre1.requestFocus();
         } else {
             JOptionPane.showMessageDialog(this, "Error al agregar cliente. Inténtelo de nuevo.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -275,12 +296,14 @@ public class ClientesAlta extends javax.swing.JFrame {
     private javax.swing.JLabel JLabel12;
     private javax.swing.JLabel JLabel13;
     private javax.swing.JLabel JLabel14;
+    private javax.swing.JLabel JLabel15;
     private javax.swing.JButton btnAgregar1;
     private javax.swing.JButton btnCancelar1;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JTextField txtCorreo;
+    private javax.swing.JTextField txtDireccion;
+    private javax.swing.JTextField txtIdentificador;
     private javax.swing.JTextField txtNombre1;
-    private javax.swing.JTextField txtRut;
     private javax.swing.JTextField txtTelefono;
     // End of variables declaration//GEN-END:variables
 }

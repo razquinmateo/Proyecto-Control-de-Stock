@@ -37,29 +37,30 @@ public class ControladorCliente implements IControladorCliente {
         return clientes;
     }
     
-    public boolean agregarCliente(String nombre, String email, String rut, String telefono, Date fechaRegistro) {
-        Cliente cliente = new Cliente(nombre, email, rut, telefono, fechaRegistro);
+    public boolean agregarCliente(String nombre, String email, String identificador, String telefono, String direccion, Date fechaRegistro) {
+        Cliente cliente = new Cliente(nombre, email, identificador, telefono, direccion, fechaRegistro);
         return ClienteServicios.agregarCliente(cliente);
     }
     
-    public boolean existeRut(String rut) {
-    return ClienteServicios.existeRut(rut);
+    public boolean existeIdentificador(String identificador) {
+    return ClienteServicios.existeIdentificador(identificador);
 }
 
-    public boolean deshabilitarCliente(String rut) {
-        // Verifica si el cliente con el RUT dado existe
-        if (!ClienteServicios.existeRut(rut)) {
+    public boolean deshabilitarCliente(String identificador) {
+        // Verifica si el cliente con el Identificador dado existe
+        if (!ClienteServicios.existeIdentificador(identificador)) {
             return false; // Cliente no encontrado
         }
         // Realiza la eliminación del cliente
-        return ClienteServicios.deshabilitarCliente(rut);
+        return ClienteServicios.deshabilitarCliente(identificador);
     }
     
     public DefaultTableModel cargarDatosEnTabla() {
     DefaultTableModel modeloTabla = new DefaultTableModel();
-    modeloTabla.addColumn("RUT");
+    modeloTabla.addColumn("Identificador");
     modeloTabla.addColumn("Nombre");
     modeloTabla.addColumn("Teléfono");
+    modeloTabla.addColumn("Dirección");
     modeloTabla.addColumn("Correo");
     modeloTabla.addColumn("Activo");
 
@@ -67,9 +68,10 @@ public class ControladorCliente implements IControladorCliente {
 
     for (Cliente cliente : clientes) {
         Object[] fila = {
-            cliente.getNum_rut(),
+            cliente.getIdentificador(),
             cliente.getNom_empresa(),
             cliente.getTelefono(),
+            cliente.getDireccion(),
             cliente.getCorreo_electronico(),
             (cliente.getActivo() != null && cliente.getActivo()) ? "Sí" : "No"
         };
@@ -78,9 +80,9 @@ public class ControladorCliente implements IControladorCliente {
     return modeloTabla;
 }
     
-    // Método para obtener un cliente por su RUT
-    public Cliente obtenerClientePorRut(String rut) {
-        return ClienteServicios.getClientePorRut(rut);
+    // Método para obtener un cliente por su Identificador
+    public Cliente getClientePorIdentificador(String identificador) {
+        return ClienteServicios.getClientePorIdentificador(identificador);
     }
     
     public boolean actualizarCliente(Cliente cliente) {
