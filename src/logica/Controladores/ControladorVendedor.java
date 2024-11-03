@@ -93,7 +93,7 @@ public class ControladorVendedor implements IControladorVendedor  {
     }
     
     @Override
-    public int obtenerIdPorUsuario(String nombreUsuario){
+    public Integer obtenerIdPorUsuario(String nombreUsuario){
         return vendedorServicios.obtenerIdPorUsuario(nombreUsuario);
     }
 }

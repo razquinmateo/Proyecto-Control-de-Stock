@@ -11,6 +11,7 @@ import java.util.List;
 import logica.Clases.DetallePedido;
 import logica.Clases.Pedido;
 import logica.Clases.Pedido.Estado;
+import logica.Clases.Producto;
 
 /**
  *
@@ -20,7 +21,7 @@ public class PedidosServicios {
 
     private Connection conexion = new ConexionDB().getConexion();
     private DetallePedidoServicios detallePedidoServicios = new DetallePedidoServicios();
-    
+
     //obtiene todos los datos de los pedidos y los devuelve en un ArrayList
     public ArrayList<Pedido> getPedidos() {
         ArrayList<Pedido> pedidos = new ArrayList<>();
@@ -118,13 +119,13 @@ public class PedidosServicios {
         }
         return false;
     }
-    
+
     public Pedido obtenerPedidoPorId(int idPedido) {
         Pedido pedido = null;
-        
+
         String sql = "SELECT Identificador, FechaPedido, Estado, Total, VendedorID, ClienteID "
                 + "FROM pedido WHERE Identificador = ?";
-        
+
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
             ps.setInt(1, idPedido);
             ResultSet rs = ps.executeQuery();
@@ -143,10 +144,10 @@ public class PedidosServicios {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        
+
         return pedido;
     }
-    
+
     public boolean actualizarEstadoPedido(int idPedido, String nuevoEstado) {
         String sql = "UPDATE pedido SET estado = ? WHERE identificador = ?";
         try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
@@ -187,15 +188,15 @@ public class PedidosServicios {
         }
         return pedidos;
     }
-    
+
     public ArrayList<Pedido> getPedidosPorVendedorYFecha(int idVendedor, int mes, int año) {
         ArrayList<Pedido> pedidos = new ArrayList<>();
 
         try {
-            String sql = "SELECT Identificador, FechaPedido, Estado, Total, VendedorID, ClienteID " +
-                         "FROM pedido " +
-                         "WHERE VendedorID = ? AND MONTH(FechaPedido) = ? AND YEAR(FechaPedido) = ? " +
-                         "ORDER BY FechaPedido DESC";
+            String sql = "SELECT Identificador, FechaPedido, Estado, Total, VendedorID, ClienteID "
+                    + "FROM pedido "
+                    + "WHERE VendedorID = ? AND MONTH(FechaPedido) = ? AND YEAR(FechaPedido) = ? AND Estado = 'ENTREGADO' "
+                    + "ORDER BY FechaPedido DESC";
             PreparedStatement statement = conexion.prepareStatement(sql);
             statement.setInt(1, idVendedor);
             statement.setInt(2, mes);
@@ -223,22 +224,19 @@ public class PedidosServicios {
         ArrayList<Pedido> pedidos = new ArrayList<>();
 
         try {
-            // Construir la consulta SQL
             StringBuilder sql = new StringBuilder();
             sql.append("SELECT p.Identificador, p.FechaPedido, p.Estado, p.Total, p.VendedorID, p.ClienteID ")
-               .append("FROM pedido p ")
-               .append("JOIN pedido_producto d ON p.Identificador = d.PedidoID ") // Asegúrate que sea correcto
-               .append("JOIN producto pr ON d.ProductoID = pr.ID ") // Cambiado a pr.ID
-               .append("WHERE p.VendedorID = ? AND MONTH(p.FechaPedido) = ? AND YEAR(p.FechaPedido) = ? ");
+                    .append("FROM pedido p ")
+                    .append("JOIN pedido_producto d ON p.Identificador = d.PedidoID ")
+                    .append("JOIN producto pr ON d.ProductoID = pr.ID ")
+                    .append("WHERE p.VendedorID = ? AND MONTH(p.FechaPedido) = ? AND YEAR(p.FechaPedido) = ? AND p.Estado = 'ENTREGADO' ");
 
-            // Agregar condición para categoría, si se proporciona
             if (idCategoria != null) {
-                sql.append("AND pr.CategoriaID = ? "); // Asegúrate de que esta columna existe en producto
+                sql.append("AND pr.CategoriaID = ? ");
             }
 
             sql.append("ORDER BY p.FechaPedido DESC");
 
-            // Preparar el statement
             PreparedStatement statement = conexion.prepareStatement(sql.toString());
             statement.setInt(1, idVendedor);
             statement.setInt(2, mes);
@@ -270,27 +268,21 @@ public class PedidosServicios {
         return pedidos;
     }
 
-
-
-    
     public ArrayList<Pedido> getPedidosPorVendedorClienteYFecha(int idVendedor, int mes, int año, Integer idCliente) {
         ArrayList<Pedido> pedidos = new ArrayList<>();
 
         try {
-            // Construir la consulta SQL
             StringBuilder sql = new StringBuilder();
             sql.append("SELECT p.Identificador, p.FechaPedido, p.Estado, p.Total, p.VendedorID, p.ClienteID ")
-               .append("FROM pedido p ")
-               .append("WHERE p.VendedorID = ? AND MONTH(p.FechaPedido) = ? AND YEAR(p.FechaPedido) = ? ");
+                    .append("FROM pedido p ")
+                    .append("WHERE p.VendedorID = ? AND MONTH(p.FechaPedido) = ? AND YEAR(p.FechaPedido) = ? AND p.Estado = 'ENTREGADO' ");
 
-            // Agregar condición para cliente, si se proporciona
             if (idCliente != null) {
                 sql.append("AND p.ClienteID = ? ");
             }
 
             sql.append("ORDER BY p.FechaPedido DESC");
 
-            // Preparar el statement
             PreparedStatement statement = conexion.prepareStatement(sql.toString());
             statement.setInt(1, idVendedor);
             statement.setInt(2, mes);
@@ -321,31 +313,27 @@ public class PedidosServicios {
         }
         return pedidos;
     }
-    
+
     public ArrayList<Pedido> getPedidosPorVendedorTodos(int idVendedor, int mes, int año, Integer idCategoria, Integer idCliente) {
         ArrayList<Pedido> pedidos = new ArrayList<>();
 
         try {
-            // Construir la consulta SQL
             StringBuilder sql = new StringBuilder();
             sql.append("SELECT p.Identificador, p.FechaPedido, p.Estado, p.Total, p.VendedorID, p.ClienteID ")
-               .append("FROM pedido p ")
-               .append("JOIN pedido_producto pp ON p.Identificador = pp.PedidoID ") // Cambiado a pedido_producto
-               .append("WHERE p.VendedorID = ? AND MONTH(p.FechaPedido) = ? AND YEAR(p.FechaPedido) = ? ");
+                    .append("FROM pedido p ")
+                    .append("JOIN pedido_producto pp ON p.Identificador = pp.PedidoID ")
+                    .append("WHERE p.VendedorID = ? AND MONTH(p.FechaPedido) = ? AND YEAR(p.FechaPedido) = ? AND p.Estado = 'ENTREGADO' ");
 
-            // Agregar condición para idCliente, si se proporciona
             if (idCliente != null) {
                 sql.append("AND p.ClienteID = ? ");
             }
 
-            // Agregar condición para idCategoria, si se proporciona
             if (idCategoria != null) {
-                sql.append("AND pp.ProductoID IN (SELECT ID FROM producto WHERE CategoriaID = ?) "); // Filtrar por idCategoria
+                sql.append("AND pp.ProductoID IN (SELECT ID FROM producto WHERE CategoriaID = ?) ");
             }
 
             sql.append("ORDER BY p.FechaPedido DESC");
 
-            // Preparar el statement
             PreparedStatement statement = conexion.prepareStatement(sql.toString());
             statement.setInt(1, idVendedor);
             statement.setInt(2, mes);
@@ -391,6 +379,41 @@ public class PedidosServicios {
             System.out.println("El pedido no existe o ya está cancelado.");
             return false;
         }
+    }
+
+    public List<DetallePedido> obtenerDetallesPedido(int idPedido) {
+        List<DetallePedido> detalles = new ArrayList<>();
+        String query = "SELECT dp.cantidad, dp.precioVenta, p.ID, p.Nombre, p.PrecioVenta "
+                + "FROM pedido_producto dp "
+                + "JOIN Producto p ON dp.productoID = p.ID "
+                + "WHERE dp.pedidoID = ?";
+
+        try (PreparedStatement stmt = conexion.prepareStatement(query)) {
+            stmt.setInt(1, idPedido);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                // Crear un objeto Producto
+                Producto producto = new Producto();
+                producto.setId(rs.getInt("ID"));
+                producto.setNombre(rs.getString("Nombre"));
+                producto.setPrecioVenta(rs.getFloat("PrecioVenta"));
+
+                // Crear un DetallePedido para la boleta de compra
+                DetallePedido detalle = new DetallePedido(
+                        rs.getInt("dp.cantidad"), // Cantidad comprada
+                        rs.getFloat("dp.precioVenta"), // Precio unitario
+                        producto,
+                        idPedido
+                );
+
+                detalles.add(detalle);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Manejo de errores
+        }
+
+        return detalles;
     }
 
 }

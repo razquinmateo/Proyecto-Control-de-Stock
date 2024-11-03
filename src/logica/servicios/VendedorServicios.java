@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.sql.Timestamp;
 import java.util.List;
 
+import Persistencia.Seguridad; //NUEVOO
+import org.mindrot.jbcrypt.BCrypt;
+
 /**
  *
  * @author UnwantedOpinion
@@ -23,13 +26,35 @@ public class VendedorServicios {
 
     private Connection conexion = new ConexionDB().getConexion();
 
-    public boolean altaVendedor(Vendedor vendedor) {
+   public boolean altaVendedor(Vendedor vendedor) {
+        if (vendedor == null) {
+            throw new IllegalArgumentException("El vendedor no puede ser null");
+        }
+
+        // Verifica que los campos obligatorios no estén vacíos
+        if (vendedor.getNomUsuario() == null || vendedor.getNomUsuario().isEmpty()) {
+            throw new IllegalArgumentException("El nombre de usuario es obligatorio");
+        }
+        if (vendedor.getContrasenia() == null || vendedor.getContrasenia().isEmpty()) {
+            throw new IllegalArgumentException("La contraseña es obligatoria");
+        }
+
+        // Se asegura de que 'activo' no sea null
+        if (vendedor.getActivo() == null) {
+            vendedor.setActivo(true); // Valor por defecto
+        }
+
         try {
+            // Hash de la contraseña del vendedor
+            String hashedPassword = Seguridad.hashPassword(vendedor.getContrasenia());
+            System.out.println("Hash de la contraseña: " + hashedPassword); // Para depuración
+            
             // Consulta SQL para insertar el nuevo vendedor a la BD
             String sql = "INSERT INTO vendedor (Nombre_Usuario, Contrasenia, Nombre, Cedula, Correo_Electronico, Telefono, Direccion, Fecha_Contratacion, Activo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement ps = conexion.prepareStatement(sql);
+            
             ps.setString(1, vendedor.getNomUsuario());
-            ps.setString(2, vendedor.getContrasenia());
+            ps.setString(2, hashedPassword); // Aquí guardamos la contraseña encriptada
             ps.setString(3, vendedor.getNombre());
             ps.setInt(4, vendedor.getCedula());
             ps.setString(5, vendedor.getCorreo());
@@ -239,38 +264,35 @@ public class VendedorServicios {
         return nombres;
     }
     
-    public boolean validarCredenciales(String nombreUsuario, String contrasenia) {
-        boolean esValido = false;
-        String sql = "SELECT COUNT(*) FROM vendedor WHERE Nombre_Usuario = ? AND Contrasenia = ?";
-
+    public boolean validarCredenciales(String username, String password) {
+        String sql = "SELECT Contrasenia FROM vendedor WHERE Nombre_Usuario = ?";
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
-            ps.setString(1, nombreUsuario);
-            ps.setString(2, contrasenia);
+            ps.setString(1, username);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    esValido = rs.getInt(1) > 0; // si hay al menos un registro, las credenciales son válidas
+                    String hashedPassword = rs.getString("Contrasenia");
+                    // Compara la contraseña ingresada con el hash almacenado
+                    return BCrypt.checkpw(password, hashedPassword);
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return esValido;
+        return false; // Retorna false si no encuentra el usuario o en caso de error
     }
     
-    public int obtenerIdPorUsuario(String nombreUsuario) {
-        String sql = "SELECT id FROM vendedor WHERE Nombre_Usuario = ?";
+    public Integer obtenerIdPorUsuario(String username) {
+        String sql = "SELECT ID FROM vendedor WHERE Nombre_Usuario = ?";
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
-            ps.setString(1, nombreUsuario);
-            try (ResultSet resultSet = ps.executeQuery()) {
-                if (resultSet.next()) {
-                    return resultSet.getInt("id");
-                } else {
-                    return -1;
+            ps.setString(1, username);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("ID");
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            return -1;
         }
+        return null; // Retorna null si no encuentra el usuario o en caso de error
     }
 }
