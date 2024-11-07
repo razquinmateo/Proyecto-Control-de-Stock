@@ -28,13 +28,15 @@ import logica.Interfaces.IControladorCliente;
 public class ClientesPrincipal extends javax.swing.JFrame {
 
     private IControladorCliente ICC;
+    private Fabrica fabrica;
     private Timer timer;
     private TableRowSorter<DefaultTableModel> sorter;
     
     public ClientesPrincipal() {
         initComponents();
+        this.fabrica = Fabrica.getInstance();
+        this.ICC = fabrica.getIControladorCliente();
         actualizarTablaClientes();
-        this.ICC = Fabrica.getInstance().getIControladorCliente();
         this.setTitle("Datos de Clientes");
         this.setLocationRelativeTo(null); // Centra la ventana
     

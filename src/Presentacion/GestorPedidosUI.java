@@ -39,6 +39,7 @@ import logica.Interfaces.IControladorVendedor;
  */
 public class GestorPedidosUI extends javax.swing.JFrame {
     
+    private Fabrica fabrica;
     private IControladorUsuario ICU;
     private IControladorPedido ICP;
     private IControladorVendedor ICV;
@@ -52,10 +53,11 @@ public class GestorPedidosUI extends javax.swing.JFrame {
 
     public GestorPedidosUI() {
         initComponents();
+        this.fabrica = Fabrica.getInstance();
         this.ICU = Fabrica.getInstance().getIControladorUsuario();
         this.ICP = Fabrica.getInstance().getIControladorPedido();
         this.ICV = Fabrica.getInstance().getIControladorVendedor();
-        this.ICC = Fabrica.getInstance().getIControladorCliente();
+        this.ICC = fabrica.getIControladorCliente();
         this.setTitle("Gestion de Pedidos");
         this.setLocationRelativeTo(null); // Centra la ventana
         this.cargarDatosDePedidos();
