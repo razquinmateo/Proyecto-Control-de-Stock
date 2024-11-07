@@ -4,12 +4,12 @@
  */
 package Presentancion.Categoria;
 
-import logica.Clases.Categoria;
-import logica.servicios.CategoriaServicios; 
-
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
+import logica.Clases.Categoria;
+import logica.Fabrica;
+import logica.Interfaces.IControladorCategoria;
 
 /**
  *
@@ -17,11 +17,13 @@ import javax.swing.JOptionPane;
  */
 public class aniadirCategoria extends javax.swing.JFrame {
 
+    private IControladorCategoria ICC;
     /**
      * Creates new form aniadirCategoria
      */
     public aniadirCategoria() {
         initComponents();
+        this.ICC = Fabrica.getInstance().getIControladorCategoria();
         this.setTitle("Añadir Categoria");
         this.setLocationRelativeTo(null);
 
@@ -169,9 +171,8 @@ public class aniadirCategoria extends javax.swing.JFrame {
             return;
         }
         
-        CategoriaServicios categoriaServicios = new CategoriaServicios();
         //verificamos si la categoría con el mismo nombre ya existe
-        Categoria categoriaExistente = categoriaServicios.buscarCategoriaPorNombre(nombre);
+        Categoria categoriaExistente = this.ICC.buscarCategoriaPorNombre(nombre);
 
         if (categoriaExistente != null) {
             //si ya existe una categoría con el mismo nombre
@@ -185,7 +186,7 @@ public class aniadirCategoria extends javax.swing.JFrame {
         nuevaCategoria.setDescripcion(descripcion);
 
         //llamamos el altaCategoria
-        boolean exito = categoriaServicios.altaCategoria(nuevaCategoria);
+        boolean exito = this.ICC.altaCategoria(nuevaCategoria);
 
         //verificamos si se añadió correctamente
         if (exito) {

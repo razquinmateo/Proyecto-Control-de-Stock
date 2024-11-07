@@ -19,7 +19,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import logica.Clases.Producto;
-import logica.servicios.ProductoServicios;
+import logica.Fabrica;
+import logica.Interfaces.IControladorProducto;
 
 
 /**
@@ -30,9 +31,11 @@ public class datosProductos extends javax.swing.JFrame {
 
     private Timer timer;
     private TableRowSorter<DefaultTableModel> sorter;
+    private IControladorProducto ICP;
     
     public datosProductos() {
         initComponents();
+        this.ICP = Fabrica.getInstance().getIControladorProducto();
         this.setLocationRelativeTo(null);
         this.setTitle("Datos de Productos");
         cargarDatos();//llama al método para llenar la tabla
@@ -135,8 +138,7 @@ public class datosProductos extends javax.swing.JFrame {
     }
     
     public void cargarDatos() {
-        ProductoServicios productoServicios = new ProductoServicios();
-        ArrayList<Producto> productos = productoServicios.listarProductos();
+        ArrayList<Producto> productos = this.ICP.listarProductos();
 
         //obtenemos el modelo de la tabla
         DefaultTableModel modelo = (DefaultTableModel) tblListarProductos.getModel();
@@ -368,8 +370,6 @@ public class datosProductos extends javax.swing.JFrame {
         if (selectedRow >= 0) {
             int id = (Integer) tblListarProductos.getValueAt(selectedRow, 0);
 
-            ProductoServicios productoServicios = new ProductoServicios();
-
             //confirmamos la deshabilitación
             int confirmar = JOptionPane.showConfirmDialog(this, 
                     "¿Está seguro de que desea deshabilitar este producto?", 
@@ -377,7 +377,7 @@ public class datosProductos extends javax.swing.JFrame {
                     JOptionPane.YES_NO_OPTION);
 
             if (confirmar == JOptionPane.YES_OPTION) {
-                boolean exito = productoServicios.deshabilitarProducto(id);
+                boolean exito = this.ICP.deshabilitarProducto(id);
 
                 if (exito) {
                     JOptionPane.showMessageDialog(this, 

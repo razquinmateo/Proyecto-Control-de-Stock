@@ -109,4 +109,9 @@ public class ControladorProducto implements IControladorProducto {
     public void eliminarProveedoresPorProductoID(int productoID){
         productoServicios.eliminarProveedoresPorProductoID(productoID);
     }
+    
+    @Override
+    public boolean agregarProductoProveedor(int productoID, int proveedorID){
+        return productoServicios.agregarProductoProveedor(productoID, proveedorID);
+    }
 }

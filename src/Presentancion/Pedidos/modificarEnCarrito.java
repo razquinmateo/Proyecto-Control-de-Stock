@@ -15,8 +15,9 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import logica.Clases.Categoria;
 import logica.Clases.Producto;
-import logica.servicios.CategoriaServicios;
-import logica.servicios.ProductoServicios;
+import logica.Fabrica;
+import logica.Interfaces.IControladorCategoria;
+import logica.Interfaces.IControladorProducto;
 
 /**
  *
@@ -28,61 +29,63 @@ public class modificarEnCarrito extends javax.swing.JFrame {
     private ActualizarPedido actualizarPedidoFrame;
     private double precioProducto;
     private int selectedRow;
-    
+    private IControladorCategoria ICC;
+    private IControladorProducto ICP;
+
     /**
      * Creates new form modificarEnCarrito
      */
     public modificarEnCarrito() {
-        
+
         initComponents();
         cargarCategorias();
         cargarProductos();
         configurarListeners();
+        this.ICC = Fabrica.getInstance().getIControladorCategoria();
+        this.ICP = Fabrica.getInstance().getIControladorProducto();
         this.setLocationRelativeTo(null);
 
-                setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-                    addWindowListener(new WindowAdapter() {
-                        @Override
-                        public void windowClosing(WindowEvent e) {
-                            //codigo que se ejecuta al cerrar la ventana
-                            manejoCiereVentana();
-                        }
-                    });
-                    txtAreaDescripcion.setEnabled(false);
-                    txtSubtotal.setEnabled(false);
-        }
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                //codigo que se ejecuta al cerrar la ventana
+                manejoCiereVentana();
+            }
+        });
+        txtAreaDescripcion.setEnabled(false);
+        txtSubtotal.setEnabled(false);
+    }
 
     private void manejoCiereVentana() {
-           //cierra la ventana actual ()
-           this.dispose();
-        }
-    
+        //cierra la ventana actual ()
+        this.dispose();
+    }
+
     public void setAddPedidoFrame(AddPedido addPedidoFrame) {
         this.addPedidoFrame = addPedidoFrame;
     }
-    
+
     public void setActualizarPedidoFrame(ActualizarPedido actualizarPedidoFrame) {
         this.actualizarPedidoFrame = actualizarPedidoFrame;
     }
 
     private void cargarProductos() {
         CbNombreProductos.addItem("--Selecciona un producto--");
-        ProductoServicios productoServicios = new ProductoServicios();
-        List<Producto> productos = productoServicios.listarProductos();
+        List<Producto> productos = this.ICP.listarProductos();
         for (Producto producto : productos) {
             CbNombreProductos.addItem(producto.getNombre());
         }
     }
-    
+
     private void cargarCategorias() {
         CbNombreCategorias.addItem("--Selecciona una categoría--");
-        CategoriaServicios categoriaServicios = new CategoriaServicios();
-        List<Categoria> categorias = categoriaServicios.listarCategorias();
+        List<Categoria> categorias = this.ICC.listarCategorias();
         for (Categoria categoria : categorias) {
             CbNombreCategorias.addItem(categoria.getNombre());
         }
     }
-    
+
     private void configurarListeners() {
         CbNombreProductos.addActionListener(new ActionListener() {
             @Override
@@ -119,11 +122,10 @@ public class modificarEnCarrito extends javax.swing.JFrame {
             }
         });
     }
-    
+
     public void setDatos(String producto, float precioUnidad, int cantidad, float subtotal, int row) {
         //selecciona la categoría del producto en cbNombreCategorias
-        ProductoServicios productoServicios = new ProductoServicios();
-        Producto prod = productoServicios.buscarProductoPorNombre(producto);
+        Producto prod = this.ICP.buscarProductoPorNombre(producto);
 
         if (prod != null) {
             //selecciona la categoría en cbNombreCategorias
@@ -145,16 +147,13 @@ public class modificarEnCarrito extends javax.swing.JFrame {
             txtAreaDescripcion.setText("Descripción no disponible");
         }
     }
-    
+
     private void cargarProductosPorCategoria(String categoriaNombre, String productoSeleccionado) {
         CbNombreProductos.removeAllItems();
-    
-        ProductoServicios productoServicios = new ProductoServicios();
-        CategoriaServicios categoriaServicios = new CategoriaServicios();
 
-        Categoria categoria = categoriaServicios.buscarCategoriaPorNombre(categoriaNombre);
+        Categoria categoria = this.ICC.buscarCategoriaPorNombre(categoriaNombre);
         if (categoria != null) {
-            List<Producto> productos = productoServicios.listarProductosPorCategoria(categoriaNombre);
+            List<Producto> productos = this.ICP.listarProductosPorCategoria(categoriaNombre);
 
             if (!productoSeleccionado.isEmpty()) {
                 //añadimos primero el producto seleccionado
@@ -172,11 +171,9 @@ public class modificarEnCarrito extends javax.swing.JFrame {
         }
     }
 
-    
     private void actualizarDescripcionYPrecio() {
         String nombreProducto = (String) CbNombreProductos.getSelectedItem();
-        ProductoServicios productoServicios = new ProductoServicios();
-        Producto producto = productoServicios.buscarProductoPorNombre(nombreProducto);
+        Producto producto = this.ICP.buscarProductoPorNombre(nombreProducto);
 
         if (producto != null) {
             txtAreaDescripcion.setText(producto.getDescripcion());
@@ -184,7 +181,7 @@ public class modificarEnCarrito extends javax.swing.JFrame {
             actualizarSubtotal();
         }
     }
-    
+
     private void actualizarSubtotal() {
         String cantidadText = txtCantidad.getText();
         int cantidad = 0;
@@ -198,7 +195,7 @@ public class modificarEnCarrito extends javax.swing.JFrame {
         }
         txtSubtotal.setText(String.format("%.2f", precioProducto * cantidad));
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -374,13 +371,13 @@ public class modificarEnCarrito extends javax.swing.JFrame {
     private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
         //obtenemos nombre del producto seleccionado
         String producto = (String) CbNombreProductos.getSelectedItem();
-    
+
         //validamos el nombre del producto
         if (producto == null || producto.equals("--Selecciona un producto--")) {
             JOptionPane.showMessageDialog(this, "Por favor, selecciona un producto válido.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
+
         //obtenemos y validamos la cantidad
         String cantidadText = txtCantidad.getText().trim();
         int cantidad = 0;
@@ -398,7 +395,7 @@ public class modificarEnCarrito extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Ingrese un número válido para la cantidad.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
+
         //obtenemos y validamos el subtotal
         String subtotalText = txtSubtotal.getText().trim();
         float subtotal = 0;
@@ -412,28 +409,28 @@ public class modificarEnCarrito extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "El subtotal no es válido.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
+
         //obtenemos el precio por unidad o de venta del producto
         float precioUnidad = (float) precioProducto;
-        
+
         if (addPedidoFrame != null) {
             addPedidoFrame.actualizarFila(selectedRow, producto, precioUnidad, cantidad, subtotal);
         }
-    
+
         if (actualizarPedidoFrame != null) {
             actualizarPedidoFrame.actualizarFila(selectedRow, producto, precioUnidad, cantidad, subtotal);
         }
-        
+
         this.dispose();
     }//GEN-LAST:event_btnConfirmarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         int confirmar = JOptionPane.showConfirmDialog(this,
-            "¿Estás seguro de que deseas cancelar?",
-            "Confirmar Cancelación",
-            JOptionPane.YES_NO_OPTION);
+                "¿Estás seguro de que deseas cancelar?",
+                "Confirmar Cancelación",
+                JOptionPane.YES_NO_OPTION);
 
-        if(confirmar == JOptionPane.YES_OPTION) {
+        if (confirmar == JOptionPane.YES_OPTION) {
             //cerramos la ventana actual
             this.dispose();
         }

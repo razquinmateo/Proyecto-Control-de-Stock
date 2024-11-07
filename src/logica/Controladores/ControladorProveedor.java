@@ -78,4 +78,14 @@ public class ControladorProveedor implements IControladorProveedor {
    public int obtenerProveedorIDPorNombre(String nombre){
        return proveedorServicios.obtenerProveedorIDPorNombre(nombre);
    }
+   
+   @Override
+   public String obtenerNombreProveedorPorID(int proveedorID){
+       return proveedorServicios.obtenerNombreProveedorPorID(proveedorID);
+   }
+   
+   @Override
+   public Proveedor getProveedor(int id){
+       return proveedorServicios.getProveedor(id);
+   }
 }

@@ -119,4 +119,14 @@ public class ControladorCliente implements IControladorCliente {
     public ArrayList<Cliente> getClientesActivos(){
         return ClienteServicios.getClientesActivos();
     }
+    
+    @Override
+    public String getNombreClientePorId(int idCliente){
+        return ClienteServicios.getNombreClientePorId(idCliente);
+    }
+    
+    @Override
+    public int obtenerIdPorNombre(String nombreCliente){
+        return ClienteServicios.obtenerIdPorNombre(nombreCliente);
+    }
 }

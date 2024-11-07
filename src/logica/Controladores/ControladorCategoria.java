@@ -74,4 +74,9 @@ public class ControladorCategoria implements IControladorCategoria {
     public boolean categoriaTieneProductos(int categoriaId){
         return categoriaServicios.categoriaTieneProductos(categoriaId);
     }
+    
+    @Override
+    public int obtenerIdPorNombre(String nombreCategoria){
+        return categoriaServicios.obtenerIdPorNombre(nombreCategoria);
+    }
 }

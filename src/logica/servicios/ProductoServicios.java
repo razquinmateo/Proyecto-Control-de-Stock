@@ -6,17 +6,11 @@ package logica.servicios;
 
 import Persistencia.ConexionDB;
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import logica.Clases.Producto;
 import logica.Clases.Categoria;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *

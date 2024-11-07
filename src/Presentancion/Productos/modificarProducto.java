@@ -19,9 +19,10 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import logica.Clases.Categoria;
 import logica.Clases.Producto;
 import logica.Clases.Proveedor;
-import logica.servicios.CategoriaServicios;
-import logica.servicios.ProductoServicios;
-import logica.servicios.ProveedorServicios;
+import logica.Fabrica;
+import logica.Interfaces.IControladorCategoria;
+import logica.Interfaces.IControladorProducto;
+import logica.Interfaces.IControladorProveedor;
 
 /**
  *
@@ -31,8 +32,9 @@ public class modificarProducto extends javax.swing.JFrame {
 
     private int id;
     private DefaultListModel<String> listModel;
-    private ProveedorServicios proveedorServicios;
-    private ProductoServicios productoServicios;
+    private IControladorProveedor ICP;
+    private IControladorProducto ICPr;
+    private IControladorCategoria ICC;
     private Producto producto;
     /**
      * Creates new form modificarProducto
@@ -42,8 +44,9 @@ public class modificarProducto extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         listModel = new DefaultListModel<>();
         jListProveedores.setModel(listModel);
-        proveedorServicios = new ProveedorServicios();
-        productoServicios = new ProductoServicios();
+        this.ICC = Fabrica.getInstance().getIControladorCategoria();
+        this.ICP = Fabrica.getInstance().getIControladorProveedor();
+        this.ICPr = Fabrica.getInstance().getIControladorProducto();
         this.setTitle("Modificar Producto");
         
         producto = new Producto();
@@ -95,17 +98,16 @@ public class modificarProducto extends javax.swing.JFrame {
     }
     
     private void cargarCategorias() {
-        CategoriaServicios categoriaServicios = new CategoriaServicios();
         CbCategoria.removeAllItems();
         CbCategoria.addItem("--Selecciona una categoria--");
-        List<Categoria> categorias = categoriaServicios.listarCategorias();
+        List<Categoria> categorias = this.ICC.listarCategorias();
         for (Categoria categoria : categorias) {
             CbCategoria.addItem(categoria.getNombre());
         }
     }
     
     private void cargarProducto() {
-        Producto producto = productoServicios.buscarProducto(id);
+        Producto producto = this.ICPr.buscarProducto(id);
         if (producto != null) {
             setNombre(producto.getNombre());
             setDescripcion(producto.getDescripcion());
@@ -130,7 +132,7 @@ public class modificarProducto extends javax.swing.JFrame {
     }
     
     private void cargarProveedores() {
-        List<Proveedor> proveedoresActivos = proveedorServicios.listarProveedoresActivos();
+        List<Proveedor> proveedoresActivos = this.ICP.listarProveedoresActivos();
         CbProveedor.removeAllItems();
         CbProveedor.addItem("--Selecciona un proveedor--");
 
@@ -142,14 +144,14 @@ public class modificarProducto extends javax.swing.JFrame {
     
     private void cargarProveedoresAsociados() {
         //obtenemos los IDs de los proveedores asociados al producto
-        List<Integer> proveedorIDs = productoServicios.obtenerProveedoresPorProductoID(id);
+        List<Integer> proveedorIDs = this.ICPr.obtenerProveedoresPorProductoID(id);
 
         //kimpiamos el modelo de la lista
         listModel.clear();
 
         //obtenemos los nombres de los proveedores basados en los IDs
         for (int proveedorID : proveedorIDs) {
-            String nombreProveedor = proveedorServicios.obtenerNombreProveedorPorID(proveedorID);
+            String nombreProveedor = this.ICP.obtenerNombreProveedorPorID(proveedorID);
             if (nombreProveedor != null) {
                 listModel.addElement(nombreProveedor);
             }
@@ -484,15 +486,15 @@ public class modificarProducto extends javax.swing.JFrame {
         }
         
         byte[] imagenNueva = producto.getImagen();
-        byte[] imagenAntigua = productoServicios.buscarProducto(id).getImagen();
+        byte[] imagenAntigua = this.ICPr.buscarProducto(id).getImagen();
 
         //solo actualizar imagenAntigua si hay una imagen nueva
         if (imagenNueva != null) {
             imagenAntigua = imagenNueva;
         }
         //verificamos si el nombre o el SKU ya están en uso
-        Producto productoExistentePorNombre = productoServicios.buscarProductoPorNombre(nombre);
-        Producto productoExistentePorSKU = productoServicios.buscarProductoPorSKU(sku);
+        Producto productoExistentePorNombre = this.ICPr.buscarProductoPorNombre(nombre);
+        Producto productoExistentePorSKU = this.ICPr.buscarProductoPorSKU(sku);
 
         //verificamos si el nombre o el SKU ya están en uso y no corresponden al producto actual
         if ((productoExistentePorNombre != null && productoExistentePorNombre.getId() != id) || 
@@ -512,8 +514,7 @@ public class modificarProducto extends javax.swing.JFrame {
         productoModificado.setImagen(imagenAntigua);
 
         //obtenemos la categoría seleccionada
-        CategoriaServicios categoriaServicios = new CategoriaServicios();
-        Categoria categoriaSeleccionada = categoriaServicios.buscarCategoriaPorNombre(categoriaNombre);
+        Categoria categoriaSeleccionada = this.ICC.buscarCategoriaPorNombre(categoriaNombre);
         if (categoriaSeleccionada == null) {
             JOptionPane.showMessageDialog(this, "Categoría seleccionada no encontrada.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -521,7 +522,7 @@ public class modificarProducto extends javax.swing.JFrame {
         productoModificado.setCategoria(categoriaSeleccionada);
 
         //modificamos el producto en la base de datos
-        boolean exito = productoServicios.modificarProducto(id, productoModificado);
+        boolean exito = this.ICPr.modificarProducto(id, productoModificado);
 
         if (exito) {
             //nos aseguramos que el JList de proveedores no esté vacío
@@ -531,14 +532,14 @@ public class modificarProducto extends javax.swing.JFrame {
             }
 
             //limpiamos las filas existentes en producto_proveedor
-            productoServicios.eliminarProveedoresPorProductoID(id);
+            this.ICPr.eliminarProveedoresPorProductoID(id);
 
             //agregamos las nuevas filas en producto_proveedor
             for (int i = 0; i < listModel.size(); i++) {
                 String nombreProveedor = listModel.getElementAt(i);
-                int proveedorID = proveedorServicios.obtenerProveedorIDPorNombre(nombreProveedor);
+                int proveedorID = this.ICP.obtenerProveedorIDPorNombre(nombreProveedor);
                 if (proveedorID != -1) {
-                    productoServicios.agregarProductoProveedor(id, proveedorID);
+                    this.ICPr.agregarProductoProveedor(id, proveedorID);
                 }
             }
             JOptionPane.showMessageDialog(this, "Producto modificado exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);

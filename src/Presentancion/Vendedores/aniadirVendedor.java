@@ -5,11 +5,12 @@
 package Presentancion.Vendedores;
 
 import logica.Clases.Vendedor;
-import logica.servicios.VendedorServicios; 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
 import java.util.Date;
+import logica.Fabrica;
+import logica.Interfaces.IControladorVendedor;
 
 /**
  *
@@ -20,8 +21,10 @@ public class aniadirVendedor extends javax.swing.JFrame {
     /**
      * Creates new form aniadirVendedor
      */
+    private IControladorVendedor ICV;
     public aniadirVendedor() {
         initComponents();
+        this.ICV = Fabrica.getInstance().getIControladorVendedor();
         this.setTitle("Añadir Vendedor");
         this.setLocationRelativeTo(null);
         
@@ -325,9 +328,8 @@ public class aniadirVendedor extends javax.swing.JFrame {
         vendedor.setDireccion(direccion);
         vendedor.setFechaContratacion(new Date()); 
         
-        //creamos una instancia de VendedorServicios y llamar a altaVendedor
-        VendedorServicios vendedorServicios = new VendedorServicios();
-        boolean exito = vendedorServicios.altaVendedor(vendedor);
+        //llamamos a altaVendedor
+        boolean exito = this.ICV.altaVendedor(vendedor);
 
         //mostramos un mensaje según el resultado de la operación
         if(exito) {

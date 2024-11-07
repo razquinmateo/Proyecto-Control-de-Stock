@@ -28,9 +28,6 @@ import logica.Interfaces.IControladorCliente;
 import logica.Interfaces.IControladorPedido;
 import logica.Interfaces.IControladorUsuario;
 import logica.Interfaces.IControladorVendedor;
-import logica.servicios.PedidosServicios;
-import logica.servicios.VendedorServicios;
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -110,8 +107,8 @@ public class GestorPedidosUI extends javax.swing.JFrame {
         SimpleDateFormat fechaFormato = new SimpleDateFormat("dd/MM/yyyy");
 
         for (Pedido pedido : pedidosDeBaseDeDatos) {
-            String nombreVendedor = ICV.obtenerNombreVendedorPorId(pedido.getIdVendedor());
-            String nombreCliente = ICC.obtenerNombreClientePorId(pedido.getIdCliente());
+            String nombreVendedor = this.ICV.obtenerNombreVendedorPorId(pedido.getIdVendedor());
+            String nombreCliente = this.ICC.obtenerNombreClientePorId(pedido.getIdCliente());
 
             String estadoFormateado = "";
             switch (pedido.getEstado()) {
@@ -476,9 +473,8 @@ public class GestorPedidosUI extends javax.swing.JFrame {
             //obtenemos el ID del pedido desde la tabla
             int idPedido = (int) tblPedidos.getValueAt(selectedRow, 0);
 
-            //obtenemos el pedido desde PedidosServicios
-            PedidosServicios pedidosServicios = new PedidosServicios();
-            Pedido pedido = pedidosServicios.obtenerPedidoPorId(idPedido);
+            //obtenemos el pedido
+            Pedido pedido = this.ICP.obtenerPedidoPorId(idPedido);
 
             if (pedido != null) {
                 //crea y muestra la ventana de actualización
@@ -515,7 +511,7 @@ public class GestorPedidosUI extends javax.swing.JFrame {
 
             if (estadoSeleccionado != null) {
                 //llamamos al servicio para actualizar el estado del pedido
-                boolean exito = ICP.actualizarEstadoPedido(idPedido, estadoSeleccionado);
+                boolean exito = this.ICP.actualizarEstadoPedido(idPedido, estadoSeleccionado);
 
                 if (exito) {
                     JOptionPane.showMessageDialog(this, "Estado del pedido actualizado correctamente.");

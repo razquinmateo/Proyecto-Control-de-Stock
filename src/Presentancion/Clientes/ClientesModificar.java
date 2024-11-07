@@ -9,21 +9,23 @@ import java.awt.event.WindowEvent;
 import java.util.Date;
 import javax.swing.JOptionPane;
 import logica.Clases.Cliente;
-import logica.Controladores.ControladorCliente;
-import logica.servicios.ClienteServicios;
+import logica.Fabrica;
+import logica.Interfaces.IControladorCliente;
 
 /**
  *
  * @author Jairo
  */
 public class ClientesModificar extends javax.swing.JFrame {
-public static String identificadorCliente;
+    private IControladorCliente ICC;
+    public static String identificadorCliente;
     /**
      * Creates new form ClientesModificar
      */
     public ClientesModificar() {
         initComponents();
         cargarDatosCliente();
+        this.ICC = Fabrica.getInstance().getIControladorCliente();
         this.setTitle("Modificar Cliente");
         this.setLocationRelativeTo(null); // Centra la ventana
 
@@ -44,11 +46,8 @@ public static String identificadorCliente;
     
     
     private void cargarDatosCliente() {
-        // Obtener el controlador de clientes
-        ControladorCliente controlador = ControladorCliente.getInstance();
-
         // Usar el método obtenerClientePorRut para obtener los datos del cliente
-        Cliente cliente = controlador.getClientePorIdentificador(identificadorCliente);
+        Cliente cliente = this.ICC.getClientePorIdentificador(identificadorCliente);
 
         if (cliente != null) {
             // Cargar los datos en los campos de texto
@@ -234,8 +233,7 @@ public static String identificadorCliente;
             String direccion = txtDireccion.getText();
 
             //verificamos si el nombre ya está en uso
-            ClienteServicios clienteServicios = new ClienteServicios();
-            if (clienteServicios.existeNombreCliente(nombre)) {
+            if (this.ICC.existeNombreCliente(nombre)) {
                 JOptionPane.showMessageDialog(this, "Ya existe un cliente con ese nombre", "Advertencia", JOptionPane.WARNING_MESSAGE);
                 return;
             }
@@ -275,8 +273,7 @@ public static String identificadorCliente;
             Cliente clienteActualizado = new Cliente(nombre, email, identificador, telefono, direccion, new Date());
 
             //llamamos al método para actualizar el cliente
-            ControladorCliente controlador = ControladorCliente.getInstance();
-            boolean actualizado = controlador.actualizarCliente(clienteActualizado);
+            boolean actualizado = this.ICC.actualizarCliente(clienteActualizado);
 
             if (actualizado) {
                 JOptionPane.showMessageDialog(this, "Cliente actualizado correctamente");

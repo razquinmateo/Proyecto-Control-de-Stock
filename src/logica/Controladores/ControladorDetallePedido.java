@@ -4,6 +4,7 @@
  */
 package logica.Controladores;
 
+import java.util.List;
 import logica.Clases.DetallePedido;
 import logica.Interfaces.IControladorDetallePedido;
 import logica.servicios.DetallePedidoServicios;
@@ -36,6 +37,16 @@ public class ControladorDetallePedido implements IControladorDetallePedido {
     @Override
     public boolean agregarDetallePedido(int idPedido, DetallePedido detalle){
         return detallesServicios.agregarDetallePedido(idPedido, detalle);
+    }
+    
+    @Override
+    public List<DetallePedido> obtenerDetallesPedido(int idPedido){
+        return detallesServicios.obtenerDetallesPedido(idPedido);
+    }
+    
+    @Override
+    public boolean actualizarDetallesPedido(int idPedido, List<DetallePedido> detalles){
+        return detallesServicios.actualizarDetallesPedido(idPedido, detalles);
     }
     
 }

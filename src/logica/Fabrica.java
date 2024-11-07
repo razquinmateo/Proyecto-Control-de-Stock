@@ -26,6 +26,9 @@ import logica.Controladores.ControladorProveedor;
 import logica.Interfaces.IControladorCliente;
 import logica.Controladores.ControladorCliente;
 
+import logica.Interfaces.IControladorDetallePedido;
+import logica.Controladores.ControladorDetallePedido;
+
 /**
  *
  * @author Santiago.S
@@ -77,5 +80,10 @@ public class Fabrica {
     public IControladorCliente getIControladorCliente() {
         IControladorCliente ControladorCli = ControladorCliente.getInstance();
         return ControladorCli;
+    }
+    
+    public IControladorDetallePedido getIControladorDetallePedido() {
+        IControladorDetallePedido ControladorDet = ControladorDetallePedido.getInstance();
+        return ControladorDet;
     }
 }

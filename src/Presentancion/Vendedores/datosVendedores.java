@@ -6,7 +6,6 @@ package Presentancion.Vendedores;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import logica.servicios.VendedorServicios;
 import logica.Clases.Vendedor;
 
 import javax.swing.table.DefaultTableModel;
@@ -22,6 +21,8 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableRowSorter;
+import logica.Fabrica;
+import logica.Interfaces.IControladorVendedor;
 
 /**
  *
@@ -29,15 +30,17 @@ import javax.swing.table.TableRowSorter;
  */
 public class datosVendedores extends javax.swing.JFrame {
 
+    private IControladorVendedor ICV;
     private Timer timer;
     private TableRowSorter<DefaultTableModel> sorter;
-    
-     public datosVendedores() {
+
+    public datosVendedores() {
         initComponents();
+        this.ICV = Fabrica.getInstance().getIControladorVendedor();
         this.setLocationRelativeTo(null);
         this.setTitle("Datos de Vendedores");
         cargarDatos();//llama al método para llenar la tabla
-       
+
         //manejamos el evento de cierre de la ventana
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
@@ -47,11 +50,11 @@ public class datosVendedores extends javax.swing.JFrame {
                 manejoCiereVentana();
             }
         });
-        
+
         //deshabilitamos los botones mod y elim
         btnModVendedor.setEnabled(false);
         btnDeshVendedor.setEnabled(false);
-        
+
         //agregamos un listener para la tabla que active los botones al seleccionar una fila
         tblListarVendedores.getSelectionModel().addListSelectionListener(e -> {
             //si hay una fila seleccionada, habilitar los botones
@@ -59,7 +62,7 @@ public class datosVendedores extends javax.swing.JFrame {
             btnModVendedor.setEnabled(seleccionValida);
             btnDeshVendedor.setEnabled(seleccionValida);
         });
-        
+
         // Inicializar el Timer
         timer = new Timer(4000, new ActionListener() {
             @Override
@@ -75,8 +78,8 @@ public class datosVendedores extends javax.swing.JFrame {
         // Agregar filtros
         agregarFiltros();
     }
-    
-     private void agregarFiltros() {
+
+    private void agregarFiltros() {
         txtBBusqueda.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -113,7 +116,7 @@ public class datosVendedores extends javax.swing.JFrame {
             timer.start(); // Reiniciar el timer solo si las condiciones son adecuadas
         }
     }
-    
+
     // Este método debe estar fuera de los Listeners para que sea accesible desde ambos
     private void aplicarFiltro() {
         String texto = txtBBusqueda.getText().trim();
@@ -128,19 +131,18 @@ public class datosVendedores extends javax.swing.JFrame {
             sorter.setRowFilter(RowFilter.regexFilter(texto, columna));
         }
     }
-     
+
     private void manejoCiereVentana() {
-       //cierra la ventana actual (datosVendedores)
-       this.dispose();
+        //cierra la ventana actual (datosVendedores)
+        this.dispose();
     }
-    
+
     public void cargarDatos() {
-        VendedorServicios vendedorServicios = new VendedorServicios();
-        ArrayList<Vendedor> vendedores = vendedorServicios.listarVendedores();
+        ArrayList<Vendedor> vendedores = this.ICV.listarVendedores();
 
         //obtenemos el modelo de la tabla
         DefaultTableModel modelo = (DefaultTableModel) tblListarVendedores.getModel();
-        
+
         //configuramos el TableRowSorter
         sorter = new TableRowSorter<>(modelo);
         tblListarVendedores.setRowSorter(sorter);
@@ -149,12 +151,12 @@ public class datosVendedores extends javax.swing.JFrame {
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
         tblListarVendedores.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
-        
+
         //limpiamos la tabla antes de agregar los nuevos datos
         modelo.setRowCount(0);
 
         SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
-        
+
         //agregamos filas a la tabla
         for (Vendedor vendedor : vendedores) {
             String fechaContratacionFormateada = "";
@@ -172,7 +174,7 @@ public class datosVendedores extends javax.swing.JFrame {
                 vendedor.getTelefono(),
                 vendedor.getDireccion(),
                 fechaContratacionFormateada,
-                vendedor.getActivo()  == true ? "Sí" : "No"
+                vendedor.getActivo() == true ? "Sí" : "No"
             });
         }
     }
@@ -330,7 +332,7 @@ public class datosVendedores extends javax.swing.JFrame {
     private void btnAltaVendedor1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAltaVendedor1ActionPerformed
         //crea una nueva instancia de la ventana aniadirVendedor
         aniadirVendedor ventanaAniadirVendedor = new aniadirVendedor();
-    
+
         //hace que la ventana sea visible
         ventanaAniadirVendedor.setVisible(true);
     }//GEN-LAST:event_btnAltaVendedor1ActionPerformed
@@ -348,24 +350,24 @@ public class datosVendedores extends javax.swing.JFrame {
             String telefono = (String) tblListarVendedores.getValueAt(filaSeleccionada, 6);
             String direccion = (String) tblListarVendedores.getValueAt(filaSeleccionada, 7);
 
-        int confirmacion = JOptionPane.showConfirmDialog(this, 
-                "¿Está seguro de que desea modificar este vendedor?", 
-                "Confirmar Modificación", 
-                JOptionPane.YES_NO_OPTION);
-        
-        if (confirmacion == JOptionPane.YES_OPTION) {
-            modificarVendedor ventanaModificacion = new modificarVendedor();
-            ventanaModificacion.setId(id);
-            ventanaModificacion.setNombreUsuario(nomUsuario);
-            ventanaModificacion.setContrasenia(contrasenia);
-            ventanaModificacion.setNombre(nombre);
-            ventanaModificacion.setCedula(cedula);
-            ventanaModificacion.setCorreo(correo);
-            ventanaModificacion.setTelefono(telefono);
-            ventanaModificacion.setDireccion(direccion);
-            ventanaModificacion.setVisible(true);
+            int confirmacion = JOptionPane.showConfirmDialog(this,
+                    "¿Está seguro de que desea modificar este vendedor?",
+                    "Confirmar Modificación",
+                    JOptionPane.YES_NO_OPTION);
 
-        }
+            if (confirmacion == JOptionPane.YES_OPTION) {
+                modificarVendedor ventanaModificacion = new modificarVendedor();
+                ventanaModificacion.setId(id);
+                ventanaModificacion.setNombreUsuario(nomUsuario);
+                ventanaModificacion.setContrasenia(contrasenia);
+                ventanaModificacion.setNombre(nombre);
+                ventanaModificacion.setCedula(cedula);
+                ventanaModificacion.setCorreo(correo);
+                ventanaModificacion.setTelefono(telefono);
+                ventanaModificacion.setDireccion(direccion);
+                ventanaModificacion.setVisible(true);
+
+            }
         } else {
             javax.swing.JOptionPane.showMessageDialog(this, "Debe seleccionar un vendedor para modificar.");
         }
@@ -377,33 +379,31 @@ public class datosVendedores extends javax.swing.JFrame {
         if (selectedRow >= 0) {
             int id = (Integer) tblListarVendedores.getValueAt(selectedRow, 0);
 
-            VendedorServicios servicios = new VendedorServicios();
-
-            int confirm = JOptionPane.showConfirmDialog(this, 
-                    "¿Está seguro de que desea deshabilitar este vendedor?", 
-                    "Confirmar Deshabilitación", 
+            int confirm = JOptionPane.showConfirmDialog(this,
+                    "¿Está seguro de que desea deshabilitar este vendedor?",
+                    "Confirmar Deshabilitación",
                     JOptionPane.YES_NO_OPTION);
 
             if (confirm == JOptionPane.YES_OPTION) {
-                boolean exito = servicios.deshabilitarVendedor(id);
+                boolean exito = this.ICV.deshabilitarVendedor(id);
 
                 if (exito) {
-                    JOptionPane.showMessageDialog(this, 
-                            "Vendedor deshabilitado exitosamente.", 
-                            "Éxito", 
+                    JOptionPane.showMessageDialog(this,
+                            "Vendedor deshabilitado exitosamente.",
+                            "Éxito",
                             JOptionPane.INFORMATION_MESSAGE);
                     cargarDatos();
                 } else {
-                    JOptionPane.showMessageDialog(this, 
-                            "Error al deshabilitar el vendedor.", 
-                            "Error", 
+                    JOptionPane.showMessageDialog(this,
+                            "Error al deshabilitar el vendedor.",
+                            "Error",
                             JOptionPane.ERROR_MESSAGE);
                 }
             }
         } else {
-            JOptionPane.showMessageDialog(this, 
-                    "Debe seleccionar un vendedor para deshabilitar.", 
-                    "Advertencia", 
+            JOptionPane.showMessageDialog(this,
+                    "Debe seleccionar un vendedor para deshabilitar.",
+                    "Advertencia",
                     JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_btnDeshVendedorActionPerformed

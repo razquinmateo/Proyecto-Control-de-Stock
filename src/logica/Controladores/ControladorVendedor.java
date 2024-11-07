@@ -96,4 +96,9 @@ public class ControladorVendedor implements IControladorVendedor  {
     public Integer obtenerIdPorUsuario(String nombreUsuario){
         return vendedorServicios.obtenerIdPorUsuario(nombreUsuario);
     }
+    
+    @Override
+    public String getNombreVendedorPorId(int idVendedor){
+        return vendedorServicios.getNombreVendedorPorId(idVendedor);
+    }
 }

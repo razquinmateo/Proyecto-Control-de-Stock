@@ -19,20 +19,22 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import logica.Clases.Cliente;
-import logica.servicios.ClienteServicios;
-
+import logica.Fabrica;
+import logica.Interfaces.IControladorCliente;
 /**
  *
  * @author UnwantedOpinion
  */
 public class ClientesPrincipal extends javax.swing.JFrame {
 
+    private IControladorCliente ICC;
     private Timer timer;
     private TableRowSorter<DefaultTableModel> sorter;
     
     public ClientesPrincipal() {
         initComponents();
         actualizarTablaClientes();
+        this.ICC = Fabrica.getInstance().getIControladorCliente();
         this.setTitle("Datos de Clientes");
         this.setLocationRelativeTo(null); // Centra la ventana
     
@@ -135,8 +137,7 @@ public class ClientesPrincipal extends javax.swing.JFrame {
     }
 
     private void actualizarTablaClientes() {
-        ClienteServicios clienteServicios = new ClienteServicios();
-        ArrayList<Cliente> clientes = clienteServicios.getClientes();
+        ArrayList<Cliente> clientes = this.ICC.listarClientes();
 
         //obtenemos el modelo de la tabla
         DefaultTableModel modelo = (DefaultTableModel) tablaClientes2.getModel();
@@ -374,8 +375,7 @@ public class ClientesPrincipal extends javax.swing.JFrame {
 
             if (confirmacion == JOptionPane.YES_OPTION) {
                 //llamamos al método para deshabilitar al cliente
-                ClienteServicios servicio = new ClienteServicios();
-                if (servicio.deshabilitarCliente(identificadorCliente)) {
+                if (this.ICC.deshabilitarCliente(identificadorCliente)) {
                     JOptionPane.showMessageDialog(this, 
                             "Cliente deshabilitado exitosamente.", 
                             "Éxito", 

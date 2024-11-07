@@ -5,13 +5,14 @@
 package Presentancion.Vendedores;
 
 
-import logica.servicios.VendedorServicios;
 import logica.Clases.Vendedor;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
 import java.util.Date;
+import logica.Fabrica;
+import logica.Interfaces.IControladorVendedor;
 
 /**
  *
@@ -20,9 +21,11 @@ import java.util.Date;
 public class modificarVendedor extends javax.swing.JFrame {
     
     private int id;
+    private IControladorVendedor ICV;
 
     public modificarVendedor() {
         initComponents();
+        this.ICV = Fabrica.getInstance().getIControladorVendedor();
         this.setTitle("Modificar Vendedor");
         this.setLocationRelativeTo(null);
         
@@ -286,8 +289,7 @@ public class modificarVendedor extends javax.swing.JFrame {
 
     private void btnGuardarCambiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarCambiosActionPerformed
         //obtenemos el ID del vendedor que se está editando
-        VendedorServicios servicios = new VendedorServicios();
-        Vendedor vendedorExistente = servicios.buscarVendedor(id);
+        Vendedor vendedorExistente = this.ICV.buscarVendedor(id);
 
         String nomUsuario = txtNomUsuario.getText();
         String contrasenia = txtContraseña.getText();
@@ -327,7 +329,7 @@ public class modificarVendedor extends javax.swing.JFrame {
         }
         
         //verificamos si la cédula ya está en uso
-        if (servicios.cedulaEnUso(cedula) && cedula != vendedorExistente.getCedula()) {
+        if (this.ICV.cedulaEnUso(cedula) && cedula != vendedorExistente.getCedula()) {
             JOptionPane.showMessageDialog(this, "La cédula ya está en uso. Por favor, elija otra.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -346,7 +348,7 @@ public class modificarVendedor extends javax.swing.JFrame {
         
         Vendedor vendedorActualizado = new Vendedor(id, nomUsuario, contrasenia, nombre, cedula, correo, telefono, direccion, fechaContratacion, activo);
     
-        boolean exito = servicios.modificarVendedor(id, vendedorActualizado);
+        boolean exito = this.ICV.modificarVendedor(id, vendedorActualizado);
 
         if(exito) {
             JOptionPane.showMessageDialog(this, "Vendedor modificado exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);

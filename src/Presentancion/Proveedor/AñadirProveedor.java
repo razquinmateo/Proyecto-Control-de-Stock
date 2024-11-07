@@ -7,8 +7,8 @@ package Presentancion.Proveedor;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import logica.Clases.Proveedor;
-import logica.Controladores.ControladorProveedor;
-import logica.servicios.ProveedorServicios;
+import logica.Fabrica;
+import logica.Interfaces.IControladorProveedor;
 /**
  *
  * @author macro
@@ -18,8 +18,10 @@ public class AñadirProveedor extends javax.swing.JFrame {
     /**
      * Creates new form AñadirProveedor
      */
+    private IControladorProveedor ICP;
     public AñadirProveedor() {
         initComponents();
+        this.ICP = Fabrica.getInstance().getIControladorProveedor();
         this.setTitle("Añadir Proveedor");
         this.setLocationRelativeTo(null);
         //manejamos el evento de cierre de la ventana
@@ -227,11 +229,9 @@ public class AñadirProveedor extends javax.swing.JFrame {
                 javax.swing.JOptionPane.showMessageDialog(this, "El teléfono debe tener entre 9 y 15 dígitos.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
                 return;
             }
-
-            ProveedorServicios servicios = new ProveedorServicios();
             
             //verificamos si el nombre ya está registrado
-            if (servicios.nombreProveedorEnUso(nombre)) {
+            if (this.ICP.nombreProveedorEnUso(nombre)) {
                 throw new Exception("El nombre del proveedor ya está en uso.");
             }
             
@@ -242,9 +242,8 @@ public class AñadirProveedor extends javax.swing.JFrame {
             proveedor.setCorreoElectronico(correo);
             proveedor.setDireccion(direccion);
 
-            // Usar ControladorProveedor para manejar la alta del proveedor
-            ControladorProveedor controladorProveedor = ControladorProveedor.getInstance();
-            boolean exito = controladorProveedor.altaProveedor(proveedor);
+            //manejar la alta del proveedor
+            boolean exito = this.ICP.altaProveedor(proveedor);
 
             if (exito) {
                 javax.swing.JOptionPane.showMessageDialog(this, "Proveedor agregado exitosamente.", "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);

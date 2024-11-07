@@ -18,7 +18,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableRowSorter;
-import logica.servicios.ProveedorServicios;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -336,7 +335,6 @@ public class datosProveedor extends javax.swing.JFrame {
 
         if (filaSeleccionada >= 0) {
             int id = (Integer) tablaProveedor.getValueAt(filaSeleccionada, 0);
-            ProveedorServicios servicios = new ProveedorServicios();
 
             //confirmamos la deshabilitación
             int confirmacion = JOptionPane.showConfirmDialog(this, 
@@ -345,7 +343,7 @@ public class datosProveedor extends javax.swing.JFrame {
                     JOptionPane.YES_NO_OPTION);
 
             if (confirmacion == JOptionPane.YES_OPTION) {
-                boolean exito = servicios.deshabilitarProveedor(id);
+                boolean exito = this.ICPE.deshabilitarProveedor(id);
 
                 if (exito) {
                     JOptionPane.showMessageDialog(this, 

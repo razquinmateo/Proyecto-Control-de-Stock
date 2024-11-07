@@ -16,11 +16,10 @@ import logica.Clases.DetallePedido;
 import logica.Clases.Pedido;
 import logica.Clases.Producto;
 import logica.Fabrica;
+import logica.Interfaces.IControladorCliente;
 import logica.Interfaces.IControladorPedido;
-import logica.servicios.ClienteServicios;
-import logica.servicios.PedidosServicios;
-import logica.servicios.VendedorServicios;
-import logica.servicios.ProductoServicios;
+import logica.Interfaces.IControladorProducto;
+import logica.Interfaces.IControladorVendedor;
 
 /**
  *
@@ -28,20 +27,18 @@ import logica.servicios.ProductoServicios;
  */
 public class AddPedido extends javax.swing.JFrame {
 
-    private PedidosServicios pedidosServicios;
-    private VendedorServicios vendedorServicios;
-    private ClienteServicios clienteServicios;
-    private ProductoServicios productoServicios;
+    private IControladorVendedor ICV;
+    private IControladorCliente ICC;
+    private IControladorProducto ICPr;
     private IControladorPedido ICP;
     
 
     public AddPedido() {
         initComponents();
         this.setLocationRelativeTo(null);
-        this.vendedorServicios = new VendedorServicios();
-        this.clienteServicios = new ClienteServicios();
-        this.productoServicios = new ProductoServicios();
-        this.pedidosServicios = new PedidosServicios();
+        this.ICV = Fabrica.getInstance().getIControladorVendedor();
+        this.ICC = Fabrica.getInstance().getIControladorCliente();
+        this.ICPr = Fabrica.getInstance().getIControladorProducto();
         this.ICP = Fabrica.getInstance().getIControladorPedido();
     
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -90,8 +87,8 @@ public class AddPedido extends javax.swing.JFrame {
         private void cargarNombres() {
         CbNombreVendedor.addItem("--Selecciona un vendedor--");
         CbNombreCliente.addItem("--Selecciona un cliente--");
-        List<String> nombresVendedores = vendedorServicios.obtenerNombresVendedoresActivos();
-        List<String> nombresClientes = clienteServicios.obtenerNombresClientesActivos();
+        List<String> nombresVendedores = this.ICV.obtenerNombresVendedoresActivos();
+        List<String> nombresClientes = this.ICC.obtenerNombresClientesActivos();
 
         for (String nombre : nombresVendedores) {
             CbNombreVendedor.addItem(nombre);
@@ -428,8 +425,8 @@ public class AddPedido extends javax.swing.JFrame {
             String nombreVendedor = (String) CbNombreVendedor.getSelectedItem();
             String nombreCliente = (String) CbNombreCliente.getSelectedItem();
 
-            int idVendedor = vendedorServicios.obtenerIdVendedorPorNombre(nombreVendedor);
-            int idCliente = clienteServicios.obtenerIdClientePorNombre(nombreCliente);
+            int idVendedor = this.ICV.obtenerIdVendedorPorNombre(nombreVendedor);
+            int idCliente = this.ICC.obtenerIdClientePorNombre(nombreCliente);
 
             //creamos un nuevo objeto Pedido
             Pedido nuevoPedido = new Pedido();
@@ -442,7 +439,7 @@ public class AddPedido extends javax.swing.JFrame {
             for (int i = 0; i < JtableCarrito.getRowCount(); i++) {
                 // Obtener el nombre del producto
                 String nombreProducto = (String) JtableCarrito.getValueAt(i, 0);
-                Producto producto = productoServicios.buscarProductoPorNombre(nombreProducto);
+                Producto producto = this.ICPr.buscarProductoPorNombre(nombreProducto);
                 if (producto == null) {
                     JOptionPane.showMessageDialog(this, "Producto no encontrado: " + nombreProducto, "Error", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -455,7 +452,7 @@ public class AddPedido extends javax.swing.JFrame {
             }
 
             //agregamos el pedido a la base de datos
-            boolean resultado = pedidosServicios.agregarPedido(nuevoPedido);
+            boolean resultado = this.ICP.agregarPedido(nuevoPedido);
 
             if (resultado) {
                 JOptionPane.showMessageDialog(this, "Pedido añadido exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);

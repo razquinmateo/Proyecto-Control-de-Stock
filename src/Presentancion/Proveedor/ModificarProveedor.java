@@ -7,9 +7,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
 import logica.Clases.Proveedor;
-import logica.Fabrica;  // Para obtener la instancia del controlador de proveedores
+import logica.Fabrica;
 import logica.Interfaces.IControladorProveedor;
-import logica.servicios.ProveedorServicios;
 /**
  *
  * @author macro
@@ -230,8 +229,7 @@ public class ModificarProveedor extends javax.swing.JFrame {
 
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
         //obtenemos el ID del vendedor que se está editando
-        ProveedorServicios servicios = new ProveedorServicios();
-        Proveedor proveedorExistente = servicios.getProveedor(id);
+        Proveedor proveedorExistente = this.ICPE.getProveedor(id);
         
         String nombre = btnNombreProv.getText();
         String telefono = btnTelefonoProv.getText(); 
@@ -266,7 +264,7 @@ public class ModificarProveedor extends javax.swing.JFrame {
         //verificamos si el nombre ha cambiado
         if (!nombre.equals(proveedorExistente.getNombre())) {
             //verificamos si el nuevo nombre ya está en uso
-            if (servicios.nombreProveedorEnUso(nombre)) {
+            if (this.ICPE.nombreProveedorEnUso(nombre)) {
                 javax.swing.JOptionPane.showMessageDialog(this, "El nombre del proveedor ya está en uso.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
                 return;
             }
@@ -274,7 +272,7 @@ public class ModificarProveedor extends javax.swing.JFrame {
         
         Proveedor proveedorActualizado = new Proveedor(id, nombre, telefono, direccion, correo, activo);
     
-        boolean exito = servicios.modificarProveedor(id, proveedorActualizado);
+        boolean exito = this.ICPE.modificarProveedor(id, proveedorActualizado);
 
         if(exito) {
             JOptionPane.showMessageDialog(this, "Vendedor modificado exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);

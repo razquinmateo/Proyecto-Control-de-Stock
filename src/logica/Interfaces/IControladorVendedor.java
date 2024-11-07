@@ -23,4 +23,5 @@ public interface IControladorVendedor {
     public abstract List<String> obtenerNombresVendedoresActivos();
     public abstract boolean validarCredenciales(String username, String password);
     public abstract Integer obtenerIdPorUsuario(String nombreUsuario);
+    public abstract String getNombreVendedorPorId(int idVendedor);
 }

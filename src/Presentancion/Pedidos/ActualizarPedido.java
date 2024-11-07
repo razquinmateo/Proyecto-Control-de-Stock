@@ -18,32 +18,30 @@ import logica.Clases.Pedido;
 import logica.Clases.Pedido.Estado;
 import logica.Clases.Producto;
 import logica.Fabrica;
+import logica.Interfaces.IControladorCliente;
+import logica.Interfaces.IControladorDetallePedido;
 import logica.Interfaces.IControladorPedido;
-import logica.servicios.ClienteServicios;
-import logica.servicios.DetallePedidoServicios;
-import logica.servicios.PedidosServicios;
-import logica.servicios.VendedorServicios;
-import logica.servicios.ProductoServicios;
+import logica.Interfaces.IControladorProducto;
+import logica.Interfaces.IControladorVendedor;
 
 public class ActualizarPedido extends javax.swing.JFrame {
 
-    private PedidosServicios pedidosServicios;
-    private VendedorServicios vendedorServicios;
-    private ClienteServicios clienteServicios;
-    private ProductoServicios productoServicios;
-    private DetallePedidoServicios detallePedidos;
+    
+    private IControladorVendedor ICV;
+    private IControladorCliente ICC;
+    private IControladorProducto ICPr;
     private IControladorPedido ICP;
+    private IControladorDetallePedido ICDP;
     private Pedido pedidoSeleccionado;
 
     public ActualizarPedido() {
         initComponents();
         this.setTitle("Gestion de Pedidos");
         this.setLocationRelativeTo(null);
-        this.vendedorServicios = new VendedorServicios();
-        this.clienteServicios = new ClienteServicios();
-        this.productoServicios = new ProductoServicios();
-        this.pedidosServicios = new PedidosServicios();
-        this.detallePedidos = new DetallePedidoServicios();
+        this.ICV = Fabrica.getInstance().getIControladorVendedor();
+        this.ICC = Fabrica.getInstance().getIControladorCliente();
+        this.ICPr = Fabrica.getInstance().getIControladorProducto();
+        this.ICDP = Fabrica.getInstance().getIControladorDetallePedido();
         this.ICP = Fabrica.getInstance().getIControladorPedido();
         
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -143,8 +141,8 @@ public class ActualizarPedido extends javax.swing.JFrame {
         CbNombreVendedor.addItem("--Selecciona un vendedor--");
         CbNombreCliente.addItem("--Selecciona un cliente--");
         
-        List<String> nombresVendedores = vendedorServicios.obtenerNombresVendedores();
-        List<String> nombresClientes = clienteServicios.obtenerNombresClientes();
+        List<String> nombresVendedores = this.ICV.obtenerNombresVendedores();
+        List<String> nombresClientes = this.ICC.obtenerNombresClientes();
 
         for (String nombre : nombresVendedores) {
             CbNombreVendedor.addItem(nombre);
@@ -205,8 +203,8 @@ public class ActualizarPedido extends javax.swing.JFrame {
     
     private void cargarDatosPedido() {
         // Cargamos los datos del pedido seleccionado en los comboboxes
-        CbNombreVendedor.setSelectedItem(vendedorServicios.getNombreVendedorPorId(pedidoSeleccionado.getIdVendedor()));
-        CbNombreCliente.setSelectedItem(clienteServicios.getNombreClientePorId(pedidoSeleccionado.getIdCliente()));
+        CbNombreVendedor.setSelectedItem(this.ICV.getNombreVendedorPorId(pedidoSeleccionado.getIdVendedor()));
+        CbNombreCliente.setSelectedItem(this.ICC.getNombreClientePorId(pedidoSeleccionado.getIdCliente()));
 
         Estado estado = pedidoSeleccionado.getEstado();
 
@@ -218,7 +216,7 @@ public class ActualizarPedido extends javax.swing.JFrame {
         model.setRowCount(0); // Limpiamos la tabla
 
         // Cargamos los productos en la tabla
-        for (DetallePedido detalle : detallePedidos.obtenerDetallesPedido(pedidoSeleccionado.getIdentificador())) {
+        for (DetallePedido detalle : this.ICDP.obtenerDetallesPedido(pedidoSeleccionado.getIdentificador())) {
             model.addRow(new Object[]{
                 detalle.getProducto().getNombre(),
                 detalle.getPrecioVenta(),
@@ -587,8 +585,8 @@ public class ActualizarPedido extends javax.swing.JFrame {
         String nombreVendedor = (String) CbNombreVendedor.getSelectedItem();
         String nombreCliente = (String) CbNombreCliente.getSelectedItem();
         
-        int idVendedor = vendedorServicios.obtenerIdVendedorPorNombre(nombreVendedor);
-        int idCliente = clienteServicios.obtenerIdClientePorNombre(nombreCliente);
+        int idVendedor = this.ICV.obtenerIdVendedorPorNombre(nombreVendedor);
+        int idCliente = this.ICC.obtenerIdClientePorNombre(nombreCliente);
         
         //tambien obtenemos el estado
         String estadoSeleccionado = (String) CbEstado.getSelectedItem();
@@ -610,7 +608,7 @@ public class ActualizarPedido extends javax.swing.JFrame {
         List<DetallePedido> detalles = new ArrayList<>();
         for (int i = 0; i < model.getRowCount(); i++) {
             String nombreProducto = (String) model.getValueAt(i, 0);
-            Producto producto = productoServicios.buscarProductoPorNombre(nombreProducto);
+            Producto producto = this.ICPr.buscarProductoPorNombre(nombreProducto);
             if (producto == null) {
                 JOptionPane.showMessageDialog(this, "Producto no encontrado: " + nombreProducto, "Error", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -624,11 +622,11 @@ public class ActualizarPedido extends javax.swing.JFrame {
         }
 
         //actualizamos en la base de datos
-        boolean resultado = pedidosServicios.actualizarPedido(pedidoSeleccionado);
+        boolean resultado = this.ICP.actualizarPedido(pedidoSeleccionado);
         
         if (resultado) {
             //si se pudo actualizar el pedido, tambie actualizamos los detalles del pedido en la base de datos
-            boolean resultadoDetalles = detallePedidos.actualizarDetallesPedido(pedidoSeleccionado.getIdentificador(), detalles);
+            boolean resultadoDetalles = this.ICDP.actualizarDetallesPedido(pedidoSeleccionado.getIdentificador(), detalles);
             if (resultadoDetalles) {
                 JOptionPane.showMessageDialog(this, "Pedido actualizado exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                 this.dispose();

@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import logica.Clases.DetallePedido;
 import logica.Clases.Pedido;
 import logica.Clases.Pedido.Estado;
 import logica.Interfaces.IControladorPedido;
@@ -80,7 +81,27 @@ public class ControladorPedido implements IControladorPedido {
     }
     
     @Override
+    public ArrayList<Pedido> getPedidosPorVendedorCategoriaYFecha(int idVendedor, int mes, int año, Integer idCategoria){
+        return servicioPedidos.getPedidosPorVendedorCategoriaYFecha(idVendedor, mes, año, idCategoria);
+    }
+    
+    @Override
+    public ArrayList<Pedido> getPedidosPorVendedorTodos(int idVendedor, int mes, int año, Integer idCategoria, Integer idCliente){
+        return servicioPedidos.getPedidosPorVendedorTodos(idVendedor, mes, año, idCategoria, idCliente);
+    }
+    
+    @Override
     public boolean cancelarPedido(int idPedido){
         return servicioPedidos.cancelarPedido(idPedido);
+    }
+    
+    @Override
+    public Pedido obtenerPedidoPorId(int idPedido){
+        return servicioPedidos.obtenerPedidoPorId(idPedido);
+    }
+    
+    @Override
+    public List<DetallePedido> obtenerDetallesPedido(int idPedido){
+        return servicioPedidos.obtenerDetallesPedido(idPedido);
     }
 }

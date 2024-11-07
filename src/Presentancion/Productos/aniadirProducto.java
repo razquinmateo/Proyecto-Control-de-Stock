@@ -19,9 +19,10 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import logica.Clases.Categoria;
 import logica.Clases.Producto;
 import logica.Clases.Proveedor;
-import logica.servicios.CategoriaServicios;
-import logica.servicios.ProductoServicios;
-import logica.servicios.ProveedorServicios;
+import logica.Fabrica;
+import logica.Interfaces.IControladorCategoria;
+import logica.Interfaces.IControladorProducto;
+import logica.Interfaces.IControladorProveedor;
 
 /**
  *
@@ -29,8 +30,9 @@ import logica.servicios.ProveedorServicios;
  */
 public class aniadirProducto extends javax.swing.JFrame {
 
-    private CategoriaServicios categoriaServicios;
-    private ProveedorServicios proveedorServicios;
+    private IControladorProducto ICPr;
+    private IControladorCategoria ICC;
+    private IControladorProveedor ICP;
     private DefaultListModel<String> listModel;
     private String rutaImagen;
     private Producto producto;
@@ -42,8 +44,9 @@ public class aniadirProducto extends javax.swing.JFrame {
         initComponents();
         this.setTitle("Añadir Producto");
         this.setLocationRelativeTo(null);
-        categoriaServicios = new CategoriaServicios();
-        proveedorServicios = new ProveedorServicios();
+        this.ICC = Fabrica.getInstance().getIControladorCategoria();
+        this.ICP = Fabrica.getInstance().getIControladorProveedor();
+        this.ICPr = Fabrica.getInstance().getIControladorProducto();
         listModel = new DefaultListModel<>();
         jListProveedores.setModel(listModel);
         cargarCategorias();
@@ -67,7 +70,7 @@ public class aniadirProducto extends javax.swing.JFrame {
     }
     
     private void cargarCategorias() {
-        List<Categoria> categorias = categoriaServicios.listarCategoriasActivas();
+        List<Categoria> categorias = this.ICC.listarCategoriasActivas();
         CbCategoria.removeAllItems();
         CbCategoria.addItem("--Selecciona una categoria--");
 
@@ -77,7 +80,7 @@ public class aniadirProducto extends javax.swing.JFrame {
     }
     
     private void cargarProveedores() {
-        List<Proveedor> proveedores = proveedorServicios.listarProveedoresActivos();
+        List<Proveedor> proveedores = this.ICP.listarProveedoresActivos();
         CbProveedor.removeAllItems();
         CbProveedor.addItem("--Selecciona un proveedor--");
 
@@ -393,15 +396,13 @@ public class aniadirProducto extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Precio de venta y stock deben ser numéricos válidos.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
-        ProductoServicios productoServicios = new ProductoServicios();
 
-        if (productoServicios.nombreProductoExiste(nombre)) {
+        if (this.ICPr.nombreProductoExiste(nombre)) {
             JOptionPane.showMessageDialog(this, "El nombre del producto ya está en uso. Por favor, elija otro nombre.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        if (productoServicios.skuProductoExiste(sku)) {
+        if (this.ICPr.skuProductoExiste(sku)) {
             JOptionPane.showMessageDialog(this, "El SKU del producto ya está en uso. Por favor, elija otro SKU.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -416,7 +417,7 @@ public class aniadirProducto extends javax.swing.JFrame {
         byte[] imagenNueva = producto.getImagen();
         producto.setImagen(imagenNueva);
         
-        Categoria categoriaSeleccionada = categoriaServicios.buscarCategoriaPorNombre(categoria);
+        Categoria categoriaSeleccionada = this.ICC.buscarCategoriaPorNombre(categoria);
         if (categoriaSeleccionada == null) {
             JOptionPane.showMessageDialog(this, "Categoría seleccionada no encontrada.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -424,11 +425,11 @@ public class aniadirProducto extends javax.swing.JFrame {
         producto.setCategoria(categoriaSeleccionada);
     
         //agregamos el producto a la base de datos
-        boolean exito = productoServicios.altaProducto(producto);
+        boolean exito = this.ICPr.altaProducto(producto);
 
         if (exito) {
             //si se pudo agregar el producto, obtenemos el ID del producto recién agregado
-            Producto productoEncontrado = productoServicios.buscarProductoPorNombre(nombre);
+            Producto productoEncontrado = this.ICPr.buscarProductoPorNombre(nombre);
             int productoID = productoEncontrado.getId();
 
             //verificamos si hay proveedores en la lista
@@ -441,10 +442,10 @@ public class aniadirProducto extends javax.swing.JFrame {
             //agregamos relaciones producto-proveedor en la base de datos
             for (int i = 0; i < modeloProveedores.size(); i++) {
                 String proveedorNombre = modeloProveedores.getElementAt(i);
-                int proveedorID = proveedorServicios.obtenerProveedorIDPorNombre(proveedorNombre);
+                int proveedorID = this.ICP.obtenerProveedorIDPorNombre(proveedorNombre);
                 if (proveedorID != -1) {
                     //agregamos la relación producto-proveedor a la base de datos
-                    productoServicios.agregarProductoProveedor(productoID, proveedorID);
+                    this.ICPr.agregarProductoProveedor(productoID, proveedorID);
                 } else {
                     JOptionPane.showMessageDialog(this, "Proveedor " + proveedorNombre + " no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
                 }

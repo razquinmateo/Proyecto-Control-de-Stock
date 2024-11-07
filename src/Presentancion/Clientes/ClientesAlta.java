@@ -9,7 +9,8 @@ import java.awt.event.WindowEvent;
 import java.util.Calendar;
 import java.util.Date;
 import javax.swing.JOptionPane;
-import logica.Controladores.ControladorCliente;
+import logica.Fabrica;
+import logica.Interfaces.IControladorCliente;
 
 /**
  *
@@ -20,8 +21,10 @@ public class ClientesAlta extends javax.swing.JFrame {
     /**
      * Creates new form ClientesAlta
      */
+    private IControladorCliente ICC;
     public ClientesAlta() {
         initComponents();
+        this.ICC = Fabrica.getInstance().getIControladorCliente();
         this.setTitle("Añadir Cliente");
         this.setLocationRelativeTo(null);
 
@@ -188,8 +191,7 @@ public class ClientesAlta extends javax.swing.JFrame {
         try {
             identificador = txtIdentificador.getText().trim();
             //verificar si el Identificador ya existe
-            ControladorCliente controlador = ControladorCliente.getInstance();
-            if (controlador.existeIdentificador(identificador)) {
+            if (this.ICC.existeIdentificador(identificador)) {
                 JOptionPane.showMessageDialog(this, "El Identificador ya está registrado","Error", JOptionPane.ERROR_MESSAGE);
                 txtIdentificador.requestFocus();
                 return;
@@ -234,11 +236,8 @@ public class ClientesAlta extends javax.swing.JFrame {
             return;
         }
 
-        //obtenemos la instancia del controlador
-        ControladorCliente controlador = ControladorCliente.getInstance();
-
         //llamamos al método para agregar cliente
-        boolean exito = controlador.agregarCliente(nombre, email, identificador, telefono, direccion, fechaRegistro);
+        boolean exito = this.ICC.agregarCliente(nombre, email, identificador, telefono, direccion, fechaRegistro);
 
         //mostramos mensaje según el resultado
         if (exito) {

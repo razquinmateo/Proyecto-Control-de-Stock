@@ -8,7 +8,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
 import logica.Clases.Categoria;
-import logica.servicios.CategoriaServicios;
+import logica.Fabrica;
+import logica.Interfaces.IControladorCategoria;
 
 /**
  *
@@ -16,6 +17,7 @@ import logica.servicios.CategoriaServicios;
  */
 public class modificarCategoria extends javax.swing.JFrame {
 
+    private IControladorCategoria ICC;
     private int id;
     private Boolean activo;
     
@@ -24,6 +26,7 @@ public class modificarCategoria extends javax.swing.JFrame {
      */
     public modificarCategoria() {
         initComponents();
+        this.ICC = Fabrica.getInstance().getIControladorCategoria();
         this.setTitle("Modificar Categoria");
         this.setLocationRelativeTo(null);
 
@@ -174,8 +177,6 @@ public class modificarCategoria extends javax.swing.JFrame {
 
     private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
         //obtenemos el ID de la categoria que se está editando
-        CategoriaServicios servicios = new CategoriaServicios();
-
         String nuevoNombre = txtNombre.getText();  
         String nuevaDescripcion = txtDescripcion.getText();
         
@@ -193,7 +194,7 @@ public class modificarCategoria extends javax.swing.JFrame {
         }
         
         //obtenemos el nombre actual desde la base de datos
-        Categoria categoriaOriginal = servicios.buscarCategoria(id);
+        Categoria categoriaOriginal = this.ICC.buscarCategoria(id);
         if (categoriaOriginal == null) {
             JOptionPane.showMessageDialog(this, "No se pudo encontrar la categoría original.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -204,7 +205,7 @@ public class modificarCategoria extends javax.swing.JFrame {
         //verificamos si el nombre ha cambiado
         if (!nuevoNombre.equals(nombreOriginal)) {
             //si el nombre ha cambiado, verificamos si el nuevo nombre ya existe
-            Categoria categoriaExistente = servicios.buscarCategoriaPorNombre(nuevoNombre);
+            Categoria categoriaExistente = this.ICC.buscarCategoriaPorNombre(nuevoNombre);
             if (categoriaExistente != null) {
                 JOptionPane.showMessageDialog(this, "Ya existe una categoría con este nombre. Elija otro.", "Advertencia", JOptionPane.WARNING_MESSAGE);
                 return;
@@ -215,7 +216,7 @@ public class modificarCategoria extends javax.swing.JFrame {
         //si el nombre no cambió o no existe duplicado, hacemos la modificar
         Categoria categoriaActualizada = new Categoria(id, nuevoNombre, nuevaDescripcion, activo);
     
-        boolean exito = servicios.modificarCategoria(id, categoriaActualizada);
+        boolean exito = this.ICC.modificarCategoria(id, categoriaActualizada);
 
         if(exito) {
             JOptionPane.showMessageDialog(this, "Categoria modificado exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);

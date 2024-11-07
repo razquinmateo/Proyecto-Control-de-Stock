@@ -5,7 +5,6 @@
 package Presentancion.Pedidos;
 
 import Presentancion.Pedidos.AddPedido;
-import logica.servicios.ProductoServicios;
 import logica.Clases.Producto;
 
 import javax.swing.*;
@@ -17,7 +16,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
 import logica.Clases.Categoria;
-import logica.servicios.CategoriaServicios;
+import logica.Fabrica;
+import logica.Interfaces.IControladorCategoria;
+import logica.Interfaces.IControladorProducto;
 
 /**
  *
@@ -28,6 +29,8 @@ public class añadirAlCarrito extends javax.swing.JFrame {
     private AddPedido addPedidoFrame;
     private ActualizarPedido actualizarPedidoFrame;
     private double precioProducto;
+    private IControladorCategoria ICC;
+    private IControladorProducto ICP;
     /**
      * Creates new form añadirAlCarrito
      */
@@ -35,6 +38,8 @@ public class añadirAlCarrito extends javax.swing.JFrame {
         initComponents();
         cargarCategorias();
         configurarListeners();
+        this.ICC = Fabrica.getInstance().getIControladorCategoria();
+        this.ICP = Fabrica.getInstance().getIControladorProducto();
         this.setLocationRelativeTo(null);
 
             setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -56,8 +61,7 @@ public class añadirAlCarrito extends javax.swing.JFrame {
     
     private void cargarCategorias() {
         CbNombreCategorias.addItem("--Selecciona una categoria--");
-        CategoriaServicios categoriaServicios = new CategoriaServicios();
-        List<Categoria> categorias = categoriaServicios.listarCategoriasActivas();
+        List<Categoria> categorias = this.ICC.listarCategoriasActivas();
 
         for (Categoria categoria : categorias) {
             CbNombreCategorias.addItem(categoria.getNombre());
@@ -77,8 +81,7 @@ public class añadirAlCarrito extends javax.swing.JFrame {
         String categoriaSeleccionada = (String) CbNombreCategorias.getSelectedItem();
         if (!categoriaSeleccionada.equals("--Selecciona una categoria--")) {
             //obtenemos los productos de la categoría seleccionada
-            ProductoServicios productoServicios = new ProductoServicios();
-            List<Producto> productos = productoServicios.listarProductosPorCategoria(categoriaSeleccionada);
+            List<Producto> productos = this.ICP.listarProductosPorCategoria(categoriaSeleccionada);
 
             for (Producto producto : productos) {
                 CbNombreProductos.addItem(producto.getNombre());
@@ -123,8 +126,7 @@ public class añadirAlCarrito extends javax.swing.JFrame {
 
     private void actualizarDescripcionYPrecio() {
         String nombreProducto = (String) CbNombreProductos.getSelectedItem();
-        ProductoServicios productoServicios = new ProductoServicios();
-        Producto producto = productoServicios.buscarProductoPorNombre(nombreProducto);
+        Producto producto = this.ICP.buscarProductoPorNombre(nombreProducto);
 
         if (producto != null) {
             txtAreaDescripcion.setText(producto.getDescripcion());

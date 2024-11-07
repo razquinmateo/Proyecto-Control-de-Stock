@@ -18,8 +18,9 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
-import logica.servicios.CategoriaServicios;
 import logica.Clases.Categoria;
+import logica.Fabrica;
+import logica.Interfaces.IControladorCategoria;
 
 /**
  *
@@ -27,11 +28,13 @@ import logica.Clases.Categoria;
  */
 public class datosCategorias extends javax.swing.JFrame {
 
+    private IControladorCategoria ICC;
     private Timer timer;
     private TableRowSorter<DefaultTableModel> sorter;
     
     public datosCategorias() {
         initComponents();
+        this.ICC = Fabrica.getInstance().getIControladorCategoria();
         this.setTitle("Datos de Categorias");
         this.setLocationRelativeTo(null);
         cargarDatos();//llama al método para llenar la tabla
@@ -137,8 +140,7 @@ public class datosCategorias extends javax.swing.JFrame {
     }
     
     public void cargarDatos() {
-        CategoriaServicios categoriaServicios = new CategoriaServicios();
-        ArrayList<Categoria> categorias = categoriaServicios.listarCategorias();
+        ArrayList<Categoria> categorias = this.ICC.listarCategorias();
 
         //obtenemos el modelo de la tabla
         DefaultTableModel modelo = (DefaultTableModel) tblListarCategorias.getModel();
@@ -360,10 +362,8 @@ public class datosCategorias extends javax.swing.JFrame {
         if (selectedRow >= 0) {
             int id = (Integer) tblListarCategorias.getValueAt(selectedRow, 0);
 
-            CategoriaServicios servicios = new CategoriaServicios();
-
             //verificamos si hay productos asociados con esta categoría
-            boolean tieneProductos = servicios.categoriaTieneProductos(id);
+            boolean tieneProductos = this.ICC.categoriaTieneProductos(id);
 
             if (tieneProductos) {
                 JOptionPane.showMessageDialog(this, 
@@ -381,7 +381,7 @@ public class datosCategorias extends javax.swing.JFrame {
                     JOptionPane.YES_NO_OPTION);
 
             if (confirmar == JOptionPane.YES_OPTION) {
-                boolean exito = servicios.deshabilitarCategoria(id);
+                boolean exito = this.ICC.deshabilitarCategoria(id);
 
                 if (exito) {
                     JOptionPane.showMessageDialog(this, 

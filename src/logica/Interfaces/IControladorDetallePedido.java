@@ -4,6 +4,7 @@
  */
 package logica.Interfaces;
 
+import java.util.List;
 import logica.Clases.DetallePedido;
 
 /**
@@ -13,4 +14,6 @@ import logica.Clases.DetallePedido;
 public interface IControladorDetallePedido {
     public abstract boolean eliminarDetallesPedido(int idPedido);
     public abstract boolean agregarDetallePedido(int idPedido, DetallePedido detalle);
+    public abstract List<DetallePedido> obtenerDetallesPedido(int idPedido);
+    public abstract boolean actualizarDetallesPedido(int idPedido, List<DetallePedido> detalles);
 }
