@@ -295,4 +295,34 @@ public class VendedorServicios {
         }
         return null; // Retorna null si no encuentra el usuario o en caso de error
     }
+    
+    public Vendedor obtenerVendedorPorUsuario(String username) {
+        Vendedor vendedor = null;
+        String sql = "SELECT * FROM vendedor WHERE Nombre_Usuario = ?";
+
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                vendedor = new Vendedor();
+                vendedor.setId(rs.getInt("id"));
+                vendedor.setNomUsuario(rs.getString("Nombre_Usuario"));
+                vendedor.setContrasenia(rs.getString("Contrasenia"));
+                vendedor.setNombre(rs.getString("Nombre"));
+                vendedor.setCedula(rs.getInt("Cedula"));
+                vendedor.setCorreo(rs.getString("Correo_Electronico"));
+                vendedor.setTelefono(rs.getString("Telefono"));
+                vendedor.setDireccion(rs.getString("Direccion"));
+                vendedor.setFechaContratacion(rs.getTimestamp("Fecha_Contratacion"));
+                vendedor.setActivo(rs.getBoolean("Activo"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.err.println("Error al obtener el vendedor por usuario: " + e.getMessage());
+        }
+
+        return vendedor; // Retorna null si no se encuentra el usuario o en caso de error
+    }
+
 }

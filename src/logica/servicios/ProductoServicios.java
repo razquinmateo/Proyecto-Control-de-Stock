@@ -11,6 +11,8 @@ import logica.Clases.Categoria;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import logica.Fabrica;
+import logica.Interfaces.IControladorCategoria;
 
 /**
  *
@@ -201,9 +203,10 @@ public class ProductoServicios {
     }
     
     // auxiliar para buscar la categoría asociada al producto
-    private Categoria buscarCategoriaPorId(int id) {
-        CategoriaServicios categoriaServicios = new CategoriaServicios();
-        return categoriaServicios.buscarCategoria(id);
+    public Categoria buscarCategoriaPorId(int id) {
+        Fabrica fabrica = Fabrica.getInstance();
+        IControladorCategoria ICC = fabrica.getIControladorCategoria();
+        return ICC.buscarCategoria(id);
     }
     
     //auxiliar para obtener los nombres de los productos

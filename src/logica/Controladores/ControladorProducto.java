@@ -9,6 +9,7 @@ import logica.Interfaces.IControladorProducto;
 import logica.servicios.ProductoServicios;
 import java.util.ArrayList;
 import java.util.List;
+import logica.Clases.Categoria;
 
 /**
  *
@@ -113,5 +114,10 @@ public class ControladorProducto implements IControladorProducto {
     @Override
     public boolean agregarProductoProveedor(int productoID, int proveedorID){
         return productoServicios.agregarProductoProveedor(productoID, proveedorID);
+    }
+    
+    @Override
+    public Categoria buscarCategoriaPorId(int id){
+        return productoServicios.buscarCategoriaPorId(id);
     }
 }

@@ -16,6 +16,14 @@ public class Usuario {
     private String password;
 
     private String email;
+    
+    public Usuario() {
+    }
+    
+    public Usuario(String email, String nombre) {
+        this.email = email;
+        this.nombre = nombre;
+    }
 
     public Usuario(String email, String nombre, String apellido, String password) {
         this.nombre = nombre;
@@ -24,11 +32,8 @@ public class Usuario {
         this.email = email;
     }
 
-    public Usuario() {
-    }
-
     public Usuario(String string, String string0, Object object) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     public String getNombre() {

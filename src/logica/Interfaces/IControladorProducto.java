@@ -7,6 +7,7 @@ package logica.Interfaces;
 import logica.Clases.Producto;
 import java.util.ArrayList;
 import java.util.List;
+import logica.Clases.Categoria;
 
 /**
  *
@@ -30,4 +31,5 @@ public interface IControladorProducto {
     public abstract List<Integer> obtenerProveedoresPorProductoID(int productoID);
     public abstract void eliminarProveedoresPorProductoID(int productoID);
     public abstract boolean agregarProductoProveedor(int productoID, int proveedorID);
+    public abstract Categoria buscarCategoriaPorId(int id);
 }
