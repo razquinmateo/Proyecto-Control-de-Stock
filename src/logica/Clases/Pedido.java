@@ -19,6 +19,7 @@ public class Pedido {
     private float total;
     private int idVendedor;
     private int idCliente;
+    private String idCliente1;
     private ArrayList<DetallePedido> detallesPedidos;
     
     public Pedido(){
@@ -34,6 +35,26 @@ public class Pedido {
         this.idCliente = idCliente;
         this.detallesPedidos = new ArrayList<>();
     }
+    
+    public Pedido(int identificador, Date fechaPedido, Estado estado, float total, int idVendedor, String idCliente1) {
+        this.identificador = identificador;
+        this.fechaPedido = fechaPedido;
+        this.estado = estado;
+        this.total = 0.0f;  //lo calculamos a partir de los detallesPedido
+        this.idVendedor = idVendedor;
+        this.idCliente1 = idCliente1;
+        this.detallesPedidos = new ArrayList<>();
+    }
+
+    public String getIdCliente1() {
+        return idCliente1;
+    }
+
+    public void setIdCliente1(String idCliente1) {
+        this.idCliente1 = idCliente1;
+    }
+    
+    
     
     public int getIdentificador() {
         return identificador;

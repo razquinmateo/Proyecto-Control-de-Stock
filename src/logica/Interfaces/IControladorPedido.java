@@ -29,4 +29,5 @@ public interface IControladorPedido {
     public abstract boolean cancelarPedido(int idPedido);
     public abstract Pedido obtenerPedidoPorId(int idPedido);
     public abstract List<DetallePedido> obtenerDetallesPedido(int idPedido);
+    public abstract boolean agregarPedido1(Pedido pedido);
 }

@@ -104,4 +104,9 @@ public class ControladorPedido implements IControladorPedido {
     public List<DetallePedido> obtenerDetallesPedido(int idPedido){
         return servicioPedidos.obtenerDetallesPedido(idPedido);
     }
+    
+    @Override
+    public boolean agregarPedido1(Pedido pedido){
+        return servicioPedidos.agregarPedido1(pedido);
+    }
 }

@@ -8,10 +8,13 @@ import Persistencia.ConexionDB;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import logica.Clases.Cliente;
 import logica.Clases.DetallePedido;
 import logica.Clases.Pedido;
 import logica.Clases.Pedido.Estado;
 import logica.Clases.Producto;
+import logica.Fabrica;
+import logica.Interfaces.IControladorCliente;
 
 /**
  *
@@ -20,7 +23,9 @@ import logica.Clases.Producto;
 public class PedidosServicios {
 
     private Connection conexion = new ConexionDB().getConexion();
+    private Fabrica fabrica = Fabrica.getInstance();
     private DetallePedidoServicios detallePedidoServicios = new DetallePedidoServicios();
+    private IControladorCliente ICP = fabrica.getIControladorCliente();
 
     //obtiene todos los datos de los pedidos y los devuelve en un ArrayList
     public ArrayList<Pedido> getPedidos() {
@@ -102,6 +107,34 @@ public class PedidosServicios {
             stmtPedido.setFloat(3, pedido.getTotal());
             stmtPedido.setInt(4, pedido.getIdVendedor());
             stmtPedido.setInt(5, pedido.getIdCliente());
+            int rowsAffected = stmtPedido.executeUpdate();
+
+            if (rowsAffected > 0) {
+                ResultSet generatedKeys = stmtPedido.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    int pedidoID = generatedKeys.getInt(1);
+                    pedido.setIdentificador(pedidoID);
+
+                    //inserta los detalles del pedido asociados
+                    return detallePedidoServicios.agregarDetallePedido(pedidoID, pedido.getDetallesPedidos());
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    public boolean agregarPedido1(Pedido pedido) {
+        String sqlPedido = "INSERT INTO pedido (FechaPedido, Estado, Total, VendedorID, ClienteID) VALUES (?, ?, ?, ?, ?)";
+        Cliente cliente1 = ICP.getClientePorIdentificador(pedido.getIdCliente1());
+        int IDCliente = ICP.obtenerIdClientePorNombre(cliente1.getNom_empresa());
+        try (PreparedStatement stmtPedido = conexion.prepareStatement(sqlPedido, Statement.RETURN_GENERATED_KEYS)) {
+            stmtPedido.setTimestamp(1, new java.sql.Timestamp(pedido.getFechaPedido().getTime()));
+            stmtPedido.setString(2, pedido.getEstado().name());
+            stmtPedido.setFloat(3, pedido.getTotal());
+            stmtPedido.setInt(4, pedido.getIdVendedor());
+            stmtPedido.setInt(5, IDCliente);
             int rowsAffected = stmtPedido.executeUpdate();
 
             if (rowsAffected > 0) {
